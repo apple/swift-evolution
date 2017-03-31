@@ -4,7 +4,6 @@
 * Author: [Doug Gregor](https://github.com/DougGregor)
 * Status: **Active review (March 21...28, 2017)**
 * Review manager: [Chris Lattner](http://github.com/lattner)
-* Implementation: [Pull request](https://github.com/apple/swift/pull/8379)
 
 ## Introduction
 
@@ -229,10 +228,9 @@ The two changes that remove inference of `@objc` are both
 source-breaking in different ways. The `dynamic` change mostly
 straightforward:
 
-* In Swift 4 mode, introduce an error when a `dynamic` declaration
-  does not explicitly state `@objc` (or infer it based on one of the
-  `@objc` inference rules that still applies in Swift 4), with a
-  Fix-It to add the `@objc`.
+* In Swift 4 mode, introduce an error that when a `dynamic`
+  declaration does not explicitly state `@objc`, with a Fix-It to add
+  the `@objc`.
 
 * In Swift 3 compatibility mode, continue to infer `@objc` for
   `dynamic` methods. However, introduce a warning that such code will
@@ -242,200 +240,170 @@ straightforward:
 * A Swift 3-to-4 migrator could employ the same logic as Swift 3
   compatibility mode to update `dynamic` declarations appropriately.
 
+
+
 The elimination of inference of `@objc` for declarations in `NSObject`
 subclasses is more complicated. Considering again the three cases:
 
-* In Swift 4 mode, do not infer `@objc` for such declarations.
-  Source-breaking changes that will be introduced include:
+* In Swift 4 mode, do not infer `@objc` for such
+  declarations. Source-breaking changes that will be introduced include:
 
     * If `#selector` or `#keyPath` refers to one such declaration, an
       error will be produced on previously-valid code that the
       declaration is not `@objc`. In most cases, a Fix-It will suggest
       the addition of `@objc`.
 
-    * If a message is sent to one of these declarations via
-      `AnyObject`, the compiler may produce an error (if no `@objc`
-      entity by that name exists anywhere) or a failure might occur at
-      runtime (if another, unrelated `@objc` entity exists with that
-      same name). For example:
-
-      ```swift
-      class MyClass : NSObject {
-        func foo() { }
-        func bar() { }
-      }
-
-      class UnrelatedClass : NSObject {
-        @objc func bar() { }
-      }
-
-      func test(object: AnyObject) {
-        object.foo?()  // Swift 3: can call method MyClass.foo()
-                       // Swift 4: compiler error, no @objc method "foo()"
-        object.bar?()  // Swift 3: can call MyClass.bar() or UnrelatedClass.bar()
-                       // Swift 4: can only call UnrelatedClass.bar()
-      }
-      ```
-
-    * If one of these declarations is written in a class extension and
-      is overridden, the override will produce an error in Swift 4
-      because Swift's class model does not support overriding
-      declarations introduced in class extensions. For example:
-
-      ```swift
-      class MySuperclass : NSObject { }
-
-      extension MySuperclass {
-        func extMethod() { } // implicitly @objc in Swift 3, not in Swift 4
-      }
-
-      class MySubclass : MySuperclass {
-        override func extMethod() { }   // Swift 3: okay
-           // Swift 4: error "declarations in extensions cannot override yet"
-      }
-      ```
-
-    * Objective-C code in mixed-source projects won't be able to call
-      these declarations. Most problems caused by this will result in
-      warnings or errors from the Objective-C compiler (due to
-      unrecognized selectors); some may only be detected at runtime,
-      similarly to the `AnyObject` case described above.
+    * The lack of `@objc` means that Objective-C code in mixed-source
+      projects won't be able to call these declarations. Most problems
+      caused by this will result in warnings or errors from the
+      Objective-C compiler (due to unrecognized selectors), but some
+      might only be detected at runtime. These latter cases will be
+      hard-to-detect.
 
     * Other tools and frameworks that rely on the presence of
-      Objective-C entrypoints (e.g., via strings) but do not make use
-      of Swift's facilities for referring to them will fail. This case
-      is particularly hard to diagnose well, and failures of this sort
-      are likely to cause runtime failures (e.g., unrecoignized
-      selectors) that only the developer can diagnose and correct.
+      Objective-C entrypoints but do not make use of Swift's
+      facilities for referring to them will fail. This case is
+      particularly hard to diagnose well, and failures of this sort
+      are likely to cause runtime failures that only the developer can
+      diagnose and correct.
 
 * In Swift 3 compatibility mode, continue to infer `@objc` for these
-  declarations. We can warn about uses of the `@objc` entrypoints in
-  cases where the `@objc` is inferred in Swift 3 but will not be in
-  Swift 4.
+  declarations. When `@objc` is inferred based on this rule, modify
+  the generated header (i.e., the header used by Objective-C code to
+  call into Swift code) so that the declaration contains a
+  "deprecated" attribute indicating that the Swift declaration should
+  be explicitly marked with `@objc`. For example:
 
-* A Swift 3-to-4 migrator is the hardest part of the story. The
-  migrator should have a switch: a "conservative" option and a
-  "minimal" option.
+  ```swift
+  class MyClass : NSObject {
+    func foo() { }
+  }
+  ```
 
-  * The "conservative" option (which is the best default) simply adds
-  explicit `@objc` annotations to every entity that was implicitly
-  `@objc` in Swift 3 but would not implicitly be `@objc` in Swift
-  4. Migrated projects won't get the benefits of the more-limited
-  `@objc` inference, but they will work out-of-the-box.
+  will produce a generated header that includes:
 
-  * The "minimal" option attempts to only add `@objc` in places where
-    it is needed to maintain the semantics of the program. It would be
-    driven by the diagnostics mentioned above (for `#selector`,
-    `#keyPath`, `AnyObject` messaging, and overrides), but some manual
-    intervention will be involved to catch the runtime cases. More
-    discussion of the migration workflow follows.
+  ```objc
+  @interface MyClass : NSObject
+  -(void)foo NS_DEPRECATED("MyClass.foo() requires an explicit `@objc` in Swift 4");
+  @end
+  ```
 
+  This way, any reference to that declaration from Objective-C code
+  will produce a warning about the deprecation. Users can silence the
+  warning by adding an explicit `@objc`.
 
-## "Minimal" migration workflow
+* A Swift 3-to-4 migrator is the hardest part of the story. Ideally,
+  the migrator to only add `@objc` in places where it is needed, so
+  that we see some of the expected benefits of code-size
+  reduction. However, there are two problems with doing so:
 
-To migrate a Swift 3 project to Swift 4 without introducing spurious
-Objective-C entry points, we can apply the following workflow:
+  1. Some of the uses that imply the need to add `@objc` come from
+  Objective-C code, so a Swift 3-to-4 migrator would also need to
+  compile the Objective-C code (possibly with a modified version of
+  the Objective-C compiler) and match up the "deprecated" warnings
+  mentioned in the Swift 3 compatibility mode bullet with Swift
+  declarations.
 
-1. In Swift 4 mode, address all of the warnings about uses of
-declarations for which `@objc` was inferred based on the deprecated
-rule.
-2. Set the environment variable `SWIFT_DEBUG_IMPLICIT_OBJC_ENTRYPOINT`
-to a value between 1 and 3 (see below) and test the application. Clean
-up any "deprecated `@objc` entrypoint` warnings.
-3. Migrate to Swift 4 with "minimal" migration, which at this point
-will only add `@objc` to explicitly `dynamic` declarations.
+  2. The migrator can't reason about dynamically-constructed selectors
+  or the behavior of other tools that might directly use the
+  Objective-C runtime, so failing to add a `@objc` will lead to
+  migrated programs that compile but fail to execute correctly.
 
-The following subsections describe this migration in more detail.
+### Overriding of declarations introduced in class extensions
 
-### Step 1: Address compiler warnings
-
-The compiler can warn about most instances of the source-breaking
-changes outlined above. Here is an example that demonstrates the
-warnings in Swift code, all of which are generated by the Swift
-compiler:
+Swift's class model doesn't support overriding of declarations
+introduced in class extensions. For example, the following code
+produces an amusing error message on the override:
 
 ```swift
-class MyClass : NSObject {
-  func foo() { }
+class MySuperclass { }
 
-  var property: NSObject? = nil
-
-  func baz() { }
+extension MySuperclass {
+  func extMethod() { }
 }
 
-extension MyClass {
-  func bar() { }
-}
+class MySubclass : MySuperclass { }
 
-class MySubClass : MyClass {
-  override func foo() { }    // okay
-
-  override func bar() { }    // warning: override of instance method
-      // 'bar()' from extension of 'MyClass' depends on deprecated inference
-      //  of '@objc'
-}
-
-func test(object: AnyObject, mine: MyClass) {
-  _ = #selector(MyClass.foo)     // warning: argument of `#selector`
-      // refers to instance method `foo()` in `MyClass` that uses deprecated
-      // `@objc` inference
-
-  _ = #keyPath(MyClass.property) // warning: argument of '#keyPath'
-      // refers to property 'property' in 'MyClass' that uses deprecated
-      // `@objc` inference
-
-  _ = object.baz?()              // warning: reference to instance
-      // method 'baz()' of 'MyClass' that uses deprecated `@objc` inference
+extension MySubclass {
+  override func extMethod() { }   // error: declarations in extensions cannot override yet
 }
 ```
 
-For mixed-source projects, the Swift compiler will annotate the
-generated Swift header with "deprecation" attributes, so that any
-references to those declarations *from Objective-C code* will also
-produce warnings. For example:
+However, this *does* work in Swift 3 when the method is `@objc`, e.g.,
 
-```objective-c
-#import "MyApp-Swift.h"
+```swift
+class MySuperclass { }
 
-void test(MyClass *mine) {
-  [mine foo];   // warning: -[MyApp.MyClass foo] uses deprecated
-      // '@objc' inference; add '@objc' to provide an Objective-C entrypoint
+extension MySuperclass {
+  @objc func extMethod() { }
+}
+
+class MySubclass : MySuperclass { }
+
+extension MySubclass {
+  override func extMethod() { }   // okay! Objective-C message dispatch allows this
 }
 ```
 
-### Step 2: Address (opt-in) runtime warnings
+Removing `@objc` inference for `NSObject` subclasses will therefore
+break this correct Swift 3 code:
 
-Swift 3 compatibility mode augments each of the Objective-C
-entrypoints introduced based on the deprecated `@objc` inference rules
-with a call to a new runtime function
-`swift_objc_swift3ImplicitObjCEntrypoint`. This entry point can be
-used in two ways to find cases where an Objective-C entry point that
-will be eliminated by the migration to Swift 4:
+```swift
+class MySuperclass { }
 
-* In a debugger, one can set a breakpoint on
-`swift_objc_swift3ImplicitObjCEntrypoint` to catch specific cases
-where the Objective-C entry point is getting called.
+extension MySuperclass : NSObject {
+  func extMethod() { } // implicitly @objc in Swift 3, not @objc in Swift 4
+}
 
-* One can set the environment variable
-`SWIFT_DEBUG_IMPLICIT_OBJC_ENTRYPOINT` to one of three different
-values to cause the Swift runtime to log uses of these Objective-C
-entry points:
-  1. Log calls to these entry points with a message such as:
-  ```***Swift runtime: entrypoint -[MyApp.MyClass foo] generated by implicit @objc inference is deprecated and will be removed in Swift 4```
-  2. Log (as in #1) and emit a backtrace showing how that Objective-C
-  entry point was invoked.
-  3. Log with a backtrace (as in #2), then crash. This last stage is
-  useful for automated testing leading up to the migration to Swift 4.
+class MySubclass : MySuperclass { }
 
-Testing with logging enabled should uncover uses of the Objective-C
-entry points that use the deprecated rules. As explicit `@objc` is
-added to each case, the runtime warnings will go away.
+extension MySubclass {
+  override func extMethod() { }   // okay in Swift 3, error in Swift 4: declarations in extensions cannot override yet
+}
+```
 
-### Step 3: Migrate to Swift 4
+There are several potential solutions to this problem, but both are
+out-of-scope for this particular proposal:
 
-At this point, one can migrate to Swift 4. Building in Swift 4 will
-remove the Objective-C entry points for any remaining case where
-`@objc` was inferred based on the deprecated rules.
+1. Require that a non-`@objc` declaration in a class extension by
+explicitly declared `final` so that it is clear from the source that
+this declaration cannot be overridden.
+
+2. Extend Swift's class model to permit overriding of declarations
+introduced in extensions.
+
+
+Additionally, a non-`final` `@objc` declaration in a class extension
+is implicitly `dynamic`. This is a second-order effect of Swift's
+class model not allowing declarations introduced in class extensions
+to be overridable: such declarations must always be `@objc` and (more
+importantly) be called via the Objective-C runtime (`objc_msgSend`),
+so they are `dynamic` *in practice*. Moreover, as an implementation
+convenience in the Swift compiler, Swift infers `dynamic`. If in fact
+Swift gains the ability to override declarations introduced in a class
+extension (without `@objc`), the inference of `dynamic` would no
+longer be necessary. Removing that inference in such a future version
+of Swift could break existing applications that swizzle those methods
+via the Objective-C runtime. There are a few options here:
+
+1. Require that `@objc` declarations in a class extension be explicitly
+  stated to be either `final` or `dynamic`. Note that there is no
+  enforcement that these methods are not swizzled via the Objective-C
+  runtime, so this is merely a case of forcing the user to be explicit
+  about whether this method is overridable and to maintain the current
+  behavior if Swift gets the ability to add overridable declarations
+  in class extensions.
+
+2. Consider the inference of 'dynamic' to be an implementation detail,
+  not a semantic contract. Specifically, it means that we reserve the
+  right to break Swift applications that swizzle declarations not
+  explicitly marked `explicit` in some future version of Swift where
+  one can introduce non-`@objc` overridable declarations in class
+  extensions. It is plausible that the Objective-C runtime could be
+  extended to realize when it is being asked to swizzle an Objective-C
+  entry point for a non-`dynamic` Swift declaration, which would
+  provide a more graceful failure mode.
+
 
 ## Effect on ABI stability
 
