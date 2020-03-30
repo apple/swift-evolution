@@ -77,7 +77,17 @@ More precisely:
 
 2. The Core Team will regularly review `swift-evolution` pull requests, and provide feedback to the authors in the pull request on whether or not the proposal looks within reason of something that might be accepted.
 
-3. If a proposal gets a positive indicator from the Core Team for later review, the authors must provide an implementation prior to the proposal being formally reviewed.  An implementation should be provided in the form of a pull request against the impacted repositories (e.g., `swift`, `swift-package-manager`), and the proposal should be updated with a link to that pull request.  The existence of an implementation does not guarantee that the proposal will be accepted, but it is instrumental in evaluating the quality and impact of the proposal.
+3. If a proposal gets a positive indicator from the Core Team for later review, the authors must provide an implementation prior to the proposal being formally reviewed.  An implementation should be provided in the form of a pull request against the impacted repositories (e.g., `swift`, `swift-package-manager`), and the proposal should be updated with a link to that pull request.  It is expected that before review begins the pull request implementation runs at least the following tests:
+
+    a. A full test on Linux and macOS. (e.x. "@swift-ci test").
+
+    b. A full test of the Source Compatibility Suite to identify source breakage. (e.x. "@swift-ci test source compatibility").
+
+    c. A full run of Swift Compiler Performance. (e.x. "@swift-ci test compiler performance").
+
+    d. A full run of the Swift Benchmark Suite. (e.x. "@swift-ci benchmark").
+
+    > _NOTE: The existence of an implementation does not guarantee that the proposal will be accepted, but it is instrumental in evaluating the quality and impact of the proposal._
 
 We want to strike a balance between encouraging open discussion of potential changes to the language and standard library while also providing more focus when changes are actually reviewed.  Further, having implementations on hand allow the changes to be more easily tried out before they are officially accepted as part of the language.  In particular, development of the initial pull request for a proposal remains a very open review process that everyone in the community can contribute a lot to.  Similarly, members of the community can help craft implementations for a proposal even if they aren't the authors of the proposal.
 
