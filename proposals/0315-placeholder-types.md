@@ -250,7 +250,7 @@ This feature does not have any effect on the ABI.
 
 ## Effect on API resilience
 
-Placeholder types are not exposed as API. In a compiled interface, they are replaced by whatever type the type checker fills in for the placeholder. While the introduction or removal of a placeholder *on its own* is not necessarily an API or ABI break, authors should be careful that the introduction/removal of the additional type context does not ultimately change the inferred type of the variable.
+Placeholder types are not exposed as API. In a compiled interface, placeholder types (except for those within the bodies of `@inlinable` functions or default argument expressions) are replaced by whatever type the type checker fills in for the placeholder. While the introduction or removal of a placeholder *on its own* is not necessarily an API or ABI break, authors should be careful that the introduction/removal of the additional type context does not ultimately change the inferred type of the variable.
 
 ## Alternatives considered
 
