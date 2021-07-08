@@ -37,7 +37,7 @@ asynchronous task. Getting the task's continuation suspends the task, and
 produces a value that synchronous code can then use a handle to resume the
 task. Given a completion callback based API like:
 
-```
+```swift
 func beginOperation(completion: (OperationResult) -> Void)
 ```
 
