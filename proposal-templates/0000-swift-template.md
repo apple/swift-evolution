@@ -95,6 +95,11 @@ breaking ABI? For more information about the resilience model, see the
 document](https://github.com/apple/swift/blob/master/docs/LibraryEvolution.rst)
 in the Swift repository.
 
+## Backward-Deployability
+
+Can the features introduced in this proposal be backward-deployed to
+previous versions of Apple's operating systems? If no, why not?
+
 ## Alternatives considered
 
 Describe alternative approaches to addressing the same problem, and
