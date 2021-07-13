@@ -35,8 +35,8 @@ struct Test {
         work()
     }
     func method() {
-        execute { 
-            x += 1
+        execute {
+            print(x)
         }
     }
 }
