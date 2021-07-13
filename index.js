@@ -117,9 +117,9 @@ init()
 
 /** Primary entry point. */
 function init () {
-  var req = new window.XMLHttpRequest()
+  var req = new XMLHttpRequest()
 
-  req.addEventListener('load', function (e) {
+  req.addEventListener('load', () => {
     proposals = JSON.parse(req.responseText)
 
     // don't display malformed proposals
@@ -167,7 +167,7 @@ function html (elementType, attributes, children) {
   var element = document.createElement(elementType)
 
   if (attributes) {
-    Object.keys(attributes).forEach(function (attributeName) {
+    Object.keys(attributes).forEach(attributeName => {
       var value = attributes[attributeName]
       if (attributeName === 'className') attributeName = 'class'
       element.setAttribute(attributeName, value)
@@ -177,7 +177,7 @@ function html (elementType, attributes, children) {
   if (!children) return element
   if (!Array.isArray(children)) children = [children]
 
-  children.forEach(function (child) {
+  children.forEach(child => {
     if (!child) {
       console.warn('Null child ignored during creation of ' + elementType)
       return
@@ -252,7 +252,7 @@ function renderNav () {
   })
 
   // The 'Implemented' filter selection gets an extra row of options if selected.
-  var implementedCheckboxIfPresent = checkboxes.filter(function (cb) {
+  var implementedCheckboxIfPresent = checkboxes.filter(cb => {
     return cb.querySelector(`#filter-by-${states['.implemented'].className}`)
   })[0]
 
@@ -277,9 +277,7 @@ function renderNav () {
       ])
     })
 
-    versionOptions.forEach(function (version) {
-      versionRow.appendChild(version)
-    })
+    versionOptions.forEach(version => versionRow.appendChild(version)) 
 
     expandableArea.appendChild(versionRowHeader)
     expandableArea.appendChild(versionRow)
@@ -299,8 +297,8 @@ function renderBody () {
     '.previewing', '.implemented', '.returnedForRevision', '.deferred', '.rejected', '.withdrawn'
   ]
     
-  proposalPresentationOrder.map(function (state) {
-    var matchingProposals = proposals.filter(function (p) { return p.status && p.status.state === state })
+  proposalPresentationOrder.map(state => {
+    var matchingProposals = proposals.filter(p => p.status && p.status.state === state)
     matchingProposals.map(function (proposal) {
       var proposalBody = html('section', { id: proposal.id, className: 'proposal ' + proposal.id }, [
         html('div', { className: 'status-pill-container' }, [
@@ -359,7 +357,7 @@ function renderBody () {
 
 /** Authors have a `name` and optional `link`. */
 function renderAuthors (authors) {
-  var authorNodes = authors.map(function (author) {
+  var authorNodes = authors.map(author => {
     if (author.link.length > 0) {
       return html('a', { href: author.link, target: '_blank' }, author.name)
     } else {
@@ -391,7 +389,7 @@ function renderReviewManager (reviewManager) {
 
 /** Tracking bugs linked in a proposal are updated via bugs.swift.org. */
 function renderTrackingBugs (bugs) {
-  var bugNodes = bugs.map(function (bug) {
+  var bugNodes = bugs.map(bug => {
     return html('a', { href: bug.link, target: '_blank' }, [
       bug.id,
       ' (',
@@ -416,7 +414,7 @@ function renderTrackingBugs (bugs) {
 
 /** Implementations are required alongside proposals (after Swift 4.0). */
 function renderImplementation (implementations) {
-  var implNodes = implementations.map(function (impl) {
+  var implNodes = implementations.map(impl => {
     return html('a', {
       href: GITHUB_BASE_URL + impl.account + '/' + impl.repository + '/' + impl.type + '/' + impl.id
     }, [
@@ -542,7 +540,8 @@ function addEventListeners () {
   })
 
   // each of the individual statuses needs to trigger filtering as well
-  ;[].forEach.call(nav.querySelectorAll('.filter-by-status input'), function (element) {
+  
+  Array.from(nav.querySelectorAll('.filter-by-status input')).forEach(function (element) {
     element.addEventListener('change', filterProposals)
   })
 
@@ -618,9 +617,9 @@ function toggleFiltering () {
   var filterButton = document.querySelector('.filter-button')
 
   if (shouldPreserveSelection) {
-    filterSelection = [].map.call(selected, function (checkbox) { return checkbox.id })
-    ;[].forEach.call(selected, function (checkbox) { checkbox.checked = false })
-
+    filterSelection = [].map.call(selected, checkbox => checkbox.id)
+    
+    ;[].forEach.call(selected, checkbox => checkbox.checked = false)
     filterButton.setAttribute('aria-pressed', 'false')
   } else { // restore it
     filterSelection.forEach(function (id) {
@@ -673,21 +672,17 @@ function filterProposals () {
 
   // Comma-separated lists of proposal IDs are treated as an "or" search.
   if (filter.match(/(SE-\d\d\d\d)($|((,SE-\d\d\d\d)+))/i)) {
-    var proposalIDs = filter.split(',').map(function (id) {
-      return id.toUpperCase()
-    })
+    var proposalIDs = filter.split(',').map(id => id.toUpperCase())
 
-    matchingSets[0] = matchingSets[0].filter(function (proposal) {
-      return proposalIDs.indexOf(proposal.id) !== -1
-    })
+    matchingSets[0] = matchingSets[0].filter(proposal => proposalIDs.indexOf(proposal.id) !== -1)
   } else if (filter.trim().length !== 0) {
     // The search input treats words as order-independent.
     matchingSets = filter.split(/\s/)
-      .filter(function (s) { return s.length > 0 })
-      .map(function (part) { return _searchProposals(part) })
+      .filter(s => s.length > 0)
+      .map(part => _searchProposals(part))
   }
 
-  var intersection = matchingSets.reduce(function (intersection, candidates) {
+  var intersection = matchingSets.reduce((intersection, candidates) => {
     return intersection.filter(function (alreadyIncluded) { return candidates.indexOf(alreadyIncluded) !== -1 })
   }, matchingSets[0] || [])
 
@@ -728,9 +723,9 @@ function _searchProposals (filterText) {
   ]
 
   // reflect over the proposals and find ones with matching properties
-  var matchingProposals = proposals.filter(function (proposal) {
+  var matchingProposals = proposals.filter(proposal => {
     var match = false
-    searchableProperties.forEach(function (propertyList) {
+    searchableProperties.forEach(propertyList => {
       var value = proposal
 
       propertyList.forEach(function (propertyName, index) {
@@ -740,7 +735,7 @@ function _searchProposals (filterText) {
           // For arrays, apply the property check to each child element.
           // Note that this only looks to a depth of one property.
           if (Array.isArray(value)) {
-            var matchCondition = value.some(function (element) {
+            var matchCondition = value.some(element => {
               return element[propertyList[index + 1]] && element[propertyList[index + 1]].toString().toLowerCase().indexOf(filterExpression) >= 0
             })
 
@@ -771,28 +766,26 @@ function _searchProposals (filterText) {
 function _applyFilter (matchingProposals) {
   // filter out proposals based on the grouping checkboxes
   var allStateCheckboxes = document.querySelector('nav').querySelectorAll('.filter-by-status input:checked')
-  var selectedStates = [].map.call(allStateCheckboxes, function (checkbox) { return checkbox.value })
+  var selectedStates = [].map.call(allStateCheckboxes, checkbox => checkbox.value)
 
-  var selectedStateNames = [].map.call(allStateCheckboxes, function (checkbox) { return checkbox.nextElementSibling.innerText.trim() })
+  var selectedStateNames = [].map.call(allStateCheckboxes, checkbox => checkbox.nextElementSibling.innerText.trim())
   updateFilterDescription(selectedStateNames)
 
   if (selectedStates.length) {
     matchingProposals = matchingProposals
-      .filter(function (proposal) {
-        return selectedStates.some(function (state) {
-          return proposal.status.state.toLowerCase().indexOf(state.split('-')[0]) >= 0
-        })
+      .filter(proposal => {
+        return selectedStates.some(state => proposal.status.state.toLowerCase().indexOf(state.split('-')[0]) >= 0)
       })
 
     // handle version-specific filtering options
-    if (selectedStates.some(function (state) { return state.match(/swift/i) })) {
+    if (selectedStates.some(state => state.match(/swift/i))) {
       matchingProposals = matchingProposals
-        .filter(function (proposal) {
-          return selectedStates.some(function (state) {
+        .filter(proposal => {
+          return selectedStates.some(state => {
             if (!(proposal.status.state === '.implemented')) return true // only filter among Implemented (N.N.N)
             if (state === 'swift-swift-Next' && proposal.status.version === 'Next') return true // special case
 
-            var version = state.split(/\D+/).filter(function (s) { return s.length }).join('.')
+            var version = state.split(/\D+/).filter(s => s.length).join('.')
 
             if (!version.length) return false // it's not a state that represents a version number
             if (proposal.status.version === version) return true
@@ -802,18 +795,16 @@ function _applyFilter (matchingProposals) {
     }
   }
 
-  var filteredProposals = proposals.filter(function (proposal) {
-    return matchingProposals.indexOf(proposal) === -1
-  })
+  var filteredProposals = proposals.filter(proposal => matchingProposals.indexOf(proposal) === -1)
 
-  matchingProposals.forEach(function (proposal) {
+  matchingProposals.forEach(proposal => {
     var matchingElements = [].concat.apply([], document.querySelectorAll('.' + proposal.id))
-    matchingElements.forEach(function (element) { element.classList.remove('hidden') })
+    matchingElements.forEach(element => { element.classList.remove('hidden') })
   })
 
-  filteredProposals.forEach(function (proposal) {
+  filteredProposals.forEach(proposal => {
     var filteredElements = [].concat.apply([], document.querySelectorAll('.' + proposal.id))
-    filteredElements.forEach(function (element) { element.classList.add('hidden') })
+    filteredElements.forEach(element => { element.classList.add('hidden') })
   })
 
   updateProposalsCount(matchingProposals.length)
@@ -849,7 +840,7 @@ function _applyFragment (fragment) {
   var actions = { proposal: [], search: null, status: [], version: [] }
 
   // parse the fragment as a query string
-  Object.keys(actions).forEach(function (action) {
+  Object.keys(actions).forEach(action => {
     var pattern = new RegExp(action + '=([^=]+)(&|$)')
     var values = fragment.match(pattern)
 
@@ -874,15 +865,13 @@ function _applyFragment (fragment) {
   }
 
   if (actions.version.length) {
-    var versionSelections = actions.version.map(function (version) {
+    var versionSelections = actions.version.map(version => {
       return document.querySelector('#filter-by-swift-' + _idSafeName(version))
-    }).filter(function (version) {
+    }).filter(version => {
       return !!version
     })
 
-    versionSelections.forEach(function (versionSelection) {
-      versionSelection.checked = true
-    })
+    versionSelections.forEach(versionSelection => versionSelection.checked = true) 
 
     if (versionSelections.length) {
       document.querySelector(
@@ -896,8 +885,8 @@ function _applyFragment (fragment) {
 
   // update the filter selections in the nav
   if (actions.status.length) {
-    var statusSelections = actions.status.map(function (status) {
-      var stateName = Object.keys(states).filter(function (state) {
+    var statusSelections = actions.status.map(status => {
+      var stateName = Object.keys(states).filter(state => {
         return states[state].className === status
       })[0]
 
@@ -911,14 +900,12 @@ function _applyFragment (fragment) {
       return !!status
     })
 
-    statusSelections.forEach(function (statusSelection) {
-      statusSelection.checked = true
-    })
+    statusSelections.forEach(statusSelection => statusSelection.checked = true)
   }
 
   // the version panel needs to be activated if any are specified
   if (actions.version.length || implementedSelected) {
-    ;['#version-options', '#version-options-label'].forEach(function (selector) {
+    ;['#version-options', '#version-options-label'].forEach(selector => {
       document.querySelector('.filter-options')
         .querySelector(selector).classList
         .toggle('hidden')
@@ -943,26 +930,24 @@ function _updateURIFragment () {
 
   var search = document.querySelector('#search-filter')
 
-  if (search.value && search.value.match(/(SE-\d\d\d\d)($|((,SE-\d\d\d\d)+))/i)) {
+  if (search.value && search.value.match(/(SE-\d\d\d\d)($|((,SE-\d\d\d\d)+))/i))
     actions.proposal = search.value.toUpperCase().split(',')
-  } else {
+  else
     actions.search = search.value
-  }
 
   var selectedVersions = document.querySelectorAll('.filter-by-swift-version:checked')
-  var versions = [].map.call(selectedVersions, function (checkbox) {
+  var versions = [].map.call(selectedVersions, checkbox => {
     return checkbox.value.split('swift-swift-')[1].split('-').join('.')
   })
 
   actions.version = versions
 
   var selectedStatuses = document.querySelectorAll('.filtered-by-status:checked')
-  var statuses = [].map.call(selectedStatuses, function (checkbox) {
+  var statuses = [].map.call(selectedStatuses, checkbox => {
     var className = checkbox.value
 
-    var correspondingStatus = Object.keys(states).filter(function (status) {
-      if (states[status].className === className) return true
-      return false
+    var correspondingStatus = Object.keys(states).filter(status => {
+      return states[status].className === className
     })[0]
 
     return states[correspondingStatus].className
@@ -970,9 +955,7 @@ function _updateURIFragment () {
 
   // .implemented is redundant if any specific implementation versions are selected.
   if (actions.version.length) {
-    statuses = statuses.filter(function (status) {
-      return status !== states['.implemented'].className
-    })
+    statuses = statuses.filter(status => status !== states['.implemented'].className)
   }
 
   actions.status = statuses
@@ -1026,7 +1009,7 @@ function updateFilterDescription (selectedStateNames) {
   var swiftVersionStates = selectedStateNames.filter(function (state) { return state.match(/swift/i) })
 
   if (swiftVersionStates.length > 0 && swiftVersionStates.length <= FILTER_DESCRIPTION_LIMIT) {
-    selectedStateNames = selectedStateNames.filter(function (state) { return !state.match(/swift|implemented/i) })
+    selectedStateNames = selectedStateNames.filter(state => !state.match(/swift|implemented/i))
       .concat('Implemented (' + swiftVersionStates.join(', ') + ')')
   }
 
@@ -1048,7 +1031,7 @@ function updateProposalsCount (count) {
 
 function updateFilterStatus () {
   var labels = [].concat.apply([], document.querySelectorAll('#filter-options label'))
-  labels.forEach(function (label) {
+  labels.forEach(label => {
     var count = states[label.getAttribute('data-state-key')].count
     var cleanedLabel = cleanNumberFromState(label.innerText)
     label.innerText = addNumberToState(cleanedLabel, count)
