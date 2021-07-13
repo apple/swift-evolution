@@ -451,12 +451,12 @@ This implementation would address the problem detailed in
 
 ### `Atomic`
 
-Support for atomic operations (load, store, increment/decrement, compare-and-exchange) is a commonly-requested Swift feature. While the implementation details for such a feature would involve compiler and standard library magic, the interface itself can be nicely expressed as a property wrapper type:
+Support for atomic operations (load, store, increment/decrement, compare-and-exchange) is a commonly-requested Swift feature. While the implementation details for such a feature would involve compiler and standard library magic, the interface itself can be expressed as a property wrapper reference type:
 
 
 ```swift
 @propertyWrapper
-struct Atomic<Value> {
+class Atomic<Value> {
   private var _value: Value
   
   init(wrappedValue: Value) {
@@ -469,13 +469,13 @@ struct Atomic<Value> {
   }
   
   func load(order: MemoryOrder = .relaxed) { ... }
-  mutating func store(newValue: Value, order: MemoryOrder = .relaxed) { ... }
-  mutating func increment() { ... }
-  mutating func decrement() { ... }
+  func store(newValue: Value, order: MemoryOrder = .relaxed) { ... }
+  func increment() { ... }
+  func decrement() { ... }
 }
 
 extension Atomic where Value: Equatable {
-  mutating func compareAndExchange(oldValue: Value, newValue: Value, order: MemoryOrder = .relaxed)  -> Bool { 
+  func compareAndExchange(oldValue: Value, newValue: Value, order: MemoryOrder = .relaxed)  -> Bool { 
     ...
   }
 }  
@@ -484,6 +484,18 @@ enum MemoryOrder {
   case relaxed, consume, acquire, release, acquireRelease, sequentiallyConsistent
 };
 ```
+
+The Atomic property wrapper is class rather than a struct because the
+memory guarded by synchronization primitives must be independent from
+the wrapper. The wrapper's value will be loaded before the call to
+`wrappedValue.getter` and written back after the call to
+`wrappedValue.setter`. Therefore, synchronization within the wrapper
+cannot provide atomic access to its own value. However, when the
+wrapped value is a separate stored property within the wrapper object,
+then it is accessed independently, only after calling the
+wrappedValue's getter and setter. Note that a class type property
+wrapper gives the wrapped value reference semantics. All copies of the
+parent object will share the same atomic value.
 
 Here are some simple uses of `Atomic`. With atomic types, it's fairly common
 to weave lower-level atomic operations (`increment`, `load`, `compareAndExchange`) where we need specific semantics (such as memory ordering) with simple queries, so both the property and the synthesized storage property are used often:
