@@ -290,7 +290,7 @@ would encode to:
 ```json
 {
   "lade": {
-    "schluessel": "MyKey"
+    "key": "MyKey"
   }
 }
 ```
