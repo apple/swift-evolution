@@ -384,11 +384,10 @@ protocol Derived: Base {
 }
 ```
 
-### Conformance to `Copyable`
+### Conditional conformance to `Copyable`
 
-Structs and enums conform to `Copyable` unconditionally by default, but a
-conditional conformance can also be defined. For example, take this
-noncopyable generic type:
+Generic structs and enums can conditionally conform to `Copyable`.
+For example, take this unconditionally noncopyable generic type:
 ```swift
 enum List<T: ~Copyable>: ~Copyable {
   case empty
@@ -405,35 +404,93 @@ Note that no `where` clause needs to be written, because by the rules above,
 the default conformances here will already range over all generic parameters
 of the type.
 
-A conditional `Copyable` conformance is not permitted if the
-struct or enum declares a `deinit`. Deterministic destruction requires the
+A conditional `Copyable` conformance cannot be declared if the
+type has a `deinit` member. Deterministic destruction requires the
 type to be unconditionally noncopyable.
 
-A conformance to `Copyable` is checked by verifying that every stored property
-(of a struct) or associated value (or an enum) itself conforms to `Copyable`.
-For a conditional `Copyable` conformance, the conditional requirements must be
-sufficient to ensure this is the case. For example, the following is rejected,
-because the struct cannot unconditionally conform to `Copyable`, having a
-stored property of the noncopyable type `T`:
+Copyability is an inherent property of the type, unlike a general protocol
+conformance, which is a logically distinct entity from the conforming type itself.
+This imposes some restrictions on the form that a conditional `Copyable`
+conformance can take:
+1. Conditional `Copyable` conformance must be declared in the same source
+   file as the conforming struct or enum declaration.
+2. The conditional requirements must be of the form `T: Copyable` where `T`
+   is a generic parameter of the conforming type. Other conditional
+   requirements are not permitted:
+   ```swift
+   extension Pair: Copyable where T: Equatable {}  // error
+   ```
+   In particular, general conformance requirements can be satisfied by
+   retroactive conformances, and it would break the semantic model if the
+   addition of a retroactive conformance to some other protocol could
+   influence the copyability of a type.
+3. It is also not allowed for `Copyable` be conditional on the copyability of
+   an associated type:
+   ```swift
+   protocol Manager { associatedtype Resource: ~Copyable }
+   struct ManagerManager<T: Manager>: ~Copyable {}
+   extension ManagerManager: Copyable where T.Resource: Copyable {}  // error
+   ```
+   To check the conditional requirement `T.Resource: Copyable`, we would
+   need to resolve the `Resource` associated type from the conformance of `T` to `Manager`,
+   which again could be retroactive.
+
+As a consequence of existing language rules around synthesized conformances
+together with the first restriction above, the default conformance on the type
+declaration does not need to be suppressed. The below is an equivalent
+declaration of the earlier `List` example, and the decision to write `~Copyable`
+in the inheritance clause is a matter of style:
+
+```swift
+enum List<T: ~Copyable> /* : ~Copyable */ {
+  case empty
+  indirect case element(T, List<T>)
+}
+
+extension List: Copyable /* where T: Copyable */ {}
+```
+
+It is an error to declare an unconditional `Copyable` conformance with an extension.
+This is always equivalent to _not_ suppressing the default conformance,
+and perhaps indicates a missing `~Copyable` on the generic parameter `T`:
+
+```swift
+struct CopyableBox<T>: ~Copyable {
+  let contents: T
+}
+
+extension CopyableBox: Copyable {}  // pointless
+```
+### Checking the `Copyable` conformance
+
+When a struct or enum conforms to `Copyable`, conditionally or unconditionally, we
+check that every stored property (of a struct) or associated value (or an enum) is itself
+`Copyable`, under the same assumptions as the type itself.
+
+For example, the following is rejected; while the struct claims to unconditionally conform
+to `Copyable`, it has a stored property of the noncopyable type `T`:
 ```swift
 struct Holder<T: ~Copyable> /* : Copyable */ {
   var value: T  // error
 }
 ```
 
-There are two situations when it is permissible for a copyable type to
-have a noncopyable generic parameter. The first is when the generic parameter
-is not stored inside the type itself:
+On the other hand, a struct or enum with a noncopyable generic parameter may still conform
+to `Copyable` unconditionally if its storage layout does not depend on this generic
+parameter. For example:
 ```swift
 struct Factory<T: ~Copyable> /* : Copyable */ {
   let fn: () -> T  // ok
 }
 ```
-The above is permitted, because a _function_ of type `() -> T` is still copyable,
-even if a _value_ of type `T` is not copyable.
+The above is permitted, because a _function_ of type `() -> T` is still
+copyable, even if its result type `T` is noncopyable.
 
-The second case is when the type is a class. The contents of a class is never
-copied, so noncopyable types can appear in the stored properties of a class:
+### Classes
+
+Class references are always `Copyable`, but the contents of a class instance
+are never implicitly copied, so a class can have noncopyable stored properties
+without restriction:
 ```swift
 class Box<T: ~Copyable> {
   let value: T  // ok
@@ -442,31 +499,14 @@ class Box<T: ~Copyable> {
 }
 ```
 
-For a conditional `Copyable` conformance, the conditional requirements must be
-of the form `T: Copyable` where `T` is a generic parameter of the type. It is
-not permitted to make `Copyable` conditional on any other kind of requirement:
-```swift
-extension Pair: Copyable where T == Array<Int> {}  // error
-```
-Nor can `Copyable` be conditional on the copyability of an associated type:
-```swift
-struct ManagerManager<T: Manager>: ~Copyable {}
-extension ManagerManager: Copyable where T.Resource: Copyable {}  // error
-```
-
-Conditional `Copyable` conformance must be declared in the same source
-file as the struct or enum itself. Unlike conformance to other protocols,
-copyability is a deep, inherent property of the type itself.
-
-### Classes
-
-This proposal supports classes with noncopyable generic parameters,
+This proposal allows generic classes to declare noncopyable generic parameters,
 but it does not permit classes to themselves be `~Copyable`.
 Similarly, an `AnyObject` or superclass requirement cannot be combined with
 `~Copyable`:
 ```swift
 func f<T>(_ t: T) where T: AnyObject, T: ~Copyable { ... }  // error
 ```
+This is left as a future direction.
 
 ### Existential types
 
@@ -512,14 +552,20 @@ noncopyable structs and enums.
 
 This proposal does not change the ABI of existing code.
 
-Adding `~Copyable` to
-an existing generic parameter is generally an ABI-breaking change, even when
-source-compatible.
+A key goal is that ABI-stable frameworks should be able to adopt `~Copyable` in public APIs where it makes sense.
+There are two scenarios to consider:
 
-Targeted mechanisms are being developed to preserve ABI compatibility when
-adopting `~Copyable` on previously-shipped generic code. This will enable adoption
-of this feature by standard library types such as `Optional`. Such mechanisms will
-require extreme care to use correctly.
+1. An older client, built before noncopyable types, is running with a newer version of the framework,
+   whose existing types have been generalized to allow for noncopyability.
+2. A newer client, built against a newer framework **and** making use of noncopyable types, is running
+   with an older version of the framework that predates noncopyable types.
+
+A follow-up proposal for adoption of `~Copyable` in the standard library will address both
+scenarios:
+
+1. The first will be handled by describing the overall rules under which `~Copyable` can retrofitted safely,
+   together with a new attribute that will handle certain differences in mangling.
+2. The second scenario is inherently more complex but it is rare except for the standard library itself.
 
 ## Alternatives Considered
 
