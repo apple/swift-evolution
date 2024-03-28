@@ -4,7 +4,7 @@
 * Authors: [Hamish Knight](https://github.com/hamishknight), [Michael Ilseman](https://github.com/milseman), [David Ewing](https://github.com/DaveEwing)
 * Review Manager: [Ben Cohen](https://github.com/airspeedswift)
 * Status: **Implemented (Swift 5.7)**
-* Upcoming Feature Flag: `BareSlashRegexLiterals` (implemented in Swift 5.8)
+* Upcoming Feature Flag: `BareSlashRegexLiterals` (implemented in Swift 5.8) (Enabled in Swift 6 language mode)
 * Implementation: [apple/swift#42119](https://github.com/apple/swift/pull/42119), [apple/swift#58835](https://github.com/apple/swift/pull/58835)
   * Bare slash syntax `/.../` available with `-enable-bare-slash-regex`
 * Review: ([first pitch](https://forums.swift.org/t/pitch-regular-expression-literals/52820))

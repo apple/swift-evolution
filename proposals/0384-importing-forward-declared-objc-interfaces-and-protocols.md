@@ -5,7 +5,7 @@
 * Review Manager: [Tony Allevato](https://github.com/allevato)
 * Status: **Implemented (Swift 5.9)**
 * Implementation:[apple/swift#61606]( https://github.com/apple/swift/pull/61606)
-* Upcoming Feature Flag: `ImportObjcForwardDeclarations`
+* Upcoming Feature Flag: `ImportObjcForwardDeclarations` (Enabled in Swift 6 language mode)
 * Review: ([pitch](https://forums.swift.org/t/pitch-importing-forward-declared-objective-c-classes-and-protocols/61926)) ([review](https://forums.swift.org/t/se-0384-importing-forward-declared-objective-c-interfaces-and-protocols/62392)) ([acceptance](https://forums.swift.org/t/accepted-se-0384-importing-forward-declared-objective-c-interfaces-and-protocols/62670))
 
 ## Introduction

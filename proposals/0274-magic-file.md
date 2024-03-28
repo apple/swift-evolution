@@ -4,7 +4,7 @@
 * Authors: [Becca Royal-Gordon](https://github.com/beccadax), [Dave DeLong](https://github.com/davedelong)
 * Review Manager: [Ben Cohen](https://github.com/airspeedswift/)
 * Status: **Implemented (Swift 5.8)**
-* Upcoming Feature Flag: `ConciseMagicFile`
+* Upcoming Feature Flag: `ConciseMagicFile` (Enabled in Swift 6 language mode)
 * Decision Notes: [Review #1](https://forums.swift.org/t/se-0274-concise-magic-file-names/32373/50), [Review #2](https://forums.swift.org/t/re-review-se-0274-concise-magic-file-names/33171/11), [Additional Commentary](https://forums.swift.org/t/revisiting-the-source-compatibility-impact-of-se-0274-concise-magic-file-names/37720)
 * Next Proposal: [SE-0285](0285-ease-pound-file-transition.md)
 

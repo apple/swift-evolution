@@ -5,7 +5,7 @@
 * Review Manager: [Becca Royal-Gordon](https://github.com/beccadax)
 * Status: **Implemented (Swift 6.0)**
 * Implementation: [apple/swift#67498](https://github.com/apple/swift/pull/67498), [apple/swift#70076](https://github.com/apple/swift/pull/70076)
-* Upcoming Feature Flag: `InferSendableFromCaptures`
+* Upcoming Feature Flag: `InferSendableFromCaptures` (Enabled in Swift 6 language mode)
 * Review: ([pitch](https://forums.swift.org/t/pitch-inferring-sendable-for-methods/66565)) ([review](https://forums.swift.org/t/se-0418-inferring-sendable-for-methods-and-key-path-literals/68999)) ([acceptance](https://forums.swift.org/t/accepted-se-0418-inferring-sendable-for-methods-and-key-path-literals/69242))
 
 ## Introduction

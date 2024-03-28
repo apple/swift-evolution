@@ -4,7 +4,7 @@
 * Authors: [Robert Widmann](https://github.com/codafi)
 * Review Manager: [John McCall](https://github.com/rjmccall)
 * Status: **Implemented (Swift 5.10)**
-* Upcoming Feature Flag: `DeprecateApplicationMain`
+* Upcoming Feature Flag: `DeprecateApplicationMain` (Enabled in Swift 6 language mode)
 * Implementation: [PR 62151](https://github.com/apple/swift/pull/62151)
 * Review: ([pitch](https://forums.swift.org/t/deprecate-uiapplicationmain-and-nsapplicationmain/61493)) ([review](https://forums.swift.org/t/se-0383-deprecate-uiapplicationmain-and-nsapplicationmain/62375)) ([acceptance](https://forums.swift.org/t/accepted-se-0383-deprecate-uiapplicationmain-and-nsapplicationmain/62645))
 

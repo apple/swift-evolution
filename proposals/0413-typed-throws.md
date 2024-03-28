@@ -4,7 +4,7 @@
 * Authors: [Jorge Revuelta (@minuscorp)](https://github.com/minuscorp), [Torsten Lehmann](https://github.com/torstenlehmann), [Doug Gregor](https://github.com/DougGregor)
 * Review Manager: [Steve Canon](https://github.com/stephentyrone)
 * Status: **Accepted**
-* Upcoming Feature Flag: `FullTypedThrows`
+* Upcoming Feature Flag: `FullTypedThrows` (Enabled in Swift 6 language mode)
 * Review: [latest pitch](https://forums.swift.org/t/pitch-n-1-typed-throws/67496), [review](https://forums.swift.org/t/se-0413-typed-throws/68507), [acceptance](https://forums.swift.org/t/accepted-se-0413-typed-throws/69099)
 
 ## Introduction

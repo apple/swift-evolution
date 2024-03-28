@@ -4,7 +4,7 @@
 * Author: [Doug Gregor](https://github.com/DougGregor)
 * Review Manager: [John McCall](https://github.com/rjmccall)
 * Status: **Implemented (Swift 5.3)**
-* Upcoming Feature Flag: `ForwardTrailingClosures` (implemented in Swift 5.8)
+* Upcoming Feature Flag: `ForwardTrailingClosures` (implemented in Swift 5.8) (Enabled in Swift 6 language mode)
 * Implementation: [apple/swift#33092](https://github.com/apple/swift/pull/33092)
 * Toolchains: [Linux](https://ci.swift.org/job/swift-PR-toolchain-Linux/404//artifact/branch-master/swift-PR-33092-404-ubuntu16.04.tar.gz), [macOS](https://ci.swift.org/job/swift-PR-toolchain-osx/579//artifact/branch-master/swift-PR-33092-579-osx.tar.gz)
 * Discussion: ([Pitch #1](https://forums.swift.org/t/pitch-1-forward-scan-matching-for-trailing-closures-source-breaking/38162)), ([Pitch #2](https://forums.swift.org/t/pitch-2-forward-scan-matching-for-trailing-closures/38491))
