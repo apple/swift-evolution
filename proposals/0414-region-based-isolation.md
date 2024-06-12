@@ -4,6 +4,7 @@
 * Authors: [Michael Gottesman](https://github.com/gottesmm) [Joshua Turcotti](https://github.com/jturcotti)
 * Review Manager: [Holly Borla](https://github.com/hborla)
 * Status: **Accepted**
+* Upcoming Feature Flag: `RegionBasedIsolation` (Enabled in Swift 6 language mode)
 * Implementation: On `main` gated behind `-enable-experimental-feature RegionBasedIsolation`
 * Review: ([first pitch](https://forums.swift.org/t/pitch-safely-sending-non-sendable-values-across-isolation-domains/66566)), ([second pitch](https://forums.swift.org/t/pitch-region-based-isolation/67888)), ([first review](https://forums.swift.org/t/se-0414-region-based-isolation/68805)), ([revision](https://forums.swift.org/t/returned-for-revision-se-0414-region-based-isolation/69123)), ([second review](https://forums.swift.org/t/se-0414-second-review-region-based-isolation/69740)), ([acceptance](https://forums.swift.org/t/accepted-with-modifications-se-0414-region-based-isolation/70051))
 
