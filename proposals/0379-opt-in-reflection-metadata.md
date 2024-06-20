@@ -142,7 +142,7 @@ If the presence of reflection metadata is mandatory, the requirement on Reflecta
 
 To decide when to emit reflection metadata IRGen will check the conformance of a type to the `Reflectable` protocol and if the type conforms, IRGen will emit reflection symbols.
 
-Conformance to Reflectable should be only allowed at type declarations level, to avoid confusing behavior, when a developer adds conformance on an imported from another module type that doesn't have reflection enabled.
+Adding conformance to Reflectable should be only allowed at the type declarations level or on an extension if it's placed in the same source file as the type declaration. This will help to avoid confusing behavior when a developer adds conformance on an imported from another module type that doesn't have reflection enabled.
 
 Transitive conformance to Reflectable should be allowed to give API authors an opportunity to hide reflection logic from APIs users as implementation details.
 
