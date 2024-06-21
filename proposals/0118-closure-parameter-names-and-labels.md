@@ -9,7 +9,7 @@
 
 ## Revision History
 
-- [v1](https://github.com/apple/swift-evolution/blob/ae4a55ab217cc9755004cbf2b29db24e28645d15/proposals/0118-closure-parameter-names-and-labels.md) (as proposed)
+- [v1](https://github.com/swiftlang/swift-evolution/blob/ae4a55ab217cc9755004cbf2b29db24e28645d15/proposals/0118-closure-parameter-names-and-labels.md) (as proposed)
 - v2: fixed spelling of identifiers containing `Utf8` to read `UTF8` per convention.
 
 ## Introduction

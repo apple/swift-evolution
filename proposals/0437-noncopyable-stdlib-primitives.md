@@ -21,12 +21,12 @@ Related proposals:
 - [SE-0429] Partial consumption of noncopyable values
 - [SE-0432] Borrowing and consuming pattern matching for noncopyable types
 
-[SE-0377]: https://github.com/apple/swift-evolution/blob/main/proposals/0377-parameter-ownership-modifiers.md
-[SE-0390]: https://github.com/apple/swift-evolution/blob/main/proposals/0390-noncopyable-structs-and-enums.md
-[SE-0426]: https://github.com/apple/swift-evolution/blob/main/proposals/0426-bitwise-copyable.md
-[SE-0427]: https://github.com/apple/swift-evolution/blob/main/proposals/0427-noncopyable-generics.md
-[SE-0429]: https://github.com/apple/swift-evolution/blob/main/proposals/0429-partial-consumption.md
-[SE-0432]: https://github.com/apple/swift-evolution/blob/main/proposals/0432-noncopyable-switch.md
+[SE-0377]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0377-parameter-ownership-modifiers.md
+[SE-0390]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0390-noncopyable-structs-and-enums.md
+[SE-0426]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0426-bitwise-copyable.md
+[SE-0427]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0427-noncopyable-generics.md
+[SE-0429]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0429-partial-consumption.md
+[SE-0432]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0432-noncopyable-switch.md
 
 ### Table of Contents
 
@@ -141,7 +141,7 @@ enum Optional<Wrapped: ~Copyable>: ~Copyable {
   case some(Wrapped)
 }
 
-extension Optional: Copyable /* where Wrapped: Copyable */ {}
+extension Optional: Copyable where Wrapped: Copyable {}
 ```
 
 This is no small matter -- every existing use of `Optional` implicitly assumes its copyability, including all its protocol conformances. We need to lift this assumption without breaking source- and (on some platforms) binary compatibility with existing code that relies on it.
@@ -238,7 +238,7 @@ By distinguishing between consuming and borrowing use, we gain more precise cont
 
 Preserving source compatibility is great, but unfortunately entirely replacing the old entry point with this new definition would be an ABI breaking change: the new function follows a new calling convention and it is exposed under a different linkage name. Existing binaries will keep linking with the original entry point, and we need to ensure they continue working. To allow this, on ABI stable platforms we continue to expose the old definition as an obsoleted `@usableFromInline internal` function. To allow newly built code to run on previously shipped Standard Library versions, the replacement needs to be defined in a back-deployable manner, such as by using the [`@backDeploy` attribute][SE-0376]. 
 
-[SE-0376]: https://github.com/apple/swift-evolution/blob/main/proposals/0376-function-back-deployment.md
+[SE-0376]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0376-function-back-deployment.md
 
 ```swift
 // Non-normative illustration of an implementation technique.
@@ -524,7 +524,7 @@ However, these members cannot work on noncopyable optionals, as we have to disti
 
 The current `unsafelyUnwrapped` property cannot currently be generalized for noncopyable types, so it is also kept restricted to the copyable case.
 
-[As foreshadowed in SE-0390](https://github.com/apple/swift-evolution/blob/main/proposals/0390-noncopyable-structs-and-enums.md#noncopyable-optional), it is commonly useful to use noncopyable optionals to allow partial consumption of stored properties in [contexts where that isn't normally allowed][SE-0429]. To support such use, we introduce a brand new mutating member `Optional.take()` that resets `self` to nil, returning its original value:
+[As foreshadowed in SE-0390](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0390-noncopyable-structs-and-enums.md#noncopyable-optional), it is commonly useful to use noncopyable optionals to allow partial consumption of stored properties in [contexts where that isn't normally allowed][SE-0429]. To support such use, we introduce a brand new mutating member `Optional.take()` that resets `self` to nil, returning its original value:
 
 ```swift
 extension Optional where Wrapped: ~Copyable {
@@ -596,12 +596,12 @@ The standard `Result` type similarly needs to be generalized to allow noncopyabl
 
 ```swift
 @frozen
-enum Result<Success: ~Copyable, Failure: Error> {
+enum Result<Success: ~Copyable, Failure: Error>: ~Copyable {
   case success(Success)
   case failure(Failure)
 }
 
-extension Result: Copyable /* where Success: Copyable */ {}
+extension Result: Copyable where Success: Copyable {}
 extension Result: Sendable where Success: Sendable & ~Copyable {}
 ```
 
@@ -992,11 +992,13 @@ We therefore propose to add the following new member methods for extracting a st
 extension UnsafeBufferPointer where Element: ~Copyable {
   func extracting(_ bounds: Range<Int>) -> Self
   func extracting(_ bounds: some RangeExpression<Int>) -> Self
+  func extracting(_ bounds: UnboundedRange) -> Self
 }
 
 extension UnsafeMutableBufferPointer where Element: ~Copyable {
   func extracting(_ bounds: Range<Int>) -> Self
   func extracting(_ bounds: some RangeExpression<Int>) -> Self
+  func extracting(_ bounds: UnboundedRange) -> Self
 }
 ```
 
@@ -1082,7 +1084,7 @@ All of these (and especially the borrowing variant) is subject to the same limit
 
 The [Standard Library's facility for allocating temporary uninitialozed buffers][SE-0322] needs to be generalized to support allocating storage for noncopyable types, as well as returning a potentially noncopyable type:
 
-[SE-0322]: https://github.com/apple/swift-evolution/blob/main/proposals/0322-temporary-buffers.md
+[SE-0322]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0322-temporary-buffers.md
 
 ```swift
 func withUnsafeTemporaryAllocation<E: Error, R: ~Copyable>(
@@ -1179,7 +1181,7 @@ func withExtendedLifetime<T: ~Copyable, E: Error, Result: ~Copyable>(
 There exists a second variant of `withExtendedLifetime` whose function argument is passed the entity whose lifetime is being extended. This variant is less frequently used, but it still makes sense to generalize this to pass a borrowed instance:
 
 ```swift
-func withExtendedLifetime<T, E: Error, Result: ~Copyable>(
+func withExtendedLifetime<T: ~Copyable, E: Error, Result: ~Copyable>(
   _ x: borrowing T,
   _ body: (borrowing T) throws(E) -> Result
 ) throws(E) -> Result
@@ -1301,7 +1303,7 @@ This easily fits into Swift API design conventions, but it doesn't feel like a g
    (Indeed, a large part of [SE-0370][SE-370-Slice] was dedicated to reducing the need to directly invoke this initializer, by cleverly extending the `Slice` type with direct methods that [hide the `init(rebasing:)` call](https://github.com/apple/swift/blob/swift-5.10-RELEASE/stdlib/public/core/UnsafeBufferPointerSlice.swift#L699-L702
 ). This is very helpful, but in exchange for simplifying use sites, we've made it more difficult to define custom operations: each operation has to be defined on both the buffer pointer and the slice type, and the latter requires advanced generics trickery. Of course, none of this work helps the noncopyable case, as `Slice` does not translate there -- so we get back to where we started.)
 
-[SE-370-Slice]: https://github.com/apple/swift-evolution/blob/main/proposals/0370-pointer-family-initialization-improvements.md#slices-of-bufferpointer
+[SE-370-Slice]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0370-pointer-family-initialization-improvements.md#slices-of-bufferpointer
 
    </small>
 

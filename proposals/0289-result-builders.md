@@ -4,7 +4,7 @@
 * Authors: [John McCall](https://github.com/rjmccall), [Doug Gregor](https://github.com/DougGregor)
 * Review Manager: [Saleem Abdulrasool](https://github.com/compnerd)
 * Status: **Implemented (Swift 5.4)**
-* Previous Revisions: [1st](https://github.com/apple/swift-evolution/blob/51c99447562e749b23f82184c99c0ddfb07a71df/proposals/0289-function-builders.md)
+* Previous Revisions: [1st](https://github.com/swiftlang/swift-evolution/blob/51c99447562e749b23f82184c99c0ddfb07a71df/proposals/0289-function-builders.md)
 
 Table of Contents
 =================
@@ -78,7 +78,7 @@ func build() -> (Int, Int, Int) {
 
 In this example, all the statements are expressions and so produce a single value apiece.  Other statements, like `let`, `if`, and `while`, are variously either handled differently or prohibited; see the proposal details below.
 
-In effect, this proposal allows the creation of a new class of embedded domain-specific languages in Swift by applying *builder transformations* to the statements of a function.  The power of these builder transformations is intentionally limited so that the result preserves the dynamic semantics of the original code: the original statements of the function are still executed as normal, it's just that values which would be ignored under normal semantics are in fact collected into the result.  The use of an *ad hoc* protocol for the builder transformation leaves room for a wide variety of future extension, whether to support new kinds of statements or to customize the details of the transformation. A similar builder pattern was used successfully for string interpolation in [SE-0228](https://github.com/apple/swift-evolution/blob/master/proposals/0228-fix-expressiblebystringinterpolation.md). 
+In effect, this proposal allows the creation of a new class of embedded domain-specific languages in Swift by applying *builder transformations* to the statements of a function.  The power of these builder transformations is intentionally limited so that the result preserves the dynamic semantics of the original code: the original statements of the function are still executed as normal, it's just that values which would be ignored under normal semantics are in fact collected into the result.  The use of an *ad hoc* protocol for the builder transformation leaves room for a wide variety of future extension, whether to support new kinds of statements or to customize the details of the transformation. A similar builder pattern was used successfully for string interpolation in [SE-0228](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0228-fix-expressiblebystringinterpolation.md). 
 
 Result builders have been a "hidden" feature since Swift 5.1, under the name "function builder", and the implementation (and its capabilities) have evolved since then. They are used most famously by [SwiftUI](https://developer.apple.com/xcode/swiftui/) to declaratively describe user interfaces, but others have also experimented with [building Swift syntax trees](https://swiftpack.co/package/akkyie/SyntaxBuilder), [testing](https://www.dotconferences.com/2020/02/kaya-thomas-swift-techniques-for-testing),
 [a Shortcuts DSL](https://github.com/a2/swift-shortcuts), [a CSS DSL](https://github.com/carson-katri/swift-css/blob/master/Sources/CSS/CSSBuilder.swift), and [an alternative SwiftPM manifest format](https://forums.swift.org/t/declarative-package-description-for-swiftpm-using-function-builders/28699). There's a GitHub repository dedicated to [awesome function builders](https://github.com/carson-katri/awesome-function-builders) with more applications.
@@ -247,7 +247,7 @@ These last two points (and some other considerations) strongly suggest that the 
 
 ## Detailed design
 
-[SE-0258](https://github.com/apple/swift-evolution/blob/master/proposals/0258-property-wrappers.md) introduced the concept of custom attributes to Swift, an approach we build on here.
+[SE-0258](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0258-property-wrappers.md) introduced the concept of custom attributes to Swift, an approach we build on here.
 
 ### Result builder types
 
@@ -900,7 +900,7 @@ struct CustomVStack<Content: View>: View {
 
 implicitly produces the memberwise initializer shown above.
 
-A result builder attribute can also be placed on a stored property whose type does not [structurally resemble function type](https://github.com/apple/swift-evolution/blob/master/proposals/0286-forward-scan-trailing-closures.md#structural-resemblance-to-a-function-type). In this case, the implicit memberwise initializer will have a corresponding function parameter that is a result-builder-attributed closure returning the property's type, and the body of the initializer will call the function. For example, given:
+A result builder attribute can also be placed on a stored property whose type does not [structurally resemble function type](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0286-forward-scan-trailing-closures.md#structural-resemblance-to-a-function-type). In this case, the implicit memberwise initializer will have a corresponding function parameter that is a result-builder-attributed closure returning the property's type, and the body of the initializer will call the function. For example, given:
 
 ```swift
 struct CustomHStack<Content: View>: View {

@@ -3,11 +3,11 @@
 * Proposal: [SE-0432](0432-noncopyable-switch.md)
 * Authors: [Joe Groff](https://github.com/jckarter)
 * Review Manager: [Ben Cohen](https://github.com/airspeedswift)
-* Status: **Active review (April 9 – April 22, 2024)**
+* Status: **Implemented (Swift 6.0)**
 * Implementation: on `main`, using the `BorrowingSwitch` experimental feature flag and `_borrowing x` binding spelling
 * Experimental Feature Flag: `BorrowingSwitch`
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/86cf6eadcdb35a09eb03330bf5d4f31f2599da02/proposals/ABCD-noncopyable-switch.md)
-* Review: ([review](https://forums.swift.org/t/se-0432-borrowing-and-consuming-pattern-matching-for-noncopyable-types/71158))
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/86cf6eadcdb35a09eb03330bf5d4f31f2599da02/proposals/ABCD-noncopyable-switch.md)
+* Review: ([review](https://forums.swift.org/t/se-0432-borrowing-and-consuming-pattern-matching-for-noncopyable-types/71158)) ([acceptance](https://forums.swift.org/t/accepted-with-modifications-se-0432-borrowing-and-consuming-pattern-matching-for-noncopyable-types/71656))
 
 ## Introduction
 
@@ -17,7 +17,7 @@ addition to the existing support for consuming pattern matches.
 
 ## Motivation
 
-[SE-0390](https://github.com/apple/swift-evolution/blob/main/proposals/0390-noncopyable-structs-and-enums.md)
+[SE-0390](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0390-noncopyable-structs-and-enums.md)
 introduced noncopyable types, allowing for programs to define
 structs and enums whose values cannot be copied. However, it restricted
 `switch` over noncopyable values to be a `consuming` operation, meaning that
@@ -315,7 +315,7 @@ binding.
 
 ### Determining pattern match ownership wholly from patterns
 
-The [first pitched revision](https://github.com/apple/swift-evolution/blob/86cf6eadcdb35a09eb03330bf5d4f31f2599da02/proposals/ABCD-noncopyable-switch.md)
+The [first pitched revision](https://github.com/swiftlang/swift-evolution/blob/86cf6eadcdb35a09eb03330bf5d4f31f2599da02/proposals/ABCD-noncopyable-switch.md)
 of this proposal kept `let` bindings in patterns as always being consuming
 bindings, and required the use of `borrowing` bindings in every pattern in order
 for a `switch` to act as a borrow. Early feedback using the feature found this

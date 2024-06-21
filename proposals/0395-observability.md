@@ -15,8 +15,8 @@
 
 #### Suggested Reading
 
-* [Expression Macros](https://github.com/apple/swift-evolution/blob/main/proposals/0382-expression-macros.md)
-* [Attached Macros](https://github.com/apple/swift-evolution/blob/main/proposals/0389-attached-macros.md)
+* [Expression Macros](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0382-expression-macros.md)
+* [Attached Macros](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0389-attached-macros.md)
 
 ## Introduction
 

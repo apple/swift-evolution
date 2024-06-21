@@ -52,7 +52,7 @@
 
 This proposal describes `Regex`'s rich Unicode support during regex matching, along with the character classes and options that define and modify that behavior.
 
-This proposal is one component of a larger [regex-powered string processing initiative](https://github.com/apple/swift-evolution/blob/main/proposals/0350-regex-type-overview.md). For the status of each proposal, [see this document](https://github.com/apple/swift-experimental-string-processing/blob/main/Documentation/Evolution/ProposalOverview.md) — discussion of other facets of the overall regex design is out of scope of this proposal and better discussed in the most relevant review.
+This proposal is one component of a larger [regex-powered string processing initiative](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0350-regex-type-overview.md). For the status of each proposal, [see this document](https://github.com/apple/swift-experimental-string-processing/blob/main/Documentation/Evolution/ProposalOverview.md) — discussion of other facets of the overall regex design is out of scope of this proposal and better discussed in the most relevant review.
 
 ## Motivation
 
@@ -1321,21 +1321,21 @@ let regex1 = /\p{name=latin lowercase a}/.extendUnicodeProperty(\.name, by: .fir
 ```
 
 [repo]: https://github.com/apple/swift-experimental-string-processing/
-[option-scoping]: https://github.com/apple/swift-evolution/blob/main/proposals/0355-regex-syntax-run-time-construction.md#matching-options
-[internals]: https://github.com/apple/swift-evolution/blob/main/proposals/0355-regex-syntax-run-time-construction.md
-[internals-properties]: https://github.com/apple/swift-evolution/blob/main/proposals/0355-regex-syntax-run-time-construction.md#character-properties
-[internals-charclass]: https://github.com/apple/swift-evolution/blob/main/proposals/0355-regex-syntax-run-time-construction.md#custom-character-classes
+[option-scoping]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0355-regex-syntax-run-time-construction.md#matching-options
+[internals]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0355-regex-syntax-run-time-construction.md
+[internals-properties]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0355-regex-syntax-run-time-construction.md#character-properties
+[internals-charclass]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0355-regex-syntax-run-time-construction.md#custom-character-classes
 [level1-word-boundaries]:https://unicode.org/reports/tr18/#Simple_Word_Boundaries
 [level2-word-boundaries]:https://unicode.org/reports/tr18/#RL2.3
 
 [overview]: https://forums.swift.org/t/declarative-string-processing-overview/52459
-[charprops]: https://github.com/apple/swift-evolution/blob/master/proposals/0221-character-properties.md
-[regexbuilder]: https://github.com/apple/swift-evolution/blob/main/proposals/0351-regex-builder.md
-[charpropsrationale]: https://github.com/apple/swift-evolution/blob/master/proposals/0221-character-properties.md#detailed-semantics-and-rationale
+[charprops]: https://github.com/swiftlang/swift-evolution/blob/master/proposals/0221-character-properties.md
+[regexbuilder]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0351-regex-builder.md
+[charpropsrationale]: https://github.com/swiftlang/swift-evolution/blob/master/proposals/0221-character-properties.md#detailed-semantics-and-rationale
 [canoneq]: https://www.unicode.org/reports/tr15/#Canon_Compat_Equivalence
 [graphemes]: https://www.unicode.org/reports/tr29/#Grapheme_Cluster_Boundaries
 [meaningless]: https://forums.swift.org/t/declarative-string-processing-overview/52459/121
-[scalarprops]: https://github.com/apple/swift-evolution/blob/master/proposals/0211-unicode-scalar-properties.md
+[scalarprops]: https://github.com/swiftlang/swift-evolution/blob/master/proposals/0211-unicode-scalar-properties.md
 [ucd]: https://www.unicode.org/reports/tr44/tr44-28.html
 [numerictype]: https://www.unicode.org/reports/tr44/#Numeric_Type
 [derivednumeric]: https://www.unicode.org/Public/UCD/latest/ucd/extracted/DerivedNumericType.txt

@@ -6,7 +6,7 @@
 * Status: **Implemented (Swift 3.0)**
 * Decision Notes: [Rationale](https://forums.swift.org/t/accepted-se-0120-revise-partition-method-signature/3475)
 * Bug: [SR-1965](https://bugs.swift.org/browse/SR-1965)
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/1dcfd35856a6f9c86af2cf7c94a9ab76411739e3/proposals/0120-revise-partition-method.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/1dcfd35856a6f9c86af2cf7c94a9ab76411739e3/proposals/0120-revise-partition-method.md)
 
 ## Introduction
 

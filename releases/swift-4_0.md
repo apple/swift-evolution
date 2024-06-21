@@ -14,7 +14,7 @@ The high-priority features supporting Stage 1's source and ABI
 stability goals were:
 
 * Source stability features: The Swift language will need [some
-  accommodations](https://github.com/apple/swift-evolution/blob/master/proposals/0141-available-by-swift-version.md)
+  accommodations](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0141-available-by-swift-version.md)
   to support code bases that target different language versions, to
   help Swift deliver on its source-compatibility goals while still
   enabling rapid progress.
@@ -38,11 +38,11 @@ stability goals were:
   of which manifest as extraneous underscored protocols and
   workarounds. If the underlying language deficiencies remain, they
   become a permanent part of the stable ABI. [Conditional
-  conformances](https://github.com/apple/swift-evolution/blob/master/proposals/0143-conditional-conformances.md),
+  conformances](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0143-conditional-conformances.md),
   [recursive protocol
   requirements](https://github.com/apple/swift/blob/master/docs/GenericsManifesto.md#recursive-protocol-constraints-),
   and [where clauses for associated
-  types](https://github.com/apple/swift-evolution/blob/master/proposals/0142-associated-types-constraints.md)
+  types](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0142-associated-types-constraints.md)
   are known to be in this category, but it's plausible that other
   features will be in scope if they would be used in the standard
   library.

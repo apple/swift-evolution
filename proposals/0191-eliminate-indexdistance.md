@@ -17,8 +17,8 @@ Eliminate the associated type `IndexDistance` from `Collection`, and modify all 
 an `Int`, generic algorithms on `Collection` need to either constrain `IndexDistance == Int` or write their algorithm to be generic over any `SignedInteger`.
 
 Swift 4.0 introduced the ability to constrain associated types with `where` clauses
-([SE-142](https://github.com/apple/swift-evolution/blob/master/proposals/0142-associated-types-constraints.md)) and will soon allow protocol constraints
-to be recursive ([SE-157](https://github.com/apple/swift-evolution/blob/master/proposals/0157-recursive-protocol-constraints.md)). With these features,
+([SE-142](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0142-associated-types-constraints.md)) and will soon allow protocol constraints
+to be recursive ([SE-157](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0157-recursive-protocol-constraints.md)). With these features,
 writing generic algorithms against `Collection` is finally a realistic tool for intermediate Swift programmers. You no longer need to know to
 constrain `SubSequence.Element == Element` or `SubSequence: Collection`, missing constraints that previously led to inexplicable error messages.
 

@@ -98,7 +98,7 @@ protocol Collection : Sequence {
 
 But as Douglas notes himself, that syntax is ambiguous since we adopted the
 generic `where` clause at the end of declarations of the following proposal:
-[SE-0081: Move where clause to end of declaration](https://github.com/apple/swift-evolution/blob/master/proposals/0081-move-where-expression.md). For those reasons, it might be wiser not to introduce the shorthand syntax.
+[SE-0081: Move where clause to end of declaration](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0081-move-where-expression.md). For those reasons, it might be wiser not to introduce the shorthand syntax.
  
 ## Acknowledgements
 

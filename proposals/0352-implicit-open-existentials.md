@@ -7,7 +7,7 @@
 * Upcoming Feature Flag: `ImplicitOpenExistentials` (Implemented in Swift 6.0) (Enabled in Swift 6 language mode)
 * Implementation: [apple/swift#41996](https://github.com/apple/swift/pull/41996), [macOS toolchain](https://ci.swift.org/job/swift-PR-toolchain-macos/120/artifact/branch-main/swift-PR-41996-120-osx.tar.gz)
 * Decision Notes: [Acceptance](https://forums.swift.org/t/accepted-se-0352-implicitly-opened-existentials/57553)
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/77374319a7d70c866bd197faada46ecfce461645/proposals/0352-implicit-open-existentials.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/77374319a7d70c866bd197faada46ecfce461645/proposals/0352-implicit-open-existentials.md)
 * Previous Review: [First review](https://forums.swift.org/t/se-0352-implicitly-opened-existentials/56557/52)
 
 ## Table of Contents
@@ -34,7 +34,7 @@
 
 ## Introduction
 
-Existential types in Swift allow one to store a value whose specific type is unknown and may change at runtime. The dynamic type of that stored value, which we refer to as the existential's *underlying type*, is known only by the set of protocols it conforms to and, potentially, its superclass. While existential types are useful for expressing values of dynamic type, they are necessarily restricted because of their dynamic nature. Recent proposals have made [existential types more explicit](https://github.com/apple/swift-evolution/blob/main/proposals/0335-existential-any.md) to help developers understand this dynamic nature, as well as [making existential types more expressive](https://github.com/apple/swift-evolution/blob/main/proposals/0309-unlock-existential-types-for-all-protocols.md) by removing a number of limitations. However, a fundamental issue with existential types remains, that once you have a value of existential type it is *very* hard to use generics with it. Developers usually encounter this via the error message "protocol 'P' as a type cannot conform to itself":
+Existential types in Swift allow one to store a value whose specific type is unknown and may change at runtime. The dynamic type of that stored value, which we refer to as the existential's *underlying type*, is known only by the set of protocols it conforms to and, potentially, its superclass. While existential types are useful for expressing values of dynamic type, they are necessarily restricted because of their dynamic nature. Recent proposals have made [existential types more explicit](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0335-existential-any.md) to help developers understand this dynamic nature, as well as [making existential types more expressive](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0309-unlock-existential-types-for-all-protocols.md) by removing a number of limitations. However, a fundamental issue with existential types remains, that once you have a value of existential type it is *very* hard to use generics with it. Developers usually encounter this via the error message "protocol 'P' as a type cannot conform to itself":
 
 ```swift
 protocol P {
@@ -142,7 +142,7 @@ There are two things to notice here. First, the method `withBells()` returns typ
 
 ### Moving between `any` and `some`
 
-One of the interesting aspects of this proposal is that it allows one to refactor `any` parameters into `some` parameters (as introduced by [SE-0341](https://github.com/apple/swift-evolution/blob/main/proposals/0341-opaque-parameters.md)) without a significant effect on client code. Let's rewrite our generic `hasBells` function using `some`:
+One of the interesting aspects of this proposal is that it allows one to refactor `any` parameters into `some` parameters (as introduced by [SE-0341](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0341-opaque-parameters.md)) without a significant effect on client code. Let's rewrite our generic `hasBells` function using `some`:
 
 ```swift
 func hasBells(_ costume: some Costume) -> Bool {
@@ -267,7 +267,7 @@ func testDecomposeQ(q: any Q) {
 }
 ```
 
-This is identical to the [covariant erasure of associated types described in SE-0309](https://github.com/apple/swift-evolution/blob/main/proposals/0309-unlock-existential-types-for-all-protocols.md#covariant-erasure-for-associated-types), and the rules specified there apply equally here. We can restate those requirements more generally for an arbitrary generic parameter as:
+This is identical to the [covariant erasure of associated types described in SE-0309](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0309-unlock-existential-types-for-all-protocols.md#covariant-erasure-for-associated-types), and the rules specified there apply equally here. We can restate those requirements more generally for an arbitrary generic parameter as:
 
 When binding a generic parameter `T` to an opened existential, `T`, `T` and `T`-rooted associated types that
 
@@ -316,7 +316,7 @@ func eraseQAssoc(q: any Q) {
 
 When type-erasing `T.B`, the most specific upper bound would be "a type that conforms to `P` where the associated type `A` is known to be `Int`". However, Swift's existential types cannot express such a type, so the type of `b` will be the less-specific `any P`.
 
-It is likely that Swift's existentials will grow in expressivity over time. For example, [SE-0353 "Constrained Existential Types"](https://github.com/apple/swift-evolution/blob/main/proposals/0353-constrained-existential-types.md) allows one to express existential types that involve bindings for [primary associated types](https://github.com/apple/swift-evolution/blob/main/proposals/0346-light-weight-same-type-syntax.md). If we were to adopt that feature for protocol `P`, the most specific upper bound would be expressible:
+It is likely that Swift's existentials will grow in expressivity over time. For example, [SE-0353 "Constrained Existential Types"](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0353-constrained-existential-types.md) allows one to express existential types that involve bindings for [primary associated types](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0346-light-weight-same-type-syntax.md). If we were to adopt that feature for protocol `P`, the most specific upper bound would be expressible:
 
 ```swift
 // Assuming SE-0353...
@@ -352,7 +352,7 @@ getBFromQ(q) as any P
 
 This way, if the upper bound changes due to increased expressiveness of existential types in the language, the overall expression will still produce a value of the same type---`any P`---as it always has. A developer would be free to remove the `as any P` at the point where Swift can fully capture all of the information known about the type in an existential.
 
-Note that this requirement for an explicit type coercion also applies to all type erasure due to existential opening, including ones that existed prior to this proposal. For example, `getBFromQ` could be written as a member of a protocol extension. The code below has the same issues (and the same resolution) as our example, as was first made well-formed with [SE-0309](https://github.com/apple/swift-evolution/blob/main/proposals/0309-unlock-existential-types-for-all-protocols.md):
+Note that this requirement for an explicit type coercion also applies to all type erasure due to existential opening, including ones that existed prior to this proposal. For example, `getBFromQ` could be written as a member of a protocol extension. The code below has the same issues (and the same resolution) as our example, as was first made well-formed with [SE-0309](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0309-unlock-existential-types-for-all-protocols.md):
 
 ```swift
 extension Q {
@@ -445,7 +445,7 @@ Here, the dynamic type of the result of `acceptsBox` would change if the existen
 
 Most of the cases in today's Swift where a generic parameter binds to an existential type succeed because there are no conformance requirements on the generic parameter, as with the `T` generic parameter to `acceptsBox`. For most protocols, an existential referencing the corresponding type does not conform to that protocol, i.e., `any Q` does not conform to `Q`. However, there are a small number of exceptions:
 
-* The existential type `any Error` conforms to the `Error` protocol, as specified in [SE-0235](https://github.com/apple/swift-evolution/blob/main/proposals/0235-add-result.md#adding-swifterror-self-conformance).
+* The existential type `any Error` conforms to the `Error` protocol, as specified in [SE-0235](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0235-add-result.md#adding-swifterror-self-conformance).
 * An existential type `any Q` of an `@objc` protocol `Q`, where `Q` contains no `static` requirements, conforms to `Q`.
 
 For example, consider an operation that takes an error. Passing a value of type `any Error` to it succeeds without opening the existential:
@@ -676,9 +676,9 @@ First revision:
 * Describe the limitation on implicit existential opening to maintain order of evaluation
 * Avoid opening an existential argument when the existential type already satisfies the conformance requirements of the corresponding generic parameter, to better maintain source compatibility 
 * Introduce `as any P` and `as! any P` as syntaxes to suppress the implicit opening of an existential value.
-* Added discussion on the relationship with `some` parameters ([SE-0341](https://github.com/apple/swift-evolution/blob/main/proposals/0341-opaque-parameters.md)).
+* Added discussion on the relationship with `some` parameters ([SE-0341](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0341-opaque-parameters.md)).
 * Expand discussion of an explicit opening syntax.
 
 ## Acknowledgments
 
-This proposal builds on the difficult design work of [SE-0309](https://github.com/apple/swift-evolution/blob/main/proposals/0309-unlock-existential-types-for-all-protocols.md), which charted most of the detailed semantics for working with values of existential type and dealing with (e.g.) covariant erasure and the restrictions that must be placed on opening existentials. Moreover, the implementation work from one of SE-0309's authors, [Anthony Latsis](https://github.com/AnthonyLatsis), formed the foundation of the implementation work for this feature, requiring only a small amount of generalization. Ensan highlighted the issue with losing information in upper bounds and [suggested an approach](https://forums.swift.org/t/se-0352-implicitly-opened-existentials/56557/7) similar to what is used here.
+This proposal builds on the difficult design work of [SE-0309](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0309-unlock-existential-types-for-all-protocols.md), which charted most of the detailed semantics for working with values of existential type and dealing with (e.g.) covariant erasure and the restrictions that must be placed on opening existentials. Moreover, the implementation work from one of SE-0309's authors, [Anthony Latsis](https://github.com/AnthonyLatsis), formed the foundation of the implementation work for this feature, requiring only a small amount of generalization. Ensan highlighted the issue with losing information in upper bounds and [suggested an approach](https://forums.swift.org/t/se-0352-implicitly-opened-existentials/56557/7) similar to what is used here.

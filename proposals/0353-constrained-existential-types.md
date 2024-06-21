@@ -9,19 +9,19 @@
 
 ## Introduction
 
-Existential types complement the Swift type system’s facilities for abstraction. Like generics, they enable a function to take and return multiple possible types. Unlike generic parameter types, existential types need not be known up front when passed as inputs to a function. Further, concrete types can be *erased* (hidden behind the interface of a protocol) when returned from a function. There has been a flurry of activity in this space with[SE-0309](https://github.com/apple/swift-evolution/blob/main/proposals/0309-unlock-existential-types-for-all-protocols.md#covariant-erasure-for-associated-types) unblocking the remaining restrictions on using protocols with associated types as existential types, and [SE-0346](https://github.com/apple/swift-evolution/blob/main/proposals/0346-light-weight-same-type-syntax.md) paving the way for a lightweight constraint syntax for the associated types of protocols. Building directly upon those ideas, this proposal seeks to re-use the syntax of lightweight associated type constraints in the context of existential types.
+Existential types complement the Swift type system’s facilities for abstraction. Like generics, they enable a function to take and return multiple possible types. Unlike generic parameter types, existential types need not be known up front when passed as inputs to a function. Further, concrete types can be *erased* (hidden behind the interface of a protocol) when returned from a function. There has been a flurry of activity in this space with[SE-0309](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0309-unlock-existential-types-for-all-protocols.md#covariant-erasure-for-associated-types) unblocking the remaining restrictions on using protocols with associated types as existential types, and [SE-0346](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0346-light-weight-same-type-syntax.md) paving the way for a lightweight constraint syntax for the associated types of protocols. Building directly upon those ideas, this proposal seeks to re-use the syntax of lightweight associated type constraints in the context of existential types.
 
 ```swift
 any Collection<String>
 ```
 
-In essence, this proposal seeks to provide the same expressive power that [SE-0346](https://github.com/apple/swift-evolution/blob/main/proposals/0346-light-weight-same-type-syntax.md) gives to `some` types to `any` types.
+In essence, this proposal seeks to provide the same expressive power that [SE-0346](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0346-light-weight-same-type-syntax.md) gives to `some` types to `any` types.
 
 Swift-evolution pitch thread: https://forums.swift.org/t/pitch-constrained-existential-types/56361
 
 ## Motivation
 
-Though [SE-0309](https://github.com/apple/swift-evolution/blob/main/proposals/0309-unlock-existential-types-for-all-protocols.md#covariant-erasure-for-associated-types) provides the ability to use protocols with associated types freely, it does not leave any room for authors to further constrain the associated types of those protocols, creating a gap in expressiveness between generics and existentials. Consider the implementation of a type-erased stack of event producers and consumers:
+Though [SE-0309](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0309-unlock-existential-types-for-all-protocols.md#covariant-erasure-for-associated-types) provides the ability to use protocols with associated types freely, it does not leave any room for authors to further constrain the associated types of those protocols, creating a gap in expressiveness between generics and existentials. Consider the implementation of a type-erased stack of event producers and consumers:
 
 ```swift
 protocol Producer {
@@ -65,7 +65,7 @@ struct EventSystem<Event> {
 }
 ```
 
-In this example, we have sacrificed quite a lot for type safety - and also have to maintain two extra type erasing wrappers for producers and consumers. Really, what is missing is the ability to express the fact that the producer and consumer types don’t matter (existential types) but the data they operate on *does* (generic constraints). This is where constrained existential types shine. When combined with the power of primary associated types from [SE-0346](https://github.com/apple/swift-evolution/blob/main/proposals/0346-light-weight-same-type-syntax.md), it allows us to write the code we wanted to in the first place:
+In this example, we have sacrificed quite a lot for type safety - and also have to maintain two extra type erasing wrappers for producers and consumers. Really, what is missing is the ability to express the fact that the producer and consumer types don’t matter (existential types) but the data they operate on *does* (generic constraints). This is where constrained existential types shine. When combined with the power of primary associated types from [SE-0346](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0346-light-weight-same-type-syntax.md), it allows us to write the code we wanted to in the first place:
 
 ```swift
 struct EventSystem<Event> {
@@ -128,7 +128,7 @@ Constrained existential types will behave as normal generic types with respect t
 
 ### Covariant Erasure with Constrained Existentials
 
-[SE-0309](https://github.com/apple/swift-evolution/blob/main/proposals/0309-unlock-existential-types-for-all-protocols.md) specifies that one can use a member on a value of existential type only when references to `Self` or its associated types are in *covariant* positions, such as the return type of a method defined a protocol. In such positions, its associated type is *erased* to its upper bound, which is the type that most closely describes the capabilities of that associated type. For example, consider a use of the `first` property on a collection.
+[SE-0309](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0309-unlock-existential-types-for-all-protocols.md) specifies that one can use a member on a value of existential type only when references to `Self` or its associated types are in *covariant* positions, such as the return type of a method defined a protocol. In such positions, its associated type is *erased* to its upper bound, which is the type that most closely describes the capabilities of that associated type. For example, consider a use of the `first` property on a collection.
 
 ```swift
 extension Collection {}
@@ -174,7 +174,7 @@ func doFilter(sequence: any Sequence, intSequence: any Sequence<Int>) {
 }
 ```
 
-The same erasure effects with the implicitly opened existentials introduced in [SE-0352](https://github.com/apple/swift-evolution/blob/main/proposals/0352-implicit-open-existentials.md).
+The same erasure effects with the implicitly opened existentials introduced in [SE-0352](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0352-implicit-open-existentials.md).
 
 ## Effect on ABI stability
 
@@ -190,13 +190,13 @@ Aside from the obvious of not accepting this proposal, we could imagine many dif
 any (Collection where Self.Element == Int)
 ```
 
-Syntax like this is hard to read and use in context and the problem becomes worse as it is made to compose with other existential types and constraints. Further it would conflict with the overall direction that generic constraints in Swift are taking as of [SE-0346](https://github.com/apple/swift-evolution/blob/main/proposals/0346-light-weight-same-type-syntax.md). Generalized constraint syntaxes are out of scope for this proposal and are mentioned later as future directions. 
+Syntax like this is hard to read and use in context and the problem becomes worse as it is made to compose with other existential types and constraints. Further it would conflict with the overall direction that generic constraints in Swift are taking as of [SE-0346](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0346-light-weight-same-type-syntax.md). Generalized constraint syntaxes are out of scope for this proposal and are mentioned later as future directions. 
 
 ## Future directions
 
 #### Generalized Constraints
 
-This proposal intentionally does not take a position on the generalized constraint syntax considered during the review of [SE-0341](https://github.com/apple/swift-evolution/blob/main/proposals/0341-opaque-parameters.md#constraining-the-associated-types-of-a-protocol). To take one spelling:
+This proposal intentionally does not take a position on the generalized constraint syntax considered during the review of [SE-0341](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0341-opaque-parameters.md#constraining-the-associated-types-of-a-protocol). To take one spelling:
 
 ```swift
 any Collection<.Index == String.Index>

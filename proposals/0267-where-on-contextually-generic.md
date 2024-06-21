@@ -71,7 +71,7 @@ extension Foo where T: Sequence, T.Element: Equatable {
 }
 ```
 A step towards generalizing `where` clause use is an obvious and farsighted improvement to the generics
-system with numerous future applications, including generic properties, [opaque types](https://github.com/apple/swift-evolution/blob/master/proposals/0244-opaque-result-types.md), [generalized
+system with numerous future applications, including generic properties, [opaque types](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0244-opaque-result-types.md), [generalized
 existentials](https://github.com/apple/swift/blob/master/docs/GenericsManifesto.md#generalized-existentials) and constrained protocol requirements. 
 
 ## Detailed design

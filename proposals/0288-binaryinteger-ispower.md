@@ -236,7 +236,7 @@ Making the public API as a protocol requirement instead of an extension methods 
 
 ###  `isPowerOfTwo` instead of `isPower(of:)`
 
-In fact, [the pitch](https://forums.swift.org/t/adding-ispowerof2-to-binaryinteger/24087) originally intended to add an API to check if an integer is power of two only.  However, the more generic form `isPower(of:)` is favored by the community.  This case is similar to [SE-0225](https://github.com/apple/swift-evolution/blob/master/proposals/0225-binaryinteger-iseven-isodd-ismultiple.md), which initially proposed `isEven` and `isOdd` as well, but ended up with `isMultiple(of:)` accepted only.
+In fact, [the pitch](https://forums.swift.org/t/adding-ispowerof2-to-binaryinteger/24087) originally intended to add an API to check if an integer is power of two only.  However, the more generic form `isPower(of:)` is favored by the community.  This case is similar to [SE-0225](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0225-binaryinteger-iseven-isodd-ismultiple.md), which initially proposed `isEven` and `isOdd` as well, but ended up with `isMultiple(of:)` accepted only.
 
 ### Choices for fast paths
 

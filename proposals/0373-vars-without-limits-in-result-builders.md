@@ -9,11 +9,11 @@
 
 ## Introduction
 
-The implementation of the result builder transform (introduced by [SE-0289](https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builders.md)) places a number of limitations on local variable declarations in the transformed function. Specifically, local variables need to have an initializer expression, they cannot be computed, they cannot have observers, and they cannot have attached property wrappers. None of these restrictions were explicit in the SE-0289 proposal, but they are a *de facto* part of the current feature.
+The implementation of the result builder transform (introduced by [SE-0289](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0289-result-builders.md)) places a number of limitations on local variable declarations in the transformed function. Specifically, local variables need to have an initializer expression, they cannot be computed, they cannot have observers, and they cannot have attached property wrappers. None of these restrictions were explicit in the SE-0289 proposal, but they are a *de facto* part of the current feature.
 
 ## Motivation
 
-The result builder proposal [describes how the result builder transform handles each individual component in a function body](https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builders.md#the-result-builder-transform). It states that local declarations are unaffected by the transformation, which implies that any declaration allowed in that context should be supported. That is not the case under the current implementation, which requires that local variables declarations must have a simple name, storage, and an initializing expression.
+The result builder proposal [describes how the result builder transform handles each individual component in a function body](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0289-result-builders.md#the-result-builder-transform). It states that local declarations are unaffected by the transformation, which implies that any declaration allowed in that context should be supported. That is not the case under the current implementation, which requires that local variables declarations must have a simple name, storage, and an initializing expression.
 
 In certain circumstances, it's useful to be able to declare a local variable that, for example, declares multiple variables, has default initialization, or has an attached property wrapper (with or without an initializer). Let's take a look at a simple example:
 
@@ -101,7 +101,7 @@ The change is purely semantic, without any new syntax. It allows variables of al
 
 These variables will be treated just like they are treated in regular functions.  All of the ordinary semantic checks to verify their validity will still be performed, and invalid declarations (based on the standard rules) will still be rejected by the compiler.
 
-There is one notable exception to this general rule. Initializing a variable after its declaration requires writing an assignment to it, and assignments require the result builder to support `Void` results, as described in [SE-0289](https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builders.md#assignments).  If the result builder does not support `Void` results (whether with an explicit `buildExpression` or just by handling them in `buildBlock`), transformed functions will not be allowed to contain uninitialized declarations.
+There is one notable exception to this general rule. Initializing a variable after its declaration requires writing an assignment to it, and assignments require the result builder to support `Void` results, as described in [SE-0289](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0289-result-builders.md#assignments).  If the result builder does not support `Void` results (whether with an explicit `buildExpression` or just by handling them in `buildBlock`), transformed functions will not be allowed to contain uninitialized declarations.
 
 
 ## Source compatibility

@@ -4,13 +4,13 @@
 * Authors: [Author 1](https://github.com/swiftdev), [Author 2](https://github.com/swiftdev)
 * Review Manager: TBD
 * Status: **Awaiting implementation** or **Awaiting review**
-* Vision: *if applicable* [Vision Name](https://github.com/apple/swift-evolution/visions/NNNNN.md)
+* Vision: *if applicable* [Vision Name](https://github.com/swiftlang/swift-evolution/visions/NNNNN.md)
 * Roadmap: *if applicable* [Roadmap Name](https://forums.swift.org/...)
 * Bug: *if applicable* [apple/swift#NNNNN](https://github.com/apple/swift/issues/NNNNN)
-* Implementation: [apple/swift#NNNNN](https://github.com/apple/swift/pull/NNNNN) or [apple/swift-evolution-staging#NNNNN](https://github.com/apple/swift-evolution-staging/pull/NNNNN)
+* Implementation: [apple/swift#NNNNN](https://github.com/apple/swift/pull/NNNNN) or [swiftlang/swift-evolution-staging#NNNNN](https://github.com/swiftlang/swift-evolution-staging/pull/NNNNN)
 * Upcoming Feature Flag: *if applicable* `MyFeatureName`
 * Previous Proposal: *if applicable* [SE-XXXX](XXXX-filename.md)
-* Previous Revision: *if applicable* [1](https://github.com/apple/swift-evolution/blob/...commit-ID.../proposals/NNNN-filename.md)
+* Previous Revision: *if applicable* [1](https://github.com/swiftlang/swift-evolution/blob/...commit-ID.../proposals/NNNN-filename.md)
 * Review: ([pitch](https://forums.swift.org/...))
 
 When filling out this template, you should delete or replace all of
@@ -63,7 +63,7 @@ that and specify the experimental feature flag.  If the implementation
 is spread across multiple PRs, just link to the most important ones.
 
 `Upcoming Feature Flag` should be the feature name used to identify this
-feature under [SE-0362](https://github.com/apple/swift-evolution/blob/main/proposals/0362-piecemeal-future-features.md#proposals-define-their-own-feature-identifier).
+feature under [SE-0362](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0362-piecemeal-future-features.md#proposals-define-their-own-feature-identifier).
 Not all proposals need an upcoming feature flag.  You should think about
 whether one would be useful for your proposal as part of filling this
 field out.
@@ -249,7 +249,7 @@ be part of the current proposal.  It's important to make focused,
 self-contained proposals that can be incrementally implemented and
 reviewed, but it's also good when proposals feel "complete" rather
 than leaving significant gaps in their design.  For example, when
-[SE-0193](https://github.com/apple/swift-evolution/blob/main/proposals/0193-cross-module-inlining-and-specialization.md)
+[SE-0193](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0193-cross-module-inlining-and-specialization.md)
 introduced the `@inlinable` attribute, it also included the
 `@usableFromInline` attribute so that declarations used in inlinable
 functions didn't have to be `public`.  This was a relatively small

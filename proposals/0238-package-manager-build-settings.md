@@ -6,7 +6,7 @@
 * Review Manager: [Boris Bügling](https://github.com/neonichu)
 * Status: **Implemented (Swift 5.0)**
 * Decision Notes: [Rationale](https://forums.swift.org/t/accepted-with-modifications-se-0238-package-manager-target-specific-build-settings/18590)
-* Previous Revisions: [1](https://github.com/apple/swift-evolution/blob/1a2801a3dc912b093f2cda13eafd54f0d98b3c8e/proposals/0238-package-manager-build-settings.md)
+* Previous Revisions: [1](https://github.com/swiftlang/swift-evolution/blob/1a2801a3dc912b093f2cda13eafd54f0d98b3c8e/proposals/0238-package-manager-build-settings.md)
 
 ## Introduction
 

@@ -6,7 +6,7 @@
 * Status: **Implemented (Swift 5.1)**
 * Implementation: [apple/swift#22072](https://github.com/apple/swift/pull/22072)
 * Toolchain: https://github.com/apple/swift/pull/22072#issuecomment-483495849
-* Previous revisions: ([1](https://github.com/apple/swift-evolution/commit/e60bac23bf0d6f345ddb48fbf64ea8324fce79a9))
+* Previous revisions: ([1](https://github.com/swiftlang/swift-evolution/commit/e60bac23bf0d6f345ddb48fbf64ea8324fce79a9))
 * Previous review threads: https://forums.swift.org/t/se-0244-opaque-result-types/21252
 * Decision Notes: [Rationale](https://forums.swift.org/t/se-0244-opaque-result-types-reopened/22942/57)
 

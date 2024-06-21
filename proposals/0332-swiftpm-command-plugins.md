@@ -10,7 +10,7 @@
 
 ## Introduction
 
-[SE-0303](https://github.com/apple/swift-evolution/blob/main/proposals/0303-swiftpm-extensible-build-tools.md) introduced the ability to define *build tool plugins* in SwiftPM, allowing custom tools to be automatically invoked during a build. This proposal extends that plugin support to allow the definition of custom *command plugins* — plugins that users can invoke directly from the SwiftPM CLI, or from an IDE that supports Swift Packages, in order to perform custom actions on their packages.
+[SE-0303](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0303-swiftpm-extensible-build-tools.md) introduced the ability to define *build tool plugins* in SwiftPM, allowing custom tools to be automatically invoked during a build. This proposal extends that plugin support to allow the definition of custom *command plugins* — plugins that users can invoke directly from the SwiftPM CLI, or from an IDE that supports Swift Packages, in order to perform custom actions on their packages.
 
 ## Motivation
 

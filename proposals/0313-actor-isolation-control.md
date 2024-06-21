@@ -4,7 +4,7 @@
 * Authors: [Doug Gregor](https://github.com/DougGregor), [Chris Lattner](https://github.com/lattner)
 * Review Manager: [Ted Kremenek](https://github.com/tkremenek)
 * Status: **Implemented (Swift 5.5)**
-* Previous revision: [1](https://github.com/apple/swift-evolution/blob/ca2e3b43be77b7f20303e1c5cba98f22ebb0fcb0/proposals/0313-actor-isolation-control.md)
+* Previous revision: [1](https://github.com/swiftlang/swift-evolution/blob/ca2e3b43be77b7f20303e1c5cba98f22ebb0fcb0/proposals/0313-actor-isolation-control.md)
 * Implementation: Partially available in [recent `main` snapshots](https://swift.org/download/#snapshots) behind the flag `-Xfrontend -enable-experimental-concurrency`
 
 ## Table of Contents
@@ -360,4 +360,4 @@ At a high level, isolated parameters and isolated conformances are similar to pa
   * Removed `isolated` captures.
   * Prohibit multiple `isolated` parameters.
 
-[actors]: https://github.com/apple/swift-evolution/blob/main/proposals/0306-actors.md
+[actors]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0306-actors.md

@@ -12,7 +12,7 @@ This proposal aims to fix the lack of `Collection` conformance of the sequences 
 Swift-evolution thread: [Pitch](https://forums.swift.org/t/pitch-add-indexed-and-collection-conformances-for-enumerated-and-zip/47288)
 
 ## Motivation
-Currently, the `Zip2Sequence` and `EnumeratedSequence` types conform to `Sequence`, but not to any of the collection protocols. Adding these conformances was impossible before [SE-0234 Remove `Sequence.SubSequence`](https://github.com/apple/swift-evolution/blob/main/proposals/0234-remove-sequence-subsequence.md), and would have been an ABI breaking change before the language allowed `@available` annotations on protocol conformances ([PR](https://github.com/apple/swift/pull/34651)). Now we can add them!
+Currently, the `Zip2Sequence` and `EnumeratedSequence` types conform to `Sequence`, but not to any of the collection protocols. Adding these conformances was impossible before [SE-0234 Remove `Sequence.SubSequence`](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0234-remove-sequence-subsequence.md), and would have been an ABI breaking change before the language allowed `@available` annotations on protocol conformances ([PR](https://github.com/apple/swift/pull/34651)). Now we can add them!
 
 Conformance to the collection protocols can be beneficial in a variety of ways, for example:
 * `(1000..<2000).enumerated().dropFirst(500)` becomes a constant time operation.

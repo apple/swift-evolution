@@ -4,7 +4,7 @@
 * Authors: [Erica Sadun](https://github.com/erica), [Chris Lattner](https://github.com/lattner)
 * Review Manager: [Joe Groff](https://github.com/jckarter)
 * Status: **Implemented (Swift 3.0)**
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/83053c5f5395987caf2ecb3830a5cd8dc6213237/proposals/0099-conditionclauses.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/83053c5f5395987caf2ecb3830a5cd8dc6213237/proposals/0099-conditionclauses.md)
 * Review: ([pitch](https://forums.swift.org/t/pitch-making-where-and-interchangeable-in-guard-conditions/2702)), ([review](https://forums.swift.org/t/review-se-0099-restructuring-condition-clauses/2808)), ([acceptance](https://forums.swift.org/t/accepted-with-revision-se-0099-restructuring-condition-clauses/2921))
 
 ## Introduction

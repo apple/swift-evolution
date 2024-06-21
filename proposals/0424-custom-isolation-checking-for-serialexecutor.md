@@ -3,13 +3,12 @@
 * Proposal: [SE-0424](0424-custom-isolation-checking-for-serialexecutor.md)
 * Author: [Konrad 'ktoso' Malawski](https://github.com/ktoso)
 * Review Manager: [John McCall](https://github.com/rjmccall)
-* Status: **Accepted**
-* Implementation: [apple/swift#71172](https://github.com/apple/swift/pull/71172)
+* Status: **Implemented (Swift 6.0)**
 * Review: ([pitch](https://forums.swift.org/t/pitch-custom-isolation-checking-for-serialexecutor/69786)) ([review](https://forums.swift.org/t/se-0424-custom-isolation-checking-for-serialexecutor/70195)) ([acceptance](https://forums.swift.org/t/accepted-se-0424-custom-isolation-checking-for-serialexecutor/70480))
 
 ## Introduction
 
-[SE-0392 (Custom Actor Executors)](https://github.com/apple/swift-evolution/blob/main/proposals/0392-custom-actor-executors.md) added support for custom actor executors, but its support is incomplete. Safety checks like [`Actor.assumeIsolated`](https://developer.apple.com/documentation/swift/actor/assumeisolated(_:file:line:)) work correctly when code is running on the actor through a task, but they don't work when code is scheduled to run on the actor's executor through some other mechanism. For example, if an actor uses a serial `DispatchQueue` as its executor, a function dispatched _directly_ to the queue with DispatchQueue.async cannot use `assumeIsolated` to assert that the actor is currently isolated. This proposal fixes this by allowing custom actor executors to provide their own logic for these safety checks.
+[SE-0392 (Custom Actor Executors)](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0392-custom-actor-executors.md) added support for custom actor executors, but its support is incomplete. Safety checks like [`Actor.assumeIsolated`](https://developer.apple.com/documentation/swift/actor/assumeisolated(_:file:line:)) work correctly when code is running on the actor through a task, but they don't work when code is scheduled to run on the actor's executor through some other mechanism. For example, if an actor uses a serial `DispatchQueue` as its executor, a function dispatched _directly_ to the queue with DispatchQueue.async cannot use `assumeIsolated` to assert that the actor is currently isolated. This proposal fixes this by allowing custom actor executors to provide their own logic for these safety checks.
 
 ## Motivation
 
@@ -125,7 +124,7 @@ return // ok, it seems the expected executor was able to prove isolation
 ```
 
 This pseudo code snippet explains the flow of the executor comparisons. There are two situations in which the new `checkIsolated` method may be invoked: when there is no current executor present, or if all other comparisons have failed.
-For more details on the executor comparison logic, you can refer to [SE-0392: Custom Actor Executors](https://github.com/apple/swift-evolution/blob/main/proposals/0392-custom-actor-executors.md).
+For more details on the executor comparison logic, you can refer to [SE-0392: Custom Actor Executors](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0392-custom-actor-executors.md).
 
 Specific use-cases of this API include `DispatchSerialQueue`, which would be able to implement the requirement as follows:
 
@@ -173,7 +172,7 @@ Asynchronous functions should not use dynamic isolation checking.  Isolation che
 
 This proposal also paves the way to clean up this hard-coded aspect of the runtime, and it would be possible to change these heurystics to instead invoke the `checkIsolation()` method on a "main actor executor" SerialExecutor reference if it were available.
 
-This proposal does not introduce a `globalMainActorExecutor`, however, similar how how [SE-0417: Task ExecutorPreference](https://github.com/apple/swift-evolution/blob/main/proposals/0417-task-executor-preference.md) introduced a:
+This proposal does not introduce a `globalMainActorExecutor`, however, similar how how [SE-0417: Task ExecutorPreference](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0417-task-executor-preference.md) introduced a:
 
 ```swift
 nonisolated(unsafe)

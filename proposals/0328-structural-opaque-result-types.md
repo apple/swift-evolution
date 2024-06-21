@@ -10,7 +10,7 @@
 
 ## Introduction
 
-An [opaque result type](https://github.com/apple/swift-evolution/blob/main/proposals/0244-opaque-result-types.md) may be used as the result type of a function, the type of a variable, or the result type of a subscript. In all cases, the opaque result type must be the entire type. This proposal recommends lifting that restriction and allowing opaque result types in "structural" positions.
+An [opaque result type](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0244-opaque-result-types.md) may be used as the result type of a function, the type of a variable, or the result type of a subscript. In all cases, the opaque result type must be the entire type. This proposal recommends lifting that restriction and allowing opaque result types in "structural" positions.
 
 Swift-evolution thread: [Structural opaque result types](https://forums.swift.org/t/structural-opaque-result-types/50998)
 
@@ -92,7 +92,7 @@ func f<T>(_ t: T) -> H<some P> { /* ... */ }
 
 This change is purely additive so has no source compatibility consequences.
 
-As discussed in [SE-0244](https://github.com/apple/swift-evolution/blob/main/proposals/0244-opaque-result-types.md#source-compatibility):
+As discussed in [SE-0244](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0244-opaque-result-types.md#source-compatibility):
 
 > If opaque result types are retroactively adopted in a library, it would initially break source compatibility [...] but could provide longer-term benefits for both source and ABI stability because fewer details would be exposed to clients. There are some mitigations for source compatibility, e.g., a longer deprecation cycle for the types or overloading the old signature (that returns the named types) with the new signature (that returns an opaque result type).
 
@@ -102,13 +102,13 @@ This change is purely additive so has no ABI stability consequences.
 
 ## Effect on API resilience
 
-This change is purely additive so has no API resilience consequences. Adopting opaque types in structural positions in a resilient library has the same implications as top-level opaque result types. From [SE-0244](https://github.com/apple/swift-evolution/blob/main/proposals/0244-opaque-result-types.md#effect-on-api-resilience):
+This change is purely additive so has no API resilience consequences. Adopting opaque types in structural positions in a resilient library has the same implications as top-level opaque result types. From [SE-0244](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0244-opaque-result-types.md#effect-on-api-resilience):
 
 > Opaque result types are part of the result type of a function/type of a variable/element type of a subscript. The requirements that describe the opaque result type cannot change without breaking the API/ABI. However, the underlying concrete type can change from one version to the next without breaking ABI, because that type is not known to clients of the API.
 
 ## Rust's `impl Trait`
 
-As discussed in [SE-0244](https://github.com/apple/swift-evolution/blob/main/proposals/0244-opaque-result-types.md#rusts-impl-trait), Swift's opaque result types were inspired by `impl Trait` in Rust, which is described in [RFC-1522](https://github.com/rust-lang/rfcs/blob/master/text/1522-conservative-impl-trait.md) and extended in [RFC-1951](https://github.com/rust-lang/rfcs/blob/master/text/1951-expand-impl-trait.md).
+As discussed in [SE-0244](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0244-opaque-result-types.md#rusts-impl-trait), Swift's opaque result types were inspired by `impl Trait` in Rust, which is described in [RFC-1522](https://github.com/rust-lang/rfcs/blob/master/text/1522-conservative-impl-trait.md) and extended in [RFC-1951](https://github.com/rust-lang/rfcs/blob/master/text/1951-expand-impl-trait.md).
 
 Though SE-0244 lists several differences between `some` and `impl Trait`, one difference it does not make explicit is that `impl Trait` is allowed in structural positions, in similar to the manner to that suggested by this proposal. One difference between this proposal and `impl Trait` is that `impl Trait` may not appear in the return type of closure traits or function pointers.
 
@@ -126,7 +126,7 @@ Furthermore, since `P?` is never a correct constraint, it would be possible to (
 
 Consider the function `func f() -> (some P) -> ()`. If this were a valid structural opaque result type, the closure value produced by calling `f` has type `(some P) -> ()`, meaning it takes an opaque result type as an argument. That argument has some concrete type, `T`, determined by the body of the closure. Assuming no special structure on `P`, such as `ExpressibleByIntegerLiteral`, the user cannot call the closure. If they were able to, then they would be depending at the source level on the concrete type of `T` to remain fixed, which is one of the things opaque result types are designed to prevent.
 
-Another reason to disallow returning functions that take opaque result types is that [SE-0341: Opaque Parameter Declarations](https://github.com/apple/swift-evolution/blob/main/proposals/0341-opaque-parameters.md) proposes a different meaning for `some` in parameter position in function declarations, which would cause confusion if opaque parameter types mean something different within a function type.
+Another reason to disallow returning functions that take opaque result types is that [SE-0341: Opaque Parameter Declarations](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0341-opaque-parameters.md) proposes a different meaning for `some` in parameter position in function declarations, which would cause confusion if opaque parameter types mean something different within a function type.
 
 ### Constraint inference
 

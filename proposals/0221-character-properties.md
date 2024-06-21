@@ -6,11 +6,11 @@
 * Status: **Implemented (Swift 5.0)**
 * Implementation: [apple/swift#20520](https://github.com/apple/swift/pull/20520)
 * Review: [Discussion thread](https://forums.swift.org/t/se-0221-character-properties/14686), [Announcement thread](https://forums.swift.org/t/accepted-with-modification-se-0221-character-properties/14944/2)
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/fdb725c240033c5273860b0a66d2189d62a97608/proposals/0221-character-properties.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/fdb725c240033c5273860b0a66d2189d62a97608/proposals/0221-character-properties.md)
 
 ## Introduction
 
-@allevato (a co-author here) proposed [Add Unicode Properties to Unicode.Scalar](https://github.com/apple/swift-evolution/blob/master/proposals/0211-unicode-scalar-properties.md), which exposes Unicode properties from the [Unicode Character Database](http://unicode.org/reports/tr44/). These are Unicode expert/enthusiast oriented properties that give a finer granularity of control and answer highly-technical and specific Unicody enquiries.
+@allevato (a co-author here) proposed [Add Unicode Properties to Unicode.Scalar](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0211-unicode-scalar-properties.md), which exposes Unicode properties from the [Unicode Character Database](http://unicode.org/reports/tr44/). These are Unicode expert/enthusiast oriented properties that give a finer granularity of control and answer highly-technical and specific Unicody enquiries.
 
 However, they are not ergonomic and Swift makes no attempt to clarify their interpretation or usage: meaning and proper interpretation is directly tied to the Unicode Standard and the version of Unicode available at run time. There’s some low-hanging ergo-fruit ripe for picking by exposing properties directly on `Character`.
 

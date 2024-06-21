@@ -11,7 +11,7 @@
 
 ## Introduction
 
-Codable was introduced in [SE-0166](https://github.com/apple/swift-evolution/blob/master/proposals/0166-swift-archival-serialization.md)
+Codable was introduced in [SE-0166](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0166-swift-archival-serialization.md)
 with support for synthesizing `Encodable` and `Decodable` conformance for
 `class` and `struct` types, that only contain values that also conform
 to the respective protocols.

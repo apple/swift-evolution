@@ -7,7 +7,7 @@
 
 ## Introduction
 
-[SE-0306](https://github.com/apple/swift-evolution/blob/main/proposals/0306-actors.md), which introduced actors to Swift, states that `async` functions may be actor-isolated, meaning that they formally run on some actor's executor.  Nothing in either SE-0306 or [SE-0296](https://github.com/apple/swift-evolution/blob/main/proposals/0296-async-await.md) (`async`/`await`) ever specifies where asynchronous functions that *aren't* actor-isolated run.  This proposal clarifies that they do not run on any actor's executor, and it tightens up the rules for [sendability checking](https://github.com/apple/swift-evolution/blob/main/proposals/0302-concurrent-value-and-concurrent-closures.md) to avoid a potential data race.
+[SE-0306](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0306-actors.md), which introduced actors to Swift, states that `async` functions may be actor-isolated, meaning that they formally run on some actor's executor.  Nothing in either SE-0306 or [SE-0296](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0296-async-await.md) (`async`/`await`) ever specifies where asynchronous functions that *aren't* actor-isolated run.  This proposal clarifies that they do not run on any actor's executor, and it tightens up the rules for [sendability checking](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0302-concurrent-value-and-concurrent-closures.md) to avoid a potential data race.
 
 ## Motivation
 

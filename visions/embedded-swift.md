@@ -11,7 +11,7 @@ However, lots of embedded platforms and low-level environments have constraints 
         * Popular MCU board families and manufacturers (Arduino, STM32, ESP32, NXP, etc.) commonly offer boards that only have an order of 10’s or 100’s of kB of memory available.
     * Firmware, and especially firmware projects that are run from SRAM, or ROM
 * (2) Environments where runtime dependencies, implicit runtime calls, and heap allocations are restricted
-    * Low-level environments without an underlaying operating system, such as bootloaders, hypervisors, firmware
+    * Low-level environments without an underlying operating system, such as bootloaders, hypervisors, firmware
     * Operating system kernels, kernel extensions, and other non-userspace software components
     * Userspace components that are too low-level in terms of dependencies, namely anything that the Swift runtime depends on.
         * A special case here is the Swift runtime itself, which is today written in C++. The concepts described further in this document allow Swift to become the implementation language instead.
@@ -96,7 +96,7 @@ The following describes the high-level points in the approach to implement Embed
 
 * **Specialization is required on all uses of generics and protocols** at compile-time, and libraries are compiled in a way that allows cross-module specialization (into clients of the libraries).
     * Required specialization (also known as monomorphization in other compilers/languages) needs type parameters of generic types and functions to always be compile-time known at the caller site, and then the compiler creates a specialized instantiation of the generic type/function that is no longer generic. The result is that the compiled code does not need access to any type metadata at runtime.
-    * This compilation mode will not support separate compilation of generics, as that makes specialization not possible. Instead, library code providing generic types and functions will be required to provide function bodies as serialized SIL (effectively, “source code”) to clients via the mechanism descibed below.
+    * This compilation mode will not support separate compilation of generics, as that makes specialization not possible. Instead, library code providing generic types and functions will be required to provide function bodies as serialized SIL (effectively, “source code”) to clients via the mechanism described below.
 * **Library code is built as always inlinable and “emitIntoClient”** to support the specialization of generics/protocols in use sites that are outside of the library.
     * **This applies to the standard library, too**, and we shall distribute the standard library built this way with the toolchain.
     * This effectively provides the source code of libraries to application builds.

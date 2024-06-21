@@ -3,8 +3,8 @@
 * Proposal: [SE-0434](0434-global-actor-isolated-types-usability.md)
 * Authors: [Sima Nerush](https://github.com/simanerush), [Matt Massicotte](https://github.com/mattmassicotte), [Holly Borla](https://github.com/hborla)
 * Review Manager: [John McCall](https://github.com/rjmccall)
-* Status: **Active review (April 10th...22nd, 2024)**
-* Implementation: On `main` gated behind `-enable-experimental-feature GlobalActorIsolatedTypesUsability`
+* Status: **Implemented (Swift 6.0)**
+* Upcoming Feature Flag: `GlobalActorIsolatedTypesUsability`
 * Review: ([pitch](https://forums.swift.org/t/pitch-usability-of-global-actor-isolated-types/70799)) ([review](https://forums.swift.org/t/se-0434-usability-of-global-actor-isolated-types/71187))
 
 ## Introduction

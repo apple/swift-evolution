@@ -3,7 +3,7 @@
 * Proposal: [SE-0200](0200-raw-string-escaping.md)
 * Authors: [John Holdsworth](https://github.com/johnno1962), [Becca Royal-Gordon](https://github.com/beccadax), [Erica Sadun](https://github.com/erica)
 * Review Manager: [Doug Gregor](https://github.com/DougGregor)
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/102b2f2770f0dab29f254a254063847388647a4a/proposals/0200-raw-string-escaping.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/102b2f2770f0dab29f254a254063847388647a4a/proposals/0200-raw-string-escaping.md)
 * Status: **Implemented (Swift 5.0)**
 * Implementation: [apple/swift#17668](https://github.com/apple/swift/pull/17668)
 * Bugs: [SR-6362](https://bugs.swift.org/browse/SR-6362)
@@ -150,9 +150,9 @@ Removing escaped snippets to external files makes code review harder. Escaping (
 
 ## Initial Proposal
 
-"Raw-mode" strings were first discussed during the [SE-0168 Multi-Line String literals](https://github.com/apple/swift-evolution/blob/master/proposals/0168-multi-line-string-literals.md) review and postponed for later consideration. This proposal focuses on raw strings to allow the entry of single and multi-line string literals.
+"Raw-mode" strings were first discussed during the [SE-0168 Multi-Line String literals](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0168-multi-line-string-literals.md) review and postponed for later consideration. This proposal focuses on raw strings to allow the entry of single and multi-line string literals.
 
-The first iteration of [SE-0200](https://github.com/apple/swift-evolution/blob/102b2f2770f0dab29f254a254063847388647a4a/proposals/0200-raw-string-escaping.md) proposed adopting Python's model, using `r"...raw string..."`. The proposal was returned for revision with the [following feedback](https://forums.swift.org/t/returned-for-revision-se-0200-raw-mode-string-literals/11630):
+The first iteration of [SE-0200](https://github.com/swiftlang/swift-evolution/blob/102b2f2770f0dab29f254a254063847388647a4a/proposals/0200-raw-string-escaping.md) proposed adopting Python's model, using `r"...raw string..."`. The proposal was returned for revision with the [following feedback](https://forums.swift.org/t/returned-for-revision-se-0200-raw-mode-string-literals/11630):
 
 > During the review discussion, a few issues surfaced with the proposal, including:
 >
@@ -361,7 +361,7 @@ The same behavior is extended to multi-line strings:
     """#
 ```
 
-New line escaping works as per [SE-182](https://github.com/apple/swift-evolution/blob/master/proposals/0182-newline-escape-in-strings.md):
+New line escaping works as per [SE-182](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0182-newline-escape-in-strings.md):
 
 ```
 #"""

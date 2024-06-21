@@ -257,7 +257,7 @@ func switchFoo(x: Foo) {
 ```
 
 However, it was decided in review that this was still too restrictive and
-source-breaking, and so the core team [accepted the proposal][Rationale] with the modification that pattern matches only had to match the case declaration in arity, and case labels could be either provided or elided in their entirety, unless there was an ambiguity. Even then, as of Swift 5.2, this part of the proposal has not been implemented, and it would be a source breaking change to do so. Therefore, the "Pattern Consistency" section of the original proposal has been removed, and replaced with a ["Disambiguating pattern matches" section](https://github.com/apple/swift-evolution/blob/aecced4919ab297f343dafd7235d392d8b859839/proposals/0155-normalize-enum-case-representation.md), which provided a minimal disambiguation rule for pattern matching cases that share a
+source-breaking, and so the core team [accepted the proposal][Rationale] with the modification that pattern matches only had to match the case declaration in arity, and case labels could be either provided or elided in their entirety, unless there was an ambiguity. Even then, as of Swift 5.2, this part of the proposal has not been implemented, and it would be a source breaking change to do so. Therefore, the "Pattern Consistency" section of the original proposal has been removed, and replaced with a ["Disambiguating pattern matches" section](https://github.com/swiftlang/swift-evolution/blob/aecced4919ab297f343dafd7235d392d8b859839/proposals/0155-normalize-enum-case-representation.md), which provided a minimal disambiguation rule for pattern matching cases that share a
 base name. This new design still had not been implemented at the time the [core team adopted a new expiration policy for unimplemented proposals](https://forums.swift.org/t/addressing-unimplemented-evolution-proposals/40322), so it has expired.
 
 [SE-0155]: 0155-normalize-enum-case-representation.md
@@ -266,8 +266,8 @@ base name. This new design still had not been implemented at the time the [core 
 [Joe Groff]: https://github.com/jckarter
 [John McCall]: https://github.com/rjmccall
 [TJs comment]: https://forums.swift.org/t/draft-compound-names-for-enum-cases/4933/33
-[Revision 1]: https://github.com/apple/swift-evolution/blob/43ca098355762014f53e1b54e02d2f6a01253385/proposals/0155-normalize-enum-case-representation.md
+[Revision 1]: https://github.com/swiftlang/swift-evolution/blob/43ca098355762014f53e1b54e02d2f6a01253385/proposals/0155-normalize-enum-case-representation.md
 [Normalize Enum Case Representation (rev. 2)]: https://forums.swift.org/t/normalize-enum-case-representation-rev-2/5395
-[Originally Accepted Proposal]: https://github.com/apple/swift-evolution/blob/4cbb1f1fa836496d4bfba95c4b78a9754690956d/proposals/0155-normalize-enum-case-representation.md
-[Expired Proposal]: https://github.com/apple/swift-evolution/blob/aecced4919ab297f343dafd7235d392d8b859839/proposals/0155-normalize-enum-case-representation.md
+[Originally Accepted Proposal]: https://github.com/swiftlang/swift-evolution/blob/4cbb1f1fa836496d4bfba95c4b78a9754690956d/proposals/0155-normalize-enum-case-representation.md
+[Expired Proposal]: https://github.com/swiftlang/swift-evolution/blob/aecced4919ab297f343dafd7235d392d8b859839/proposals/0155-normalize-enum-case-representation.md
 [Rationale]: https://forums.swift.org/t/accepted-se-0155-normalize-enum-case-representation/5732

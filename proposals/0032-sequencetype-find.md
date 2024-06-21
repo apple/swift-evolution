@@ -6,7 +6,7 @@
 * Status: **Implemented (Swift 3.0)**
 * Decision Notes: [Rationale](https://forums.swift.org/t/accepted-se-0032-add-find-method-to-sequence/2462)
 * Bug: [SR-1519](https://bugs.swift.org/browse/SR-1519)
-* Previous Revisions: [1](https://github.com/apple/swift-evolution/blob/d709546002e1636a10350d14da84eb9e554c3aac/proposals/0032-sequencetype-find.md)
+* Previous Revisions: [1](https://github.com/swiftlang/swift-evolution/blob/d709546002e1636a10350d14da84eb9e554c3aac/proposals/0032-sequencetype-find.md)
 
 ## Introduction
 

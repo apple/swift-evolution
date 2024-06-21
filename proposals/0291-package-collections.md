@@ -5,7 +5,7 @@
 * Review Manager: [Tom Doron](https://github.com/tomerd)
 * Status: **Implemented (Swift 5.5)**
 * Implementation: [apple/swift-package-manager#3030](https://github.com/apple/swift-package-manager/pull/3030)
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/7c45e22557a0ef726dea9787f0fae9dac3ed7856/proposals/0291-package-collections.md), [2](https://github.com/apple/swift-evolution/blob/3e56b936a2398b7bd57c09dc39a845336d2543fe/proposals/0291-package-collections.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/7c45e22557a0ef726dea9787f0fae9dac3ed7856/proposals/0291-package-collections.md), [2](https://github.com/swiftlang/swift-evolution/blob/3e56b936a2398b7bd57c09dc39a845336d2543fe/proposals/0291-package-collections.md)
 * Review: [Review](https://forums.swift.org/t/se-0291-package-collections), [Review 2](https://forums.swift.org/t/se-0291-2nd-review-package-collections), [Acceptance](https://forums.swift.org/t/accepted-with-modifications-se-0291-package-collections), [Amendment](https://forums.swift.org/t/amendment-se-0291-package-collection-signing/), [Amendment Acceptance](https://forums.swift.org/t/accepted-se-0291-amendment-package-collection-signing/45126)
 
 ## Introduction
@@ -14,7 +14,7 @@ This is a proposal for adding support for **Package Collections** to SwiftPM. A 
 
 We believe there are three different components in the space of package discovery with different purposes:
 
-**Package Registry** is focused on hosting and serving package sources as an alternative to fetching them directly from git. The goal is to provide better immutability, durability and potentially improve performance and security. This initiative is in-progress and governed by [a separate proposal](https://github.com/apple/swift-evolution/pull/1179).
+**Package Registry** is focused on hosting and serving package sources as an alternative to fetching them directly from git. The goal is to provide better immutability, durability and potentially improve performance and security. This initiative is in-progress and governed by [a separate proposal](https://github.com/swiftlang/swift-evolution/pull/1179).
 
 **Package Index** is focused for providing a search index for packages. The goal is to improve discoverability of packages that may be hosted anywhere, and provide a rich set of metadata that helps making informed decisions when choosing dependencies. The Index indexes the package core metadata available in `Package.swift` as well as additional metadata from additional and external sources. An example of a package index is https://swiftpackageindex.com.
 

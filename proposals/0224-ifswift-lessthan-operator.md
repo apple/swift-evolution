@@ -11,7 +11,7 @@
 ## Introduction
 
 This proposal augments the functionality implemented for proposal
-[SE-0020](https://github.com/apple/swift-evolution/blob/master/proposals/0020-if-swift-version.md)
+[SE-0020](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0020-if-swift-version.md)
 with the introduction of a new valid operator in compilation
 condition: "<". The aim is that the syntax `#if swift(<4.2)` is
 supported by the language.

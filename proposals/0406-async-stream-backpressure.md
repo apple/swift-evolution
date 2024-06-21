@@ -9,7 +9,7 @@
 
 ## Introduction
 
-[SE-0314](https://github.com/apple/swift-evolution/blob/main/proposals/0314-async-stream.md)
+[SE-0314](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0314-async-stream.md)
 introduced new `Async[Throwing]Stream` types which act as root asynchronous
 sequences. These two types allow bridging from synchronous callbacks such as
 delegates to an asynchronous sequence. This proposal adds a new way of
@@ -792,7 +792,7 @@ against it since it effectively is a result type.
 Instead of providing a `makeStream` factory method we could use an initializer
 approach that takes a closure which gets the `Source` passed into. A similar API
 has been offered with the `Continuation` based approach and
-[SE-0388](https://github.com/apple/swift-evolution/blob/main/proposals/0388-async-stream-factory.md)
+[SE-0388](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0388-async-stream-factory.md)
 introduced new factory methods to solve some of the usability ergonomics with
 the initializer based APIs.
 

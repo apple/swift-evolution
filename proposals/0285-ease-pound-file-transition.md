@@ -13,7 +13,7 @@ In [SE-0274][], the core team accepted a proposal to change the behavior of `#fi
 
 Swift-evolution thread: [Revisiting the source compatibility impact of SE-0274: Concise magic file names](https://forums.swift.org/t/revisiting-the-source-compatibility-impact-of-se-0274-concise-magic-file-names/37720/)
 
-  [SE-0274]: https://github.com/apple/swift-evolution/blob/master/proposals/0274-magic-file.md
+  [SE-0274]: https://github.com/swiftlang/swift-evolution/blob/master/proposals/0274-magic-file.md
 
 ## Motivation
 

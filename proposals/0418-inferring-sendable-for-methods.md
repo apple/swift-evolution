@@ -4,13 +4,12 @@
 * Authors: [Angela Laar](https://github.com/angela-laar), [Kavon Farvardin](https://github.com/kavon), [Pavel Yaskevich](https://github.com/xedin)
 * Review Manager: [Becca Royal-Gordon](https://github.com/beccadax)
 * Status: **Implemented (Swift 6.0)**
-* Implementation: [apple/swift#67498](https://github.com/apple/swift/pull/67498), [apple/swift#70076](https://github.com/apple/swift/pull/70076)
 * Upcoming Feature Flag: `InferSendableFromCaptures`
 * Review: ([pitch](https://forums.swift.org/t/pitch-inferring-sendable-for-methods/66565)) ([review](https://forums.swift.org/t/se-0418-inferring-sendable-for-methods-and-key-path-literals/68999)) ([acceptance](https://forums.swift.org/t/accepted-se-0418-inferring-sendable-for-methods-and-key-path-literals/69242))
 
 ## Introduction
 
-This proposal is focused on a few corner cases in the language surrounding functions as values and key path literals when using concurrency. We propose Sendability should be inferred for partial and unapplied methods. We also propose to lift a Sendability restriction placed on key path literals in [SE-0302](https://github.com/apple/swift-evolution/blob/main/proposals/0302-concurrent-value-and-concurrent-closures.md#key-path-literals) by allowing the developers to control whether key path literal is Sendable or not. The goal is to improve flexibility, simplicity, and ergonomics without significant changes to Swift.
+This proposal is focused on a few corner cases in the language surrounding functions as values and key path literals when using concurrency. We propose Sendability should be inferred for partial and unapplied methods. We also propose to lift a Sendability restriction placed on key path literals in [SE-0302](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0302-concurrent-value-and-concurrent-closures.md#key-path-literals) by allowing the developers to control whether key path literal is Sendable or not. The goal is to improve flexibility, simplicity, and ergonomics without significant changes to Swift.
 
 ## Motivation
 
@@ -77,7 +76,7 @@ However, this is a lot of churn to get the expected behavior. The compiler shoul
 
 **Key Paths**
 
-[SE-0302](https://github.com/apple/swift-evolution/blob/main/proposals/0302-concurrent-value-and-concurrent-closures.md#key-path-literals) makes an explicit mention that all key path literals are treated as implicitly `Sendable` which means that they are not allowed to capture any non-`Sendable` values. This behavior is justified when key path values are passed across concurrency domains or otherwise involved in concurrently executed code but is too restrictive for non-concurrency related code.
+[SE-0302](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0302-concurrent-value-and-concurrent-closures.md#key-path-literals) makes an explicit mention that all key path literals are treated as implicitly `Sendable` which means that they are not allowed to capture any non-`Sendable` values. This behavior is justified when key path values are passed across concurrency domains or otherwise involved in concurrently executed code but is too restrictive for non-concurrency related code.
 
 ```swift
 class Info : Hashable {
@@ -248,7 +247,7 @@ let partial : @Sendable (String, String) -> Void = User().changeAddress // no er
 ```
 
 
-These two rules include partially applied and unapplied static methods but do not include partially applied or unapplied mutable methods. Unapplied references to mutable methods are not allowed in the language because they can lead to undefined behavior.  More details about this can be found in [SE-0042](https://github.com/apple/swift-evolution/blob/main/proposals/0042-flatten-method-types.md).
+These two rules include partially applied and unapplied static methods but do not include partially applied or unapplied mutable methods. Unapplied references to mutable methods are not allowed in the language because they can lead to undefined behavior.  More details about this can be found in [SE-0042](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0042-flatten-method-types.md).
 
 
 3. A key path literal without non-Sendable type captures and references to actor-isolated properties and/or subscripts is going to be inferred as key path type with a `& Sendable` requirement or a function type with `@Sendable` attribute.

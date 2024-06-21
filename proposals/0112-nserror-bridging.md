@@ -40,7 +40,7 @@ Swift-evolution thread: [Charles Srstka's pitch for Consistent
 bridging for NSErrors at the language
 boundary](https://forums.swift.org/t/pitch-consistent-bridging-for-nserrors-at-the-language-boundary/2482),
 which discussed Charles' [original
-proposal](https://github.com/apple/swift-evolution/pull/331) that
+proposal](https://github.com/swiftlang/swift-evolution/pull/331) that
 addressed these issues by providing ``NSError`` to ``ErrorProtocol``
 bridging and exposing the domain, code, and user-info dictionary for
 all errors. This proposal expands upon that work, but without directly

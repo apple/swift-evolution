@@ -58,7 +58,7 @@
 
 ## Introduction
 
-With the recent introduction of [actors](https://github.com/apple/swift-evolution/blob/main/proposals/0306-actors.md) to the language, Swift gained powerful and foundational building blocks for expressing *thread-safe* concurrent programs. This proposal is the first in a series of proposals aiming to extend Swift's actor runtime with the concept of *distributed actors*, allowing developers leverage the actor model not only in local, but also distributed settings.
+With the recent introduction of [actors](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0306-actors.md) to the language, Swift gained powerful and foundational building blocks for expressing *thread-safe* concurrent programs. This proposal is the first in a series of proposals aiming to extend Swift's actor runtime with the concept of *distributed actors*, allowing developers leverage the actor model not only in local, but also distributed settings.
 
 With distributed actors, we acknowledge that the world we live in is increasingly built around distributed systems, and that we should provide developers with better tools to work within those environments. We aim to simplify and push the state-of-the-art for distributed systems programming in Swift as we did with concurrent programming with local actors and Swift’s structured concurrency approach embedded in the language.
 
@@ -287,7 +287,7 @@ distributed actor Player {
 
 ## Detailed design
 
-Unless otherwise specified in this proposal, the semantics of a distributed actor are the same as a regular actor, as described in [SE-0306](https://github.com/apple/swift-evolution/blob/main/proposals/0306-actors.md).
+Unless otherwise specified in this proposal, the semantics of a distributed actor are the same as a regular actor, as described in [SE-0306](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0306-actors.md).
 
 ### Distributed Actors 
 
@@ -774,7 +774,7 @@ distributed actor Charlie {
 
 While subscripts share many similarities with methods, they can lead to complex and potentially impossible to support invocations, meaning that they are currently also not allowed to be `distributed`. Such subscripts' usefulness would, in any case, be severely limited by both their lack of support for being `async` (e.g., could only support read-only subscripts, because no coroutine-style accessors) and their lightweight syntax can lead to the same problems as properties.
 
-Distributed functions _may_ be combined with property wrappers to function parameters (which were introduced by [SE-0293: Extend Property Wrappers to Function and Closure Parameters](https://github.com/apple/swift-evolution/blob/main/proposals/0293-extend-property-wrappers-to-function-and-closure-parameters.md)), and their semantics are what one would expect: they are a transformation on the syntactical level, meaning that the actual serialized parameter value is what the property wrapper has wrapped the parameter in. This is especially interesting for implementing eager validation of specific parameters, such that calls with illegal argument values can be synchronously prevented before even sending the message. Of course, the recipient should still validate the incoming arguments using the same logic, but thanks to this we are able to avoid sending wrong values in non-adversarial situations, and just validate some values on the client side eagerly.
+Distributed functions _may_ be combined with property wrappers to function parameters (which were introduced by [SE-0293: Extend Property Wrappers to Function and Closure Parameters](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0293-extend-property-wrappers-to-function-and-closure-parameters.md)), and their semantics are what one would expect: they are a transformation on the syntactical level, meaning that the actual serialized parameter value is what the property wrapper has wrapped the parameter in. This is especially interesting for implementing eager validation of specific parameters, such that calls with illegal argument values can be synchronously prevented before even sending the message. Of course, the recipient should still validate the incoming arguments using the same logic, but thanks to this we are able to avoid sending wrong values in non-adversarial situations, and just validate some values on the client side eagerly.
 
 #### Distributed Method Serialization Requirements
 
@@ -1194,7 +1194,7 @@ As such, please be very careful with such mutable declarations. Swift Concurrenc
 
 #### Computed properties
 
-Distributed _computed properties_ are possible to support in a very limited fashion because of the effectful nature of the distributed keyword. It is only possible to make *read-only* properties distributed, because only such properties may be effectful (as introduced by [SE-0310: Effectful Read-only Properties](https://github.com/apple/swift-evolution/blob/main/proposals/0310-effectful-readonly-properties.md)). 
+Distributed _computed properties_ are possible to support in a very limited fashion because of the effectful nature of the distributed keyword. It is only possible to make *read-only* properties distributed, because only such properties may be effectful (as introduced by [SE-0310: Effectful Read-only Properties](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0310-effectful-readonly-properties.md)). 
 
 ```swift
 distributed actor Chunk { 

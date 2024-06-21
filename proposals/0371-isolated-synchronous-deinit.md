@@ -9,13 +9,13 @@
 
 ## Introduction
 
-This feature allows `deinit`'s of actors and global-actor isolated types (GAITs) to access non-sendable isolated state, lifting restrictions imposed imposed by [SE-0327](https://github.com/apple/swift-evolution/blob/main/proposals/0327-actor-initializers.md). This is achieved by providing runtime support for hopping onto executors in `__deallocating_deinit()`'s.
+This feature allows `deinit`'s of actors and global-actor isolated types (GAITs) to access non-sendable isolated state, lifting restrictions imposed imposed by [SE-0327](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0327-actor-initializers.md). This is achieved by providing runtime support for hopping onto executors in `__deallocating_deinit()`'s.
 
 ## Motivation
 
 The combination of automatic reference counting and deterministic deinitialization makes `deinit` in Swift a powerful tool for resource management. It greatly reduces need for `close()`-like methods (`unsubscribe()`, `cancel()`, `shutdown()`, etc.) in the public API. Such methods not only clutter the public API, but also introduce a state where object is already unusable but is still able to be referenced.
 
-Restrictions imposed by [SE-0327](https://github.com/apple/swift-evolution/blob/main/proposals/0327-actor-initializers.md) reduce the usefulness of explicit `deinit`s in actors and GAITs. Workarounds for these limitations may involve creation of `close()`-like methods, or even manual reference counting if the API should be able to serve several clients.
+Restrictions imposed by [SE-0327](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0327-actor-initializers.md) reduce the usefulness of explicit `deinit`s in actors and GAITs. Workarounds for these limitations may involve creation of `close()`-like methods, or even manual reference counting if the API should be able to serve several clients.
 
 In cases when `deinit` belongs to a subclass of `UIView` or `UIViewController` which are known to call `dealloc` on the main thread, developers may be tempted to silence the diagnostic by adopting `@unchecked Sendable` in types that are not actually  sendable. This undermines concurrency checking by the compiler, and may lead to data races when using incorrectly marked types in other places.
 
@@ -23,7 +23,7 @@ In cases when `deinit` belongs to a subclass of `UIView` or `UIViewController` w
 
 Allow execution of `deinit` and object deallocation to be the scheduled on the executor of the containing type (either that of the actor itself or that of the relevant global actor), if needed.
 
-Let's consider [examples from SE-0327](https://github.com/apple/swift-evolution/blob/main/proposals/0327-actor-initializers.md#data-races-in-deinitializers):
+Let's consider [examples from SE-0327](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0327-actor-initializers.md#data-races-in-deinitializers):
 
 In the case of several instances with shared data isolated on a common actor, the problem is completely eliminated:
 
@@ -142,7 +142,7 @@ actor MyActor {
 }
 ```
 
-If there is an explicit `deinit`, then isolation is computed following usual rules for isolation of class instance members as defined by [SE-0313](https://github.com/gottesmm/swift-evolution/blob/move-function-pitch-v1/proposals/0313-actor-isolation-control.md) and [SE-0316](https://github.com/apple/swift-evolution/blob/main/proposals/0316-global-actors.md). It takes into account isolation attributes on the `deinit` itself, isolation of the `deinit` in the superclass, and isolation attributes on the containing class. If deinit belongs to an actor or GAIT, but isolation of the `deinit` is undesired, it can be suppressed using `nonisolated` attribute:
+If there is an explicit `deinit`, then isolation is computed following usual rules for isolation of class instance members as defined by [SE-0313](https://github.com/gottesmm/swift-evolution/blob/move-function-pitch-v1/proposals/0313-actor-isolation-control.md) and [SE-0316](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0316-global-actors.md). It takes into account isolation attributes on the `deinit` itself, isolation of the `deinit` in the superclass, and isolation attributes on the containing class. If deinit belongs to an actor or GAIT, but isolation of the `deinit` is undesired, it can be suppressed using `nonisolated` attribute:
 
 ```swift
 @MainActor

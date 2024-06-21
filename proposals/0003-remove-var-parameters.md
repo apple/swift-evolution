@@ -97,7 +97,7 @@ this language change.
 This proposal originally included removal of `var` bindings for all
 refutable patterns as well as function parameters.
 
-[Original SE-0003 Proposal](https://github.com/apple/swift-evolution/blob/8cd734260bc60d6d49dbfb48de5632e63bf200cc/proposals/0003-remove-var-parameters-patterns.md)
+[Original SE-0003 Proposal](https://github.com/swiftlang/swift-evolution/blob/8cd734260bc60d6d49dbfb48de5632e63bf200cc/proposals/0003-remove-var-parameters-patterns.md)
 
 Removal of `var` from refutable patterns was reconsidered due to the
 burden it placed on valid mutation patterns already in use in Swift 2

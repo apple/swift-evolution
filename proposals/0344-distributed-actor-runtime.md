@@ -63,7 +63,7 @@
 
 ## Introduction
 
-With the recent introduction of [actors](https://github.com/apple/swift-evolution/blob/main/proposals/0306-actors.md) to the language, Swift gained powerful and foundational building blocks for expressing *thread-safe* concurrent programs. Actors guarantee thread-safety thanks to actor-isolation of mutable state they encapsulate.
+With the recent introduction of [actors](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0306-actors.md) to the language, Swift gained powerful and foundational building blocks for expressing *thread-safe* concurrent programs. Actors guarantee thread-safety thanks to actor-isolation of mutable state they encapsulate.
 
 In [SE-0336: Distributed Actor Isolation][isolation] we took it a step further, guaranteeing complete isolation of state with distributed actor-isolation, and setting the stage for `distributed` method calls to be performed across process and node boundaries.
 
@@ -401,7 +401,7 @@ Distributed actor initializers inject a number of calls into specific places of 
 
 ### Distributed actor initializers
 
-A non-delegating initializer of a type must *fully initialize* it. The place in code where an actor becomes fully initialized has important and specific meaning to actor isolation which is defined in depth in [SE-0327: On Actors and Initialization](https://github.com/apple/swift-evolution/blob/main/proposals/0327-actor-initializers.md). Not only that, but once fully initialized it is possible to escape `self` out of a (distributed) actor's initializer. This aspect is especially important for distributed actors, because it means that once fully initialized they _must_ be registered with the actor system as they may be sent to other distributed actors and even sent messages to.
+A non-delegating initializer of a type must *fully initialize* it. The place in code where an actor becomes fully initialized has important and specific meaning to actor isolation which is defined in depth in [SE-0327: On Actors and Initialization](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0327-actor-initializers.md). Not only that, but once fully initialized it is possible to escape `self` out of a (distributed) actor's initializer. This aspect is especially important for distributed actors, because it means that once fully initialized they _must_ be registered with the actor system as they may be sent to other distributed actors and even sent messages to.
 
 All non-delegating initializers must store an instance of a `DistributedActorSystem` conforming type into their `self.actorSystem` property. 
 
@@ -479,7 +479,7 @@ distributed actor DA {
 
 So far, the initialization process was fairly straightforward. We only needed to find a way to initialize the stored properties, and that's it. There is one more step though that is necessary to make distributed actors work: "ready-ing" the actor.
 
-As the actor becomes fully initialized, the type system allows escaping its `self` through method calls or closures. There are a number of rules which govern the isolation state of `self` of any actor during its initializer, which are fully explained in: [SE-0327: On Actor Initialization](https://github.com/apple/swift-evolution/blob/main/proposals/0327-actor-initializers.md). Distributed actor initializers are subject to the same rules, and in addition to that they inject an `actorReady(self)` at the point where self would have become nonisolated under the rules explained in SE-0327.
+As the actor becomes fully initialized, the type system allows escaping its `self` through method calls or closures. There are a number of rules which govern the isolation state of `self` of any actor during its initializer, which are fully explained in: [SE-0327: On Actor Initialization](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0327-actor-initializers.md). Distributed actor initializers are subject to the same rules, and in addition to that they inject an `actorReady(self)` at the point where self would have become nonisolated under the rules explained in SE-0327.
 
 This call is necessary in order for the distributed actor system to be able to resolve an incoming `ID` (that it knows, since it assigned it) to a specific distributed actor instance (which it does not know, until `actorReady` is called on the system). This means that there is a state between the `assignID` and `actorReady` calls, during which the actor system cannot yet properly resolve the actor.
 
@@ -1506,7 +1506,7 @@ Once the `onError` or `onReturn` methods complete, the `executeDistributedTarget
 
 ### Initializers no longer need to accept a single DistributedActorSystem
 
-During this review, feedback was received and addressed with regards to the previous implementation limitation that user defined designated actor initializers must have always accepted a single `DistributedActorSystem` conforming parameter. This was defined in [SE-0336: Distributed Actor Isolation](https://github.com/apple/swift-evolution/blob/main/proposals/0336-distributed-actor-isolation.md).
+During this review, feedback was received and addressed with regards to the previous implementation limitation that user defined designated actor initializers must have always accepted a single `DistributedActorSystem` conforming parameter. This was defined in [SE-0336: Distributed Actor Isolation](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0336-distributed-actor-isolation.md).
 
 The limitation used to be that one had to accept such parameter or the system would fail to synthesize the initializer an offer a compile-time error:
 
@@ -1885,4 +1885,4 @@ None.
 - [Pitch: Distributed Actors](https://forums.swift.org/t/pitch-distributed-actors/51669)
   - Which focused on the general concept of distributed actors, and will from here on be cut up in smaller, reviewable pieces that will become their own independent proposals. Similar to how Swift Concurrency is a single coherent feature, however was introduced throughout many interconnected Swift Evolution proposals.
 
-[isolation]: https://github.com/apple/swift-evolution/blob/main/proposals/0336-distributed-actor-isolation.md
+[isolation]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0336-distributed-actor-isolation.md

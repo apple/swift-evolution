@@ -6,8 +6,8 @@
 * Status: **Implemented (Swift 5.2)**
 * Implementation: [apple/swift#24299](https://github.com/apple/swift/pull/24299)
 * Previous Revisions:
-  [[1]](https://github.com/apple/swift-evolution/blob/36ea8be09508db9380949954d0c7a101fdb15226/proposals/0253-callable.md),
-  [[2]](https://github.com/apple/swift-evolution/blob/e1dd65469e3525e5e230b877e1539bff1e1cc5e3/proposals/0253-callable.md)
+  [[1]](https://github.com/swiftlang/swift-evolution/blob/36ea8be09508db9380949954d0c7a101fdb15226/proposals/0253-callable.md),
+  [[2]](https://github.com/swiftlang/swift-evolution/blob/e1dd65469e3525e5e230b877e1539bff1e1cc5e3/proposals/0253-callable.md)
 * Decision Notes:
   ([rationale](https://forums.swift.org/t/accepted-with-modification-se-0253-callable-values-of-user-defined-nominal-types/24605)),
   ([final revision note](https://forums.swift.org/t/accepted-with-modification-se-0253-callable-values-of-user-defined-nominal-types/24605/166))
@@ -19,7 +19,7 @@ This proposal introduces "statically"
 Callable values are values that define function-like behavior and can be called
 using function call syntax. In contrast to dynamically callable values
 introduced in
-[SE-0216](https://github.com/apple/swift-evolution/blob/master/proposals/0216-dynamic-callable.md),
+[SE-0216](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0216-dynamic-callable.md),
 this feature supports statically declared arities, argument labels, and
 parameter types, and is not constrained to primary type declarations.
 
@@ -233,7 +233,7 @@ let sexp = sexpParser("(+ 1 2)")
 
 ### A static counterpart to `@dynamicCallable`
 
-[SE-0216](https://github.com/apple/swift-evolution/blob/master/proposals/0216-dynamic-callable.md) introduced user-defined dynamically callable values. In its [alternatives considered](https://github.com/apple/swift-evolution/blob/master/proposals/0216-dynamic-callable.md#alternatives-considered) section, it was requested that we design and implement the "static callable" version of this proposal in conjunction with the dynamic version proposed. See its [pitch thread](https://forums.swift.org/t/pitch-3-introduce-user-defined-dynamically-callable-types/12232) for discussions about "static callables".
+[SE-0216](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0216-dynamic-callable.md) introduced user-defined dynamically callable values. In its [alternatives considered](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0216-dynamic-callable.md#alternatives-considered) section, it was requested that we design and implement the "static callable" version of this proposal in conjunction with the dynamic version proposed. See its [pitch thread](https://forums.swift.org/t/pitch-3-introduce-user-defined-dynamically-callable-types/12232) for discussions about "static callables".
 
 ### Prior art
 
@@ -486,7 +486,7 @@ struct Adder {
 ```
 
 This alternative is in fact what's proposed in [the first revision of this
-proposal](https://github.com/apple/swift-evolution/blob/36ea8be09508db9380949954d0c7a101fdb15226/proposals/0253-callable.md),
+proposal](https://github.com/swiftlang/swift-evolution/blob/36ea8be09508db9380949954d0c7a101fdb15226/proposals/0253-callable.md),
 which got [returned for
 revision](https://forums.swift.org/t/returned-for-revision-se-0253-static-callables/23290).
 
@@ -585,7 +585,7 @@ struct Adder {
     //
     // `StringInterpolationProtocol` has a similar informal requirement for
     // `func appendInterpolation` methods.
-    // https://github.com/apple/swift-evolution/blob/master/proposals/0228-fix-expressiblebystringinterpolation.md#proposed-solution
+    // https://github.com/swiftlang/swift-evolution/blob/master/proposals/0228-fix-expressiblebystringinterpolation.md#proposed-solution
     func callAsFunction(_ x: Int) -> Int {
         return base + x
     }

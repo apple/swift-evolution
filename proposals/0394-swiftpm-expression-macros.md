@@ -9,11 +9,11 @@
 
 ## Introduction
 
-Macros provide a way to extend Swift by performing arbitrary syntactic transformations on input source code to produce new code. One example for this are expression macros which were previously proposed in [SE-0382](https://github.com/apple/swift-evolution/blob/main/proposals/0382-expression-macros.md). This proposal covers how custom macros are defined, built and distributed as part of a Swift package.
+Macros provide a way to extend Swift by performing arbitrary syntactic transformations on input source code to produce new code. One example for this are expression macros which were previously proposed in [SE-0382](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0382-expression-macros.md). This proposal covers how custom macros are defined, built and distributed as part of a Swift package.
 
 ## Motivation
 
-[SE-0382](https://github.com/apple/swift-evolution/blob/main/proposals/0382-expression-macros.md) and [A Possible Vision for Macros in Swift](https://gist.github.com/DougGregor/4f3ba5f4eadac474ae62eae836328b71) covered the motivation for macros themselves, defining them as part of a package will offer a straightforward way to reuse and distribute macros as source code.
+[SE-0382](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0382-expression-macros.md) and [A Possible Vision for Macros in Swift](https://gist.github.com/DougGregor/4f3ba5f4eadac474ae62eae836328b71) covered the motivation for macros themselves, defining them as part of a package will offer a straightforward way to reuse and distribute macros as source code.
 
 ## Proposed solution
 
@@ -46,7 +46,7 @@ public extension Target {
 }
 ```
 
-Similar to package plugins ([SE-0303 "Package Manager Extensible Build Tools"](https://github.com/apple/swift-evolution/blob/main/proposals/0303-swiftpm-extensible-build-tools.md)), macro plugins are built as executables for the host (i.e, where the compiler is run). The compiler receives the paths to these executables from the build system and will run them on demand as part of the compilation process. Macro executables are automatically available for any target that transitively depends on them via the package manifest.
+Similar to package plugins ([SE-0303 "Package Manager Extensible Build Tools"](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0303-swiftpm-extensible-build-tools.md)), macro plugins are built as executables for the host (i.e, where the compiler is run). The compiler receives the paths to these executables from the build system and will run them on demand as part of the compilation process. Macro executables are automatically available for any target that transitively depends on them via the package manifest.
 
 A minimal package containing the implementation, definition and client of a macro would look like this:
 
@@ -72,7 +72,7 @@ let package = Package(
 )
 ```
 
-Macro implementations will be executed in a sandbox [similar to package plugins](https://github.com/apple/swift-evolution/blob/main/proposals/0303-swiftpm-extensible-build-tools.md#security), preventing file system and network access. This is a practical way of encouraging macros to not depend on any state other than the specific macro expansion node they are given to expand and its child nodes (but not its parent nodes), and the information specifically provided by the macro expansion context. If in the future macros need access to other information, this will be accomplished by extending the macro expansion context, which also provides a mechanism for the compiler to track what information the macro actually queried.
+Macro implementations will be executed in a sandbox [similar to package plugins](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0303-swiftpm-extensible-build-tools.md#security), preventing file system and network access. This is a practical way of encouraging macros to not depend on any state other than the specific macro expansion node they are given to expand and its child nodes (but not its parent nodes), and the information specifically provided by the macro expansion context. If in the future macros need access to other information, this will be accomplished by extending the macro expansion context, which also provides a mechanism for the compiler to track what information the macro actually queried.
 
 Any code from macro implementations can be tested by declaring a dependency on the macro target from a test, this works similarly to the [testing of executable targets](https://github.com/apple/swift-package-manager/pull/3316).
 
@@ -186,7 +186,7 @@ Since macro plugins are entirely additive, there's no impact on existing package
 
 ### Package plugins
 
-The original pitch of expression macros considered declaring macros by introducing a new capability to [package plugins](https://github.com/apple/swift-evolution/blob/main/proposals/0303-swiftpm-extensible-build-tools.md), but since the execution model is significantly different and the APIs used for macros are external to SwiftPM, this idea was discarded.
+The original pitch of expression macros considered declaring macros by introducing a new capability to [package plugins](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0303-swiftpm-extensible-build-tools.md), but since the execution model is significantly different and the APIs used for macros are external to SwiftPM, this idea was discarded.
 
 ### `.macroTarget()`
 
@@ -194,7 +194,7 @@ We're (slowly) trying to move away from having the target suffix since it is imp
 
 ### Dependencies on macro targets
 
-In [SE-0303](https://github.com/apple/swift-evolution/blob/main/proposals/0303-swiftpm-extensible-build-tools.md), we introduced the `plugins` parameter for build order dependencies on plugins, so it could have make sense to use a `macros` parameter for dependencies on macros. However, introducing bespoke API for each type of host-side content used during the build does not seem scalable. We also already have precedence of executables being part of `dependencies` even though that dependency is strictly for build ordering (with the exception of tests, which also applies to macros). Because of this, dependencies on macros are declared via the `dependencies` parameter, however it could be interesting to revisit a separation of build order and linked dependencies in the future.
+In [SE-0303](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0303-swiftpm-extensible-build-tools.md), we introduced the `plugins` parameter for build order dependencies on plugins, so it could have make sense to use a `macros` parameter for dependencies on macros. However, introducing bespoke API for each type of host-side content used during the build does not seem scalable. We also already have precedence of executables being part of `dependencies` even though that dependency is strictly for build ordering (with the exception of tests, which also applies to macros). Because of this, dependencies on macros are declared via the `dependencies` parameter, however it could be interesting to revisit a separation of build order and linked dependencies in the future.
 
 ## Future Directions
 

@@ -86,7 +86,7 @@ in `bar` will result in an error due to `bar` not being isolated to the
 ### Asynchronous top-level context inference
 
 The rules for inferring whether the top-level context is an asynchronous context
-are the same for anonymous closures, specified in [SE-0296 Async/Await](https://github.com/apple/swift-evolution/blob/main/proposals/0296-async-await.md#closures).
+are the same for anonymous closures, specified in [SE-0296 Async/Await](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0296-async-await.md#closures).
 
 The top-level code is inferred to be an asynchronous context if it contains a
 suspension point in the immediate top-level context.

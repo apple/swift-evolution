@@ -7,7 +7,7 @@
 * Bugs: rdar://99276048, rdar://99832858
 * Implementation: [Swift PR 68419](https://github.com/apple/swift/pull/68419), [Swift PR 68423](https://github.com/apple/swift/pull/68423)
 * Review: ([pitch](https://forums.swift.org/t/66206)), ([review](https://forums.swift.org/t/se-0405-string-initializers-with-encoding-validation/66655)), ([acceptance](https://forums.swift.org/t/accepted-with-modifications-se-0405-string-initializers-with-encoding-validation/67134))
-* Previous Revisions: [0](https://gist.github.com/glessard/d1ed79b7968b4ad2115462b3d1eba805), [1](https://github.com/apple/swift-evolution/blob/37531427931a57ff2a76225741c99de8fa8b8c59/proposals/0405-string-validating-initializers.md)
+* Previous Revisions: [0](https://gist.github.com/glessard/d1ed79b7968b4ad2115462b3d1eba805), [1](https://github.com/swiftlang/swift-evolution/blob/37531427931a57ff2a76225741c99de8fa8b8c59/proposals/0405-string-validating-initializers.md)
 
 ## Introduction
 
@@ -219,5 +219,5 @@ It is often desirable to normalize strings, but the standard library does not ex
 
 Thanks to Michael Ilseman, Tina Liu and Quinn Quinn for discussions about input validation issues.
 
-[SE-0027](https://github.com/apple/swift-evolution/blob/main/proposals/0027-string-from-code-units.md) by [Zachary Waldowski](https://github.com/zwaldowski) was reviewed in February 2016, covering similar ground. It was rejected at the time because the design of `String` had not been finalized. The name `String.init(validatingCString:)` was suggested as part of SE-0027. Lily Ballard later [pitched](https://forums.swift.org/t/21538) a renaming of `String.init(validatingUTF8:)`, citing consistency with other `String` API involving C strings.
+[SE-0027](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0027-string-from-code-units.md) by [Zachary Waldowski](https://github.com/zwaldowski) was reviewed in February 2016, covering similar ground. It was rejected at the time because the design of `String` had not been finalized. The name `String.init(validatingCString:)` was suggested as part of SE-0027. Lily Ballard later [pitched](https://forums.swift.org/t/21538) a renaming of `String.init(validatingUTF8:)`, citing consistency with other `String` API involving C strings.
 

@@ -189,7 +189,7 @@ Note that incorrect conformance to this protocol can introduce bugs in your prog
 
 #### Tuple conformance to `Sendable`
 
-Swift has [hard coded conformances for tuples](https://github.com/apple/swift-evolution/blob/main/proposals/0283-tuples-are-equatable-comparable-hashable.md) to specific protocols, and this should be extended to `Sendable`, when the tuples elements all conform to `Sendable`.
+Swift has [hard coded conformances for tuples](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0283-tuples-are-equatable-comparable-hashable.md) to specific protocols, and this should be extended to `Sendable`, when the tuples elements all conform to `Sendable`.
 
 #### Metatype conformance to `Sendable`
 
@@ -314,7 +314,7 @@ This behavior makes it possible to safely create and pass around immutable bags 
 
 #### Actor types
 
-Actor types provide their own internal synchronization, so they implicitly conform to `Sendable`. The [actors proposal](https://github.com/apple/swift-evolution/blob/main/proposals/0306-actors.md) provides more detail.
+Actor types provide their own internal synchronization, so they implicitly conform to `Sendable`. The [actors proposal](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0306-actors.md) provides more detail.
 
 #### Key path literals
 
@@ -625,7 +625,7 @@ We need the compiler to know whether there is a possible concurrency domain hop 
 
 ### Marker protocols as custom attributes 
 
-The marker protocol `Sendable` and the function attribute `@Sendable` are intentionally given the same name. There is a potential future direction here where `@Sendable` could move from a special attribute recognized by the compiler (as in this proposal), to having marker protocols like `Sendable` be custom attributes like [property wrappers](https://github.com/apple/swift-evolution/blob/main/proposals/0258-property-wrappers.md) and [result builders](https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builders.md). Such a change would have very little effect on existing code that uses `@Sendable` so long as users don't declare their own `Sendable` type that shadows the one from the standard library. However, it would make `@Sendable` less special and allow other marker protocols to be used similarly.
+The marker protocol `Sendable` and the function attribute `@Sendable` are intentionally given the same name. There is a potential future direction here where `@Sendable` could move from a special attribute recognized by the compiler (as in this proposal), to having marker protocols like `Sendable` be custom attributes like [property wrappers](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0258-property-wrappers.md) and [result builders](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0289-result-builders.md). Such a change would have very little effect on existing code that uses `@Sendable` so long as users don't declare their own `Sendable` type that shadows the one from the standard library. However, it would make `@Sendable` less special and allow other marker protocols to be used similarly.
 
 ## Source Compatibility
 

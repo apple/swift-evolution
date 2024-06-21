@@ -5,7 +5,7 @@
 * Review Manager: [Chris Lattner](https://github.com/lattner)
 * Status: **Implemented (Swift 4.0)**
 * Decision Notes: [Rationale](https://forums.swift.org/t/accepted-se-0160-limiting-objc-inference/5621) 
-* Previous Revisions: [1](https://github.com/apple/swift-evolution/blob/0389b1f49fc55b1a898701c549ce89738307b9fc/proposals/0160-objc-inference.md)
+* Previous Revisions: [1](https://github.com/swiftlang/swift-evolution/blob/0389b1f49fc55b1a898701c549ce89738307b9fc/proposals/0160-objc-inference.md)
 * Implementation: [apple/swift#8379](https://github.com/apple/swift/pull/8379)
 * Bug: [SR-4481](https://bugs.swift.org/browse/SR-4481)
 
@@ -176,7 +176,7 @@ become well-formed, and the method `bar()` will continue to work as
 it does today through the Objective-C runtime. Indeed, this change
 is the right way forward even if Swift never supports `dynamic` in
 its own runtime, following the precedent of
-[SE-0070](https://github.com/apple/swift-evolution/blob/master/proposals/0070-optional-requirements.md),
+[SE-0070](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0070-optional-requirements.md),
 which required the Objective-C-only protocol feature "optional
 requirements" to be explicitly marked with `@objc`.
 
@@ -606,6 +606,6 @@ relationship to this proposal.
 
 # Revision history
 
-[Version 1](https://github.com/apple/swift-evolution/blob/0389b1f49fc55b1a898701c549ce89738307b9fc/proposals/0160-objc-inference.md)
+[Version 1](https://github.com/swiftlang/swift-evolution/blob/0389b1f49fc55b1a898701c549ce89738307b9fc/proposals/0160-objc-inference.md)
 of this proposal did not include the use of `@objcMembers` on classes
 or the use of `@objc`/`@nonobjc` on extensions to mass-annotate.

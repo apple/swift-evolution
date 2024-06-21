@@ -48,7 +48,7 @@ typealias StringArray = Array<String>
 extension StringArray { ... }
 ```
 
-With [SE-0346](https://github.com/apple/swift-evolution/blob/main/proposals/0346-light-weight-same-type-syntax.md), we can also declare a primary associated type, and bind it in an extension using angle-brackets:
+With [SE-0346](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0346-light-weight-same-type-syntax.md), we can also declare a primary associated type, and bind it in an extension using angle-brackets:
 
 ```swift
 protocol Collection<Element> {

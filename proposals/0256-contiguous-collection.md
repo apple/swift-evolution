@@ -17,7 +17,7 @@ unsafe buffer.
 
 ## Motivation
 
-[SE-0237](https://github.com/apple/swift-evolution/blob/master/proposals/0237-contiguous-collection.md) 
+[SE-0237](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0237-contiguous-collection.md) 
 introduced two new methods, `withContiguous{Mutable}StorageIfAvailable`, to
 allow generic algorithms to test for and use an underlying unsafe buffer when
 it is available. This has significant performance benefit for certain

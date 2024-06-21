@@ -14,7 +14,7 @@ This proposal conforms `Never` to `Identifiable` to make it usable as a "bottom 
 
 ## Motivation and Proposed Solution
 
-With the acceptance of [SE-0215](https://github.com/apple/swift-evolution/blob/main/proposals/0215-conform-never-to-hashable-and-equatable.md), `Never` was deemed as being a “blessed bottom type”, but that it wouldn’t implicitly conform to all protocols—instead explicit conformance would be added where valuable.
+With the acceptance of [SE-0215](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0215-conform-never-to-hashable-and-equatable.md), `Never` was deemed as being a “blessed bottom type”, but that it wouldn’t implicitly conform to all protocols—instead explicit conformance would be added where valuable.
 
 The conformance of `Never` to `Equatable` and `Hashable` in SE-0215 was motivated by examples like using `Never` as a generic constraint in types like `Result` and in enumerations. These same use cases motivate the conformance of `Never` to `Identifiable`, which is pervasive in commonly used frameworks like SwiftUI.
 

@@ -35,7 +35,7 @@ func horizontal<V1: View, V2: View>(_ v1: V1, _ v2: V2) -> some View {
 }
 ```
 
-There is a lot of boilerplate to declare the generic parameters `V1` and `V2` that are only used once, making this function look far more complex than it really is. The result, on the other hand, is able to use an [opaque result type](https://github.com/apple/swift-evolution/blob/main/proposals/0244-opaque-result-types.md) to hide the specific returned type (which would be complicated to describe), describing it only by the protocols to which it conforms.
+There is a lot of boilerplate to declare the generic parameters `V1` and `V2` that are only used once, making this function look far more complex than it really is. The result, on the other hand, is able to use an [opaque result type](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0244-opaque-result-types.md) to hide the specific returned type (which would be complicated to describe), describing it only by the protocols to which it conforms.
 
 This proposal extends the syntax of opaque result types to parameters, allowing one to specify function parameters that are generic without the boilerplate associated with generic parameter lists. The `horizontal` function above can then be expressed as:
 
@@ -77,7 +77,7 @@ let fString: (String) -> Void = f // okay, opaque type inferred to String
 let fAmbiguous = f                // error: cannot infer parameter for `some P` parameter
 ```
 
-[SE-0328](https://github.com/apple/swift-evolution/blob/main/proposals/0328-structural-opaque-result-types.md) extended opaque result types to allow multiple uses of `some P` types within the result type, in any structural position. Opaque types in parameters permit the same structural uses, e.g.,
+[SE-0328](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0328-structural-opaque-result-types.md) extended opaque result types to allow multiple uses of `some P` types within the result type, in any structural position. Opaque types in parameters permit the same structural uses, e.g.,
 
 ```swift
 func encodeAnyDictionaryOfPairs(_ dict: [some Hashable & Codable: Pair<some Codable, some Codable>]) -> Data
@@ -140,7 +140,7 @@ acceptLots(Swift, 6)                  // okay, Ts contains String and Int
 
 ### Opaque parameters in "consuming" positions of function types
 
-The resolution of [SE-0328](https://github.com/apple/swift-evolution/blob/main/proposals/0328-structural-opaque-result-types.md) prohibited the use of opaque parameters in "consuming" positions of function types. For example:
+The resolution of [SE-0328](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0328-structural-opaque-result-types.md) prohibited the use of opaque parameters in "consuming" positions of function types. For example:
 
 ```swift
 func f() -> (some P) -> Void { ... } // error: cannot use opaque type in parameter of function type

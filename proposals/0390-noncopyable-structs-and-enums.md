@@ -6,7 +6,7 @@
 * Status: **Implemented (Swift 5.9)**
 * Implementation: in main branch of compiler
 * Review: ([pitch](https://forums.swift.org/t/pitch-noncopyable-or-move-only-structs-and-enums/61903)) ([first review](https://forums.swift.org/t/se-0390-noncopyable-structs-and-enums/63258)) ([second review](https://forums.swift.org/t/second-review-se-0390-noncopyable-structs-and-enums/63866)) ([acceptance](https://forums.swift.org/t/accepted-se-0390-noncopyable-structs-and-enums/65157))
-* Previous Revisions: [1](https://github.com/apple/swift-evolution/blob/5d075b86d57e3436b223199bd314b2642e30045f/proposals/0390-noncopyable-structs-and-enums.md)
+* Previous Revisions: [1](https://github.com/swiftlang/swift-evolution/blob/5d075b86d57e3436b223199bd314b2642e30045f/proposals/0390-noncopyable-structs-and-enums.md)
 
 ## Introduction
 
@@ -1222,7 +1222,7 @@ struct FileDescriptor: ~Copyable {
 }
 ```
 
-The [consume operator](https://github.com/apple/swift-evolution/blob/main/proposals/0377-parameter-ownership-modifiers.md)
+The [consume operator](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0377-parameter-ownership-modifiers.md)
 must be used to explicitly end the value's lifetime using its `deinit` if
 `discard` is used to conditionally destroy the value on other paths
 through the method.
@@ -1857,7 +1857,7 @@ value is required to provide a non-borrowed value to the underlying function.
 
 ## Revision history
 
-This revision makes the following changes from the [second reviewed revision](https://github.com/apple/swift-evolution/blob/a9e21e3a4eb9526f998915c6554c7c72e5885a91/proposals/0390-noncopyable-structs-and-enums.md)
+This revision makes the following changes from the [second reviewed revision](https://github.com/swiftlang/swift-evolution/blob/a9e21e3a4eb9526f998915c6554c7c72e5885a91/proposals/0390-noncopyable-structs-and-enums.md)
 in response to Language Steering Group review and implementation experience:
 
 - `_ = x` is now a borrowing operation.
@@ -1876,9 +1876,9 @@ in response to Language Steering Group review and implementation experience:
   managing the possibility to accidentally cause recursion into `deinit`
   by implicit destruction.
 
-The [second reviewed revision](https://github.com/apple/swift-evolution/blob/a9e21e3a4eb9526f998915c6554c7c72e5885a91/proposals/0390-noncopyable-structs-and-enums.md)
+The [second reviewed revision](https://github.com/swiftlang/swift-evolution/blob/a9e21e3a4eb9526f998915c6554c7c72e5885a91/proposals/0390-noncopyable-structs-and-enums.md)
 of the proposal made the following changes from the
-[first reviewed revision](https://github.com/apple/swift-evolution/blob/5d075b86d57e3436b223199bd314b2642e30045f/proposals/0390-noncopyable-structs-and-enums.md):
+[first reviewed revision](https://github.com/swiftlang/swift-evolution/blob/5d075b86d57e3436b223199bd314b2642e30045f/proposals/0390-noncopyable-structs-and-enums.md):
 
 - The original revision did not provide a `Copyable` generic constraint, and
   declared types as noncopyable using a `@noncopyable` attribute. The

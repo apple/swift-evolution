@@ -3,10 +3,9 @@
 * Proposal: [SE-0423](0423-dynamic-actor-isolation.md)
 * Authors: [Holly Borla](https://github.com/hborla), [Pavel Yaskevich](https://github.com/xedin)
 * Review Manager: [Ben Cohen](https://github.com/airspeedswift)
-* Status: **Active Review (April 9 - April 18, 2024)**
+* Status: **Implemented (Swift 6.0)**
 * Upcoming Feature Flag: `DynamicActorIsolation`
-* Review: ([pitch](https://forums.swift.org/t/pitch-dynamic-actor-isolation-enforcement/68354)) ([first review](https://forums.swift.org/t/se-0423-dynamic-actor-isolation-enforcement-from-non-strict-concurrency-contexts/70155)) ([second review](https://forums.swift.org/t/se-0423-second-review-dynamic-actor-isolation-enforcement-from-non-strict-concurrency-contexts/71159))
-* Implementation: [apple/swift#70867](https://github.com/apple/swift/pull/70867), [apple/swift#71261](https://github.com/apple/swift/pull/71261), [apple/swift-syntax#2419](https://github.com/apple/swift-syntax/pull/2419)
+* Review: ([pitch](https://forums.swift.org/t/pitch-dynamic-actor-isolation-enforcement/68354)) ([first review](https://forums.swift.org/t/se-0423-dynamic-actor-isolation-enforcement-from-non-strict-concurrency-contexts/70155)) ([second review](https://forums.swift.org/t/se-0423-second-review-dynamic-actor-isolation-enforcement-from-non-strict-concurrency-contexts/71159)) ([acceptance](https://forums.swift.org/t/accepted-se-0423-dynamic-actor-isolation-enforcement-from-non-strict-concurrency-contexts/71540))
 
 ## Introduction
 
@@ -14,7 +13,7 @@ Many Swift programs need to interoperate with frameworks written in C/C++/Object
 
 ## Motivation
 
-The ecosystem of Swift libraries has a vast surface area of APIs that predate strict concurrency checking, relying on carefully calling APIs from the appropriate thread or dispatch queue to avoid data races. Migrating all of these libraries to strict concurrency checking will happen incrementally, motivating [SE-0337: Incremental migration to concurrency checking](https://github.com/apple/swift-evolution/blob/main/proposals/0337-support-incremental-migration-to-concurrency-checking.md) which introduced the `@preconcurrency import` statement to suppress concurrency warnings from APIs that programmers do not control.
+The ecosystem of Swift libraries has a vast surface area of APIs that predate strict concurrency checking, relying on carefully calling APIs from the appropriate thread or dispatch queue to avoid data races. Migrating all of these libraries to strict concurrency checking will happen incrementally, motivating [SE-0337: Incremental migration to concurrency checking](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0337-support-incremental-migration-to-concurrency-checking.md) which introduced the `@preconcurrency import` statement to suppress concurrency warnings from APIs that programmers do not control.
 
 If an actor isolation violation exists in the implementation of a preconcurrency library, the bug is only surfaced to clients as hard-to-debug data races on isolated state. `@preconcurrency` also does not apply to protocol conformances; there is no way to suppress concurrency diagnostics when conforming to a protocol from a preconcurrency library. This is unfortunate, because it's common for protocols to have a dynamic invariant that all requirements are called on the main thread or a specific dispatch queue provided by the client.
 

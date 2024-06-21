@@ -6,7 +6,7 @@
 * Status: **Implemented (Swift 5.5)**
 * Implementation: [apple/swift#34272](https://github.com/apple/swift/pull/34272), [apple/swift#36344](https://github.com/apple/swift/pull/36344)
 * Decision Notes: [Review #3](https://forums.swift.org/t/accepted-se-0293-extend-property-wrappers-to-function-and-closure-parameters/47030), [Review #2](https://forums.swift.org/t/returned-for-revision-2-se-0293-extend-property-wrappers-to-function-and-closure-parameters/44832), [Review #1](https://forums.swift.org/t/returned-for-revision-se-0293-extend-property-wrappers-to-function-and-closure-parameters/42953)
-* Previous versions: [Revision #2](https://github.com/apple/swift-evolution/blob/bdf12b26d15d63ab7e58dab635a55ffeca841389/proposals/0293-extend-property-wrappers-to-function-and-closure-parameters.md), [Revision #1](https://github.com/apple/swift-evolution/blob/e5b2ce1fd6c1c2617a820a1e6f2b53a00e54fdce/proposals/0293-extend-property-wrappers-to-function-and-closure-parameters.md)
+* Previous versions: [Revision #2](https://github.com/swiftlang/swift-evolution/blob/bdf12b26d15d63ab7e58dab635a55ffeca841389/proposals/0293-extend-property-wrappers-to-function-and-closure-parameters.md), [Revision #1](https://github.com/swiftlang/swift-evolution/blob/e5b2ce1fd6c1c2617a820a1e6f2b53a00e54fdce/proposals/0293-extend-property-wrappers-to-function-and-closure-parameters.md)
 
 ## Contents
 
@@ -52,7 +52,7 @@
 
 ## Introduction
 
-Property Wrappers were [introduced in Swift 5.1](https://github.com/apple/swift-evolution/blob/main/proposals/0258-property-wrappers.md), and have since become a popular mechanism for abstracting away common accessor patterns for properties. Currently, applying a property wrapper is solely permitted on local variables and type properties. However, with increasing adoption, demand for extending _where_ property wrappers can be applied has emerged. This proposal aims to extend property wrappers to function and closure parameters.
+Property Wrappers were [introduced in Swift 5.1](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0258-property-wrappers.md), and have since become a popular mechanism for abstracting away common accessor patterns for properties. Currently, applying a property wrapper is solely permitted on local variables and type properties. However, with increasing adoption, demand for extending _where_ property wrappers can be applied has emerged. This proposal aims to extend property wrappers to function and closure parameters.
 
 
 ## Motivation
@@ -207,7 +207,7 @@ func insert(text: String) {
 
 Note that the backing storage is a let-constant, and the local `text` property does not have a setter.
 
-> **Rationale**: The ability to mutate a wrapped parameter would likely confuse users into thinking that the mutations they make are observable by the caller; that's not the case. There was a similar feature in Swift which was removed in [SE-0003](https://github.com/apple/swift-evolution/blob/main/proposals/0003-remove-var-parameters.md).
+> **Rationale**: The ability to mutate a wrapped parameter would likely confuse users into thinking that the mutations they make are observable by the caller; that's not the case. There was a similar feature in Swift which was removed in [SE-0003](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0003-remove-var-parameters.md).
 
 Implementation-detail property wrappers on parameters must support initialization from a wrapped value, and the parameter type must be equal to the wrapped value type of the wrapper. Because the backing storage is initialized locally, implementation-detail property wrappers have no external effect on the function. A function that uses implementation-detail property wrappers on parameters can fulfill protocol requirements that use the wrapped-value type:
 
@@ -499,7 +499,7 @@ One approach to achieving the expected semantics for higher-order functions with
 
 ### Only allow implementation-detail property wrappers on function parameters
 
-Only allowing implementation-detail property wrappers on function parameters would eliminate the need for the API-level versus implementation-detail distinction for functions, because the property wrapper would never have an external effect on the argument. However, allowing property wrappers to have an external effect on the wrapped declaration is part of what makes the feature so powerful and applicable to a wide variety of use cases. One fairly common class of property wrappers are those which provide an abstracted reference to a value, such as the [`Ref` / `Box` example](https://github.com/apple/swift-evolution/blob/main/proposals/0258-property-wrappers.md#ref--box) from the SE-0258 proposal, and [`Binding`](https://developer.apple.com/documentation/swiftui/binding) from SwiftUI. It's common to pass these property wrappers around as projections, and there isn't currently a nice way to achieve the property wrapper sugar in a function body that uses such a property wrapper. The best way to achieve this currently is to use a local property wrapper and initialize the backing storage directly, e.g.
+Only allowing implementation-detail property wrappers on function parameters would eliminate the need for the API-level versus implementation-detail distinction for functions, because the property wrapper would never have an external effect on the argument. However, allowing property wrappers to have an external effect on the wrapped declaration is part of what makes the feature so powerful and applicable to a wide variety of use cases. One fairly common class of property wrappers are those which provide an abstracted reference to a value, such as the [`Ref` / `Box` example](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0258-property-wrappers.md#ref--box) from the SE-0258 proposal, and [`Binding`](https://developer.apple.com/documentation/swiftui/binding) from SwiftUI. It's common to pass these property wrappers around as projections, and there isn't currently a nice way to achieve the property wrapper sugar in a function body that uses such a property wrapper. The best way to achieve this currently is to use a local property wrapper and initialize the backing storage directly, e.g.
 
 ```swift
 func useReference(reference: Ref<Int>) {

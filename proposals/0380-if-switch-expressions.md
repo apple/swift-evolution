@@ -16,7 +16,7 @@ This proposal introduces the ability to use `if` and `switch` statements as expr
 
 ## Motivation
 
-Swift has always had a terse but readable syntax for closures, which allows the `return` to be omitted when the body is a single expression. [SE-0255: Implicit Returns from Single-Expression Functions](https://github.com/apple/swift-evolution/blob/main/proposals/0255-omit-return.md) extended this to functions and properties with a single expression as their body.
+Swift has always had a terse but readable syntax for closures, which allows the `return` to be omitted when the body is a single expression. [SE-0255: Implicit Returns from Single-Expression Functions](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0255-omit-return.md) extended this to functions and properties with a single expression as their body.
 
 This omission of the `return` keyword is in keeping with Swift's low-ceremony approach, and is in common with many of Swift's peer "modern" languages. However, Swift differs from its peers in the lack of support for `if` and `switch` expressions.
 
@@ -143,7 +143,7 @@ let y: Float = switch x.value {
 }
 ```
 
-This decision is in keeping with other recent proposals such as [SE-0244: Opaque Result Types](https://github.com/apple/swift-evolution/blob/main/proposals/0244-opaque-result-types.md):
+This decision is in keeping with other recent proposals such as [SE-0244: Opaque Result Types](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0244-opaque-result-types.md):
 
 ```swift
 // Error: Function declares an opaque return type 'some Numeric', but the
@@ -168,7 +168,7 @@ let x: Double? = if p { nil } else { 2.0 }
 
 Of course, when returning from a function or assigning to an existing variable, this type context is always provided.
 
-It is also in keeping with [SE-0326: Enable multi-statement closure parameter/result type inference]( https://github.com/apple/swift-evolution/blob/main/proposals/0326-extending-multi-statement-closure-inference.md):
+It is also in keeping with [SE-0326: Enable multi-statement closure parameter/result type inference]( https://github.com/swiftlang/swift-evolution/blob/main/proposals/0326-extending-multi-statement-closure-inference.md):
 
 ```swift
 func test<T>(_: (Int?) -> T) {}
@@ -355,7 +355,7 @@ This could be done with `if` expressions outside result builders too, and would 
 
 ### Sticking with the Status Quo
 
-The list of [commonly rejected proposals](https://github.com/apple/swift-evolution/blob/main/commonly_proposed.md) includes the subject of this proposal:
+The list of [commonly rejected proposals](https://github.com/swiftlang/swift-evolution/blob/main/commonly_proposed.md) includes the subject of this proposal:
 
 > **if/else and switch as expressions**: These are conceptually interesting things to support, but many of the problems solved by making these into expressions are already solved in Swift in other ways. Making them expressions introduces significant tradeoffs, and on balance, we haven't found a design that is clearly better than what we have so far.
 
@@ -473,6 +473,6 @@ This proposal has no impact on ABI stability.
 
 ## Acknowledgments
 
-Much of this implementation layers on top of ground work done by [Pavel Yaskevich](https://github.com/xedin), particularly the work done to allow [multi-statement closure type inference](https://github.com/apple/swift-evolution/blob/main/proposals/0326-extending-multi-statement-closure-inference.md).
+Much of this implementation layers on top of ground work done by [Pavel Yaskevich](https://github.com/xedin), particularly the work done to allow [multi-statement closure type inference](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0326-extending-multi-statement-closure-inference.md).
 
 Both [Nate Cook](https://forums.swift.org/t/if-else-expressions/22366/48) and [Michael Ilseman](https://forums.swift.org/t/omitting-returns-in-string-case-study-of-se-0255/24283) provided analysis of use cases in the standard library and elsewhere. Many community members have made a strong case for this change, most recently [Dave Abrahams](https://forums.swift.org/t/if-else-expressions/22366).

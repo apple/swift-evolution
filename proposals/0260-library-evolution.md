@@ -40,7 +40,7 @@ A similar challenge occurs with Swift enums. As discussed in [SE-0192][], introd
 
 The goal of this proposal is to reduce the burden on library developers by building into the compiler an automatic mechanism to reserve the flexibility to alter the internal representation of structs and enums, without manual workarounds. This mechanism can be implemented in such a way that optimizations such as stack allocation or contiguous inline storage of structs can still happen, while leaving the size of the type to be determined at runtime. 
 
-  [SE-0192]: https://github.com/apple/swift-evolution/blob/master/proposals/0192-non-exhaustive-enums.md
+  [SE-0192]: https://github.com/swiftlang/swift-evolution/blob/master/proposals/0192-non-exhaustive-enums.md
 
 ## Proposed solution
 
@@ -109,7 +109,7 @@ This affects what changes to the struct's fields affect the ABI of the containin
 
 > Note: This proposal is implemented already and in use by the standard library, albeit under different names. The command-line flag is `-enable-library-evolution`; the attribute is `@_fixed_layout` for structs, and `@_frozen` for enums.
 
-  [SE-0193]: https://github.com/apple/swift-evolution/blob/master/proposals/0193-cross-module-inlining-and-specialization.md
+  [SE-0193]: https://github.com/swiftlang/swift-evolution/blob/master/proposals/0193-cross-module-inlining-and-specialization.md
 
 #### Guarantees
 
@@ -134,7 +134,7 @@ That said, the compiler is allowed to use its knowledge of the struct's contents
 This proposal does not change either of these guarantees.
 
   [trivial]: https://docs.microsoft.com/en-us/cpp/cpp/trivial-standard-layout-and-pod-types
-  [SE-0055]: https://github.com/apple/swift-evolution/blob/master/proposals/0055-optional-unsafe-pointers.md
+  [SE-0055]: https://github.com/swiftlang/swift-evolution/blob/master/proposals/0055-optional-unsafe-pointers.md
 
 ### `@frozen` on `enum` types
 

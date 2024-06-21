@@ -3,8 +3,7 @@
 * Proposal: [SE-0415](0415-function-body-macros.md)
 * Authors: [Doug Gregor](https://github.com/DougGregor)
 * Review Manager: [Tony Allevato](https://github.com/allevato)
-* Status: **Accepted**
-* Implementation: Available on `main` behind the flag `-enable-experimental-feature BodyMacros`
+* Status: **Implemented (Swift 6.0)**
 * Feature Flag: `BodyMacros`
 * Review: [pitch](https://forums.swift.org/t/function-body-macros/66471), [review](https://forums.swift.org/t/se-0415-function-body-macros/68847), [returned for revision](https://forums.swift.org/t/returned-for-revision-se-0415-function-body-macros/69114), [second review](https://forums.swift.org/t/se-0415-second-review-function-body-macros/71644), [acceptance](https://forums.swift.org/t/accepted-se-0415-function-body-macros/72013)
 
@@ -40,7 +39,7 @@ This proposal introduces *function body macros*, which do exactly that: allow th
 
 ## Proposed solution
 
-This proposal introduces *function body macros*, which are [attached macros](https://github.com/apple/swift-evolution/blob/main/proposals/0389-attached-macros.md) that can augment a function (including initializers, deinitializers, and accessors) with a new body. For example, one could introduce a `Remote` macro that packages up arguments for a remote procedure call:
+This proposal introduces *function body macros*, which are [attached macros](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0389-attached-macros.md) that can augment a function (including initializers, deinitializers, and accessors) with a new body. For example, one could introduce a `Remote` macro that packages up arguments for a remote procedure call:
 
 ```swift
  @Remote
@@ -76,7 +75,7 @@ func g(a: Int, b: Int) -> Int {
 }
 ```
 
-Or one could provide a macro that makes it easier to assume that a function that cannot be marked as `@MainActor` using [`assumeIsolated`](https://github.com/apple/swift-evolution/blob/main/proposals/0392-custom-actor-executors.md):
+Or one could provide a macro that makes it easier to assume that a function that cannot be marked as `@MainActor` using [`assumeIsolated`](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0392-custom-actor-executors.md):
 
 ```swift
 extension MyView: SomeDelegate {
@@ -224,7 +223,7 @@ f(0) { z in
 }
 ```
 
-Macros are designed to avoid [multiply instantiating the same macro](https://github.com/apple/swift-evolution/blob/main/proposals/0382-expression-macros.md#macro-expansion), and have existing limitations in place to prevent the type checker from getting into a position where it is not obvious which macro to expand or the same macro needs to be expanded multiple times. To extend function body macros to closures will require a solution to this type-checking issue, and might be paired with lifting other restrictions on (e.g.) freestanding declaration macros.
+Macros are designed to avoid [multiply instantiating the same macro](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0382-expression-macros.md#macro-expansion), and have existing limitations in place to prevent the type checker from getting into a position where it is not obvious which macro to expand or the same macro needs to be expanded multiple times. To extend function body macros to closures will require a solution to this type-checking issue, and might be paired with lifting other restrictions on (e.g.) freestanding declaration macros.
 
 ### Preamble macros
 
@@ -233,7 +232,7 @@ The first reviewed revision of this proposal contained *preamble* macros, which 
 * Preamble macros can be composed, whereas function body macros cannot.
 * Preamble macros don't change the code as written by the user, so they provide a better user experience (e.g., for diagnostics, code completion, and so on).
 
-Preamble macros would be expressed as its own attached macro role (`preamble`), implemented with a type that conforms to the `PreambleMacro` protocol. Details are available in [the prior revision](https://github.com/apple/swift-evolution/blob/f1b9da80315578666352a7d6d40a9f6cc936f69a/proposals/0415-function-body-macros.md). 
+Preamble macros would be expressed as its own attached macro role (`preamble`), implemented with a type that conforms to the `PreambleMacro` protocol. Details are available in [the prior revision](https://github.com/swiftlang/swift-evolution/blob/f1b9da80315578666352a7d6d40a9f6cc936f69a/proposals/0415-function-body-macros.md). 
 
 Preamble macros have been moved out to Future Directions because they represent a possible future, but not an obviously right one: preamble macros might not add sufficient expressivity to cover the cost of the complexity they introduce, and another kind of macro (like the "wrapper" macro below) might provide a more reasonable tradeoff between expressivity and complexity.
 

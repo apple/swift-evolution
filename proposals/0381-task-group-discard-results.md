@@ -17,7 +17,7 @@ Pitch thread: [Task Pools](https://forums.swift.org/t/pitch-task-pools/61703).
 
 Task groups are the building block of structured concurrency, allowing for the Swift runtime to relate groups of tasks together. This enables powerful features such as automatic cancellation propagation, correctly propagating errors, and ensuring well-defined lifetimes, as well as providing diagnostic information to programming tools.
 
-The version of Task Groups introduced in [SE-0304](https://github.com/apple/swift-evolution/blob/main/proposals/0304-structured-concurrency.md) provides all of these features. However, it also provides the ability to propagate return values to the user of the task group. This capability provides an unexpected limitation in some use-cases.
+The version of Task Groups introduced in [SE-0304](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0304-structured-concurrency.md) provides all of these features. However, it also provides the ability to propagate return values to the user of the task group. This capability provides an unexpected limitation in some use-cases.
 
 As users of Task Groups are able to retrieve the return values of child tasks, it implicitly follows that the Task Group preserves at least the `Result` of any completed child task. As a practical matter, the task group actually preseves the entire `Task` object. This data is preserved until the user consumes it via one of the Task Group consumption APIs, whether that is `next()` or by iterating the Task Group.
 

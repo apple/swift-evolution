@@ -6,7 +6,7 @@
 * Status: **Implemented**
 * Decision Notes: [Rationale](https://forums.swift.org/t/accepted-se-0110-distinguish-between-single-tuple-and-multiple-argument-function-types/3305), [Additional Commentary](https://forums.swift.org/t/core-team-addressing-the-se-0110-usability-regression-in-swift-4/6147)
 * Bug: [SR-2008](https://bugs.swift.org/browse/SR-2008)
-* Previous Revision: [Originally Accepted Proposal](https://github.com/apple/swift-evolution/blob/9e44932452e1daead98f2bc2e58711eb489e9751/proposals/0110-distingish-single-tuple-arg.md)
+* Previous Revision: [Originally Accepted Proposal](https://github.com/swiftlang/swift-evolution/blob/9e44932452e1daead98f2bc2e58711eb489e9751/proposals/0110-distingish-single-tuple-arg.md)
 
 ## Introduction
 
@@ -67,4 +67,4 @@ Don't make this change.
 
 ## Revision history
 
-The [original proposal as reviewed](https://github.com/apple/swift-evolution/blob/9e44932452e1daead98f2bc2e58711eb489e9751/proposals/0110-distingish-single-tuple-arg.md) did not include the special-case conversion from `(T, U, ...) -> V` to `((T, U, ...)) -> V` for function arguments. In response to community feedback, [this conversion was added](https://forums.swift.org/t/core-team-addressing-the-se-0110-usability-regression-in-swift-4/6147) as part of the Core Team's acceptance of the proposal.
+The [original proposal as reviewed](https://github.com/swiftlang/swift-evolution/blob/9e44932452e1daead98f2bc2e58711eb489e9751/proposals/0110-distingish-single-tuple-arg.md) did not include the special-case conversion from `(T, U, ...) -> V` to `((T, U, ...)) -> V` for function arguments. In response to community feedback, [this conversion was added](https://forums.swift.org/t/core-team-addressing-the-se-0110-usability-regression-in-swift-4/6147) as part of the Core Team's acceptance of the proposal.

@@ -10,7 +10,7 @@
 ## Introduction
 
 This proposal is a follow-up to [SE-0195 - Introduce User-defined "Dynamic Member
-Lookup" Types](https://github.com/apple/swift-evolution/blob/master/proposals/0195-dynamic-member-lookup.md),
+Lookup" Types](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0195-dynamic-member-lookup.md),
 which shipped in Swift 4.2. It introduces a new `@dynamicCallable` attribute, which marks
 a type as being "callable" with normal syntax. It is simple syntactic sugar
 which allows the user to write:
@@ -50,7 +50,7 @@ implementation approaches. The conclusion was that the best approach was to put
 most of the complexity into dynamic language specific bindings written as
 pure-Swift libraries, but add small hooks in Swift to allow these bindings to
 provide a natural experience to their clients.
-[SE-0195](https://github.com/apple/swift-evolution/blob/master/proposals/0195-dynamic-member-lookup.md)
+[SE-0195](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0195-dynamic-member-lookup.md)
 was the first step in this process, which introduced a binding to naturally
 express member lookup rules in dynamic languages.
 
@@ -67,7 +67,7 @@ class Dog:
         self.tricks.append(trick)
 ```
 
-With the [SE-0195 `@dynamicMemberLookup` feature](https://github.com/apple/swift-evolution/blob/master/proposals/0195-dynamic-member-lookup.md)
+With the [SE-0195 `@dynamicMemberLookup` feature](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0195-dynamic-member-lookup.md)
 introduced in Swift 4.2, it is possible to implement a [Python interoperability
 layer](https://github.com/apple/swift/tree/tensorflow/stdlib/public/Python)
 written in Swift. It interoperates with the Python runtime, and project all
@@ -161,7 +161,7 @@ implementing dynamic proxy objects).
 We propose introducing a new `@dynamicCallable` attribute to the Swift language
 which may be applied to structs, classes, enums, and protocols. This follows
 the precedent of
-[SE-0195](https://github.com/apple/swift-evolution/blob/master/proposals/0195-dynamic-member-lookup.md).
+[SE-0195](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0195-dynamic-member-lookup.md).
 
 Before this proposal, values of these types are not valid in a call expression:
 the only existing callable values in Swift are those with function types
@@ -455,7 +455,7 @@ features and should be evaluated separately.
 
 Many alternatives were considered and discussed. Most of them are captured in
 the ["Alternatives Considered" section of
-SE-0195](https://github.com/apple/swift-evolution/blob/master/proposals/0195-dynamic-member-lookup.md#alternatives-considered).
+SE-0195](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0195-dynamic-member-lookup.md#alternatives-considered).
 
 Here are a few points raised in the discussion:
 

@@ -7,7 +7,7 @@
 * Implementation: [apple/swift#68857](https://github.com/apple/swift/pull/68857)
 * Version: 2023-12-04
 * Status: **Implemented (Swift 6.0)**
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/d35d6566fe2297f4782bdfac4d5253e0ca96b353/proposals/0410-atomics.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/d35d6566fe2297f4782bdfac4d5253e0ca96b353/proposals/0410-atomics.md)
 * Decision Notes: [pitch](https://forums.swift.org/t/atomics/67350), [first review](https://forums.swift.org/t/se-0410-atomics/68007), [first return for revision](https://forums.swift.org/t/returned-for-revision-se-0410-atomics/68522), [second review](https://forums.swift.org/t/second-review-se-0410-atomics/68810), [acceptance](https://forums.swift.org/t/accepted-with-modifications-se-0410-atomics/69244)
 
 ## Introduction
@@ -97,7 +97,7 @@ We want to limit this proposal to constructs that satisfy the following requirem
 
 3. Every atomic operation must compile down to the corresponding CPU instruction (when one is available), with minimal overhead. (Ideally even if the code is compiled without optimizations.) Wait-freedom isn't a requirement -- if no direct instruction is available for an operation, then it must still be implemented, e.g. by mapping it to a compare-exchange loop.
 
-Following the acceptance of [Clarify the Swift memory consistency model (SE-0282)](https://github.com/apple/swift-evolution/blob/main/proposals/0282-atomics.md), the [swift-atomics package](https://github.com/apple/swift-atomics) was shortly created to experiment and design what a standard atomic API would look like. This proposal is relying heavily on some of the ideas that package has spent years developing and designing.
+Following the acceptance of [Clarify the Swift memory consistency model (SE-0282)](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0282-atomics.md), the [swift-atomics package](https://github.com/apple/swift-atomics) was shortly created to experiment and design what a standard atomic API would look like. This proposal is relying heavily on some of the ideas that package has spent years developing and designing.
 
 ## Proposed Solution
 
@@ -138,7 +138,7 @@ The atomic constructs later in this proposal implement concurrent read/write acc
 
 However, this alone does not give us a way to synchronize accesses to regular variables, or between atomic accesses to different memory locations. To support such synchronization, each atomic operation can be configured to also act as a synchronization point for other variable accesses within the same thread, preventing previous accesses from getting executed after the atomic operation, and/or vice versa. Atomic operations on another thread can then synchronize with the same point, establishing a strict (although partial) timeline between accesses performed by both threads. This way, we can reason about the possible ordering of operations across threads, even if we know nothing about how those operations are implemented. (This is how locks or dispatch queues can be used to serialize the execution of arbitrary blocks containing regular accesses to shared variables.) For more details, see \[[C++17], [N2153], [Boehm 2008]].
 
-In order to enable atomic synchronization within Swift, we must first introduce memory orderings that will give us control of the timeline of these operations across threads. Luckily, with the acceptance of [Clarify the Swift memory consistency model (SE-0282)](https://github.com/apple/swift-evolution/blob/main/proposals/0282-atomics.md), Swift already adopts the C/C++ concurrency memory model. In this model, concurrent access to shared state remains undefined behavior unless all such access is forced into a conflict-free timeline through explicit synchronization operations.
+In order to enable atomic synchronization within Swift, we must first introduce memory orderings that will give us control of the timeline of these operations across threads. Luckily, with the acceptance of [Clarify the Swift memory consistency model (SE-0282)](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0282-atomics.md), Swift already adopts the C/C++ concurrency memory model. In this model, concurrent access to shared state remains undefined behavior unless all such access is forced into a conflict-free timeline through explicit synchronization operations.
 
 This proposal introduces five distinct memory orderings, organized into three logical groups, from loosest to strictest:
 
@@ -1039,7 +1039,7 @@ An ordering expression will be considered constant-evaluable if it's either (1) 
 
 ## Interaction with Existing Language Features
 
-Please refer to the [Clarify the Swift memory consistency model (SE-0282)](https://github.com/apple/swift-evolution/blob/main/proposals/0282-atomics.md#interaction-with-non-instantaneous-accesses) proposal which goes over how atomics interact with the Law of Exclusivity, Non-Instantaneous Accesses, and Implicit Pointer Conversions.
+Please refer to the [Clarify the Swift memory consistency model (SE-0282)](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0282-atomics.md#interaction-with-non-instantaneous-accesses) proposal which goes over how atomics interact with the Law of Exclusivity, Non-Instantaneous Accesses, and Implicit Pointer Conversions.
 
 An additional note with regards to the Law of Exclusivity, atomic values should never be declared with a `var` binding, always prefer a `let` one. Consider the following:
 
@@ -1804,8 +1804,8 @@ We shouldn't be afraid of conflicting module names causing spurious source break
 
 ## References
 
-[Clarify the Swift memory consistency model (SE-0282)]: https://github.com/apple/swift-evolution/blob/main/proposals/0282-atomics.md
-**\[Clarify the Swift memory consistency model (SE-0282)]** Karoy Lorenty. "Clarify the Swift memory consistency model."*Swift Evolution Proposal*, 2020. https://github.com/apple/swift-evolution/blob/main/proposals/0282-atomics.md
+[Clarify the Swift memory consistency model (SE-0282)]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0282-atomics.md
+**\[Clarify the Swift memory consistency model (SE-0282)]** Karoy Lorenty. "Clarify the Swift memory consistency model."*Swift Evolution Proposal*, 2020. https://github.com/swiftlang/swift-evolution/blob/main/proposals/0282-atomics.md
 
 [C++17]: https://isocpp.org/std/the-standard
 **\[C++17]** ISO/IEC. *ISO International Standard ISO/IEC 14882:2017(E) – Programming Language C++.* 2017.

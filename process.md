@@ -95,7 +95,7 @@ Please state explicitly whether you believe that the proposal should be accepted
 
    1. Expand the rough sketch into a formal proposal using the [proposal template](proposal-templates/0000-swift-template.md).
    1. In the [swift-evolution repository][swift-evolution-repo], open a [draft pull request][draft-pr] that adds your proposal to the [proposals directory](/proposals).
-   1. Anounce the pull request on the forums and edit the root post to link out to the pull request.
+   1. Announce the pull request on the forums and edit the root post to link out to the pull request.
    1. Refine the formal proposal in the open as you receive further feedback on the forums or the pull request.
       A ripe proposal is expected to address commentary from present and past
       discussions of the idea.
@@ -117,7 +117,7 @@ Please state explicitly whether you believe that the proposal should be accepted
       existing types and protocols that can be implemented without access to
       standard library internals or other non-public features.
       For more information about the kinds of changes that can be implemented in
-      the preview package, see [SE-0264](https://github.com/apple/swift-evolution/blob/main/proposals/0264-stdlib-preview-package.md).
+      the preview package, see [SE-0264](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0264-stdlib-preview-package.md).
 
 1. **Request a review**
 
@@ -205,8 +205,8 @@ A given proposal can be in one of several states:
   If the proposal's implementation spans multiple version numbers,
   write the version number for which the implementation will be complete.
 
-[swift-evolution-repo]: https://github.com/apple/swift-evolution  "Swift evolution repository"
-[swift-evolution-staging]: https://github.com/apple/swift-evolution-staging  "Swift evolution staging repository"
+[swift-evolution-repo]: https://github.com/swiftlang/swift-evolution  "Swift evolution repository"
+[swift-evolution-staging]: https://github.com/swiftlang/swift-evolution-staging  "Swift evolution staging repository"
 [proposal-reviews]: https://forums.swift.org/c/evolution/proposal-reviews "'Proposal reviews' category of the Swift forums"
 [status-page]: https://apple.github.io/swift-evolution/
 [preview-package]: https://github.com/apple/swift-standard-library-preview/
@@ -250,7 +250,7 @@ answer in your review:
 
 More information about the Swift evolution process is available at
 
-> <https://github.com/apple/swift-evolution/blob/main/process.md>
+> <https://github.com/swiftlang/swift-evolution/blob/main/process.md>
 
 Thank you,
 

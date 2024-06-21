@@ -10,8 +10,8 @@
    - [SE-0023] API Design Guidelines
    - [SE-0346] Lightweight same-type requirements for primary associated types
    
-[SE-0023]: https://github.com/apple/swift-evolution/blob/main/proposals/0023-api-guidelines.md
-[SE-0346]: https://github.com/apple/swift-evolution/blob/main/proposals/0346-light-weight-same-type-syntax.md
+[SE-0023]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0023-api-guidelines.md
+[SE-0346]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0346-light-weight-same-type-syntax.md
 
 ## Introduction
 
@@ -214,5 +214,5 @@ Therefore, we will not be able to make any changes to the list of primary associ
 
 ## Revisions
 
-- [2022-05-28](https://github.com/apple/swift-evolution/blob/716db41ccefde348ac38bd2fd1eb5bd7842be7b6/proposals/0358-primary-associated-types-in-stdlib.md): Initial proposal version.
+- [2022-05-28](https://github.com/swiftlang/swift-evolution/blob/716db41ccefde348ac38bd2fd1eb5bd7842be7b6/proposals/0358-primary-associated-types-in-stdlib.md): Initial proposal version.
 - 2022-06-22: Removed the primary associated type declaration from the `OptionSet` protocol. The API guidelines section has revised wording; it no longer proposes the new guidelines for inclusion in the official Swift API Guidelines document. Adjusted wording to prefer the term "lightweight constraint syntax" to "lightweight same-type requirements", as the new syntax can be used for more than just to express same-type constraints.

@@ -83,7 +83,7 @@ The desire to provide specific thrown error types has come up repeatedly on the 
 * [Proposal: Typed throws](https://forums.swift.org/t/proposal-typed-throws/268)
 * [Type Inferencing For Error Handling (try catch blocks)](https://forums.swift.org/t/type-inferencing-for-error-handling-try-catch-blocks/117)
 
-In a sense, Swift started down the path toward typed throws with the introduction of the [`Result`](https://github.com/apple/swift-evolution/blob/main/proposals/0235-add-result.md) type in the standard library, which captured a specific thrown error type in its `Failure` parameter. That pattern was replicated in the [`Task` type](https://github.com/apple/swift-evolution/blob/main/proposals/0304-structured-concurrency.md) and other concurrency APIs. The loss of information between types like `Result` and `Task` and the language's error-handling system provides partial motivation for the introduction of typed throws, and is discussed further below.
+In a sense, Swift started down the path toward typed throws with the introduction of the [`Result`](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0235-add-result.md) type in the standard library, which captured a specific thrown error type in its `Failure` parameter. That pattern was replicated in the [`Task` type](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0304-structured-concurrency.md) and other concurrency APIs. The loss of information between types like `Result` and `Task` and the language's error-handling system provides partial motivation for the introduction of typed throws, and is discussed further below.
 
 Typed throws also provides benefits in places where clients need to exhaustively handle errors. For this to make sense, the set of potential failure conditions must be relatively fixed, either because they come from the same module or package as the clients, or because they come from a library that is effectively standalone and unlikely to evolve to (e.g.) pass through an error from another lower-level library. Typed throws also provides benefits in generic code that will propagate errors from its arguments, but never generate errors itself, as a more flexible alternative to the existing `rethrows`. Finally, typed throws also open up the potential for more efficient code, because they avoid the overhead associated with existential types (`any Error`).
 
@@ -217,7 +217,7 @@ This is even more boilerplate than the first approach, because now we are writin
 
 ### Existential error types incur overhead
 
-Untyped errors have the existential type `any Error`, which incurs some [necessary overhead](https://github.com/apple/swift-evolution/blob/main/proposals/0335-existential-any.md), in code size, heap allocation overhead, and execution performance, due to the need to support values of unknown type. In constrained environments such as those supported by [Embedded Swift](https://forums.swift.org/t/embedded-swift/67057), existential types may not be permitted due to these overheads, making the existing untyped throws mechanism unusable in those environments.
+Untyped errors have the existential type `any Error`, which incurs some [necessary overhead](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0335-existential-any.md), in code size, heap allocation overhead, and execution performance, due to the need to support values of unknown type. In constrained environments such as those supported by [Embedded Swift](https://forums.swift.org/t/embedded-swift/67057), existential types may not be permitted due to these overheads, making the existing untyped throws mechanism unusable in those environments.
 
 
 ## Proposed solution
@@ -610,7 +610,7 @@ Note that the constraint that the thrown error type must conform to `Error` mean
 func remoteCall(function: String) async throws(any Error & Codable) -> String { ... }
 ```
 
-The `any Error` existential has [special semantics](https://github.com/apple/swift-evolution/blob/main/proposals/0235-add-result.md#adding-swifterror-self-conformance) that allow it to conform to the `Error` protocol, introduced along with `Result`. A separate language change would be required to allow other existential types to conform to the `Error` protocol.
+The `any Error` existential has [special semantics](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0235-add-result.md#adding-swifterror-self-conformance) that allow it to conform to the `Error` protocol, introduced along with `Result`. A separate language change would be required to allow other existential types to conform to the `Error` protocol.
 
 #### Catching typed thrown errors 
 
@@ -791,7 +791,7 @@ to be a rethrowing function for the purposes of `rethrows` checking in its calle
 
 #### Opaque thrown error types
 
-The thrown error type of a function can be specified with an [opaque result type](https://github.com/apple/swift-evolution/blob/main/proposals/0244-opaque-result-types.md). For example:
+The thrown error type of a function can be specified with an [opaque result type](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0244-opaque-result-types.md). For example:
 
 ```swift
 func doSomething() throws(some Error) { ... }
@@ -817,7 +817,7 @@ func doSomething() throws(some Error) {
 }
 ```
 
-Due to the contravariance of parameters, an opaque thrown error type that occurs within a function parameter will be an [opaque parameter](https://github.com/apple/swift-evolution/blob/main/proposals/0341-opaque-parameters.md). This means that the closure argument itself will choose the type, so
+Due to the contravariance of parameters, an opaque thrown error type that occurs within a function parameter will be an [opaque parameter](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0341-opaque-parameters.md). This means that the closure argument itself will choose the type, so
 
 ```swift
 func map<T>(_ transform: (Element) throws(some Error) -> T) rethrows -> [T]
@@ -1066,7 +1066,7 @@ This is a mechanical transformation that is applied throughout the standard libr
 
 This proposal has called out two specific places where the introduction of typed throws into the language will affect source compatibility. In both cases, the type inference behavior of the language will differ when there are `throw` statements that throw a specific concrete type.
 
-To mitigate this source compatibility problem in Swift 5, `throw` statements will be treated as always throwing `any Error`. In Swift 6, they will be treated as throwing the type of their thrown expression. One can enable the Swift 6 behavior with the [upcoming feature flag](https://github.com/apple/swift-evolution/blob/main/proposals/0362-piecemeal-future-features.md) named `FullTypedThrows`.
+To mitigate this source compatibility problem in Swift 5, `throw` statements will be treated as always throwing `any Error`. In Swift 6, they will be treated as throwing the type of their thrown expression. One can enable the Swift 6 behavior with the [upcoming feature flag](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0362-piecemeal-future-features.md) named `FullTypedThrows`.
 
 Note that the source compatibility arguments in this proposal are there to ensure that Swift code that does not use typed throws will continue to work in the same way it always has. Once a function adopts typed throws, the effect of typed throws can then ripple to its callers.
 
@@ -1171,7 +1171,7 @@ internal func _oldRethrowingMap<U>(
 ) rethrows -> U?
 ```
 
-Then, the new typed-throws version will be introduced with [back-deployment support](https://github.com/apple/swift-evolution/blob/main/proposals/0376-function-back-deployment.md):
+Then, the new typed-throws version will be introduced with [back-deployment support](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0376-function-back-deployment.md):
 
 ```swift
 @backDeploy(...)
@@ -1190,7 +1190,7 @@ The concurrency library has a number of places that could benefit from the adopt
 
 `Task` is similar to `Result` because it also carries a `Failure` type that could benefit from typed throws. Continuations and task groups could propagate typed throws information from closures to make more of the library usable with precise thrown type information.
 
-`AsyncSequence`, and the asynchronous `for..in` loop that depends on it, could be improved by using typed throws. Both `AsyncIteratorProtocol` and `AsyncSequence` could be augmented with a `Failure` associated type that is used for the thrown error type of `next()`, and will be used by the asynchronous `for..in` loop to determine whether the sequence can throw. This can be combined with [primary associated types](https://github.com/apple/swift-evolution/blob/main/proposals/0346-light-weight-same-type-syntax.md) to make it possible to use existentials such as `any AsyncSequence<Image, NetworkError>`:
+`AsyncSequence`, and the asynchronous `for..in` loop that depends on it, could be improved by using typed throws. Both `AsyncIteratorProtocol` and `AsyncSequence` could be augmented with a `Failure` associated type that is used for the thrown error type of `next()`, and will be used by the asynchronous `for..in` loop to determine whether the sequence can throw. This can be combined with [primary associated types](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0346-light-weight-same-type-syntax.md) to make it possible to use existentials such as `any AsyncSequence<Image, NetworkError>`:
 
 ```swift
 public protocol AsyncIteratorProtocol<Element, Failure> {
@@ -1211,7 +1211,7 @@ The scope of potential changes to the concurrency library to make full use of ty
 
 ### Specific thrown error types for distributed actors
 
-The transport mechanism for [distributed actors](https://github.com/apple/swift-evolution/blob/main/proposals/0344-distributed-actor-runtime.md), `DistributedActorSystem`, can throw an error due to transport failures. This error is currently untyped, but it should be possible to adopt typed throws (with a `Failure` associated type in `DistributedActorSystem` and mirrored in `DistributedActor`) so that the distributed actor system can be more specific about the kind of error it throws. Calls to a distributed actor from outside the actor (i.e., that could be on a different node) would then throw `errorUnion(Failure, E)` where the `E` is the type that the function normally throws.
+The transport mechanism for [distributed actors](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0344-distributed-actor-runtime.md), `DistributedActorSystem`, can throw an error due to transport failures. This error is currently untyped, but it should be possible to adopt typed throws (with a `Failure` associated type in `DistributedActorSystem` and mirrored in `DistributedActor`) so that the distributed actor system can be more specific about the kind of error it throws. Calls to a distributed actor from outside the actor (i.e., that could be on a different node) would then throw `errorUnion(Failure, E)` where the `E` is the type that the function normally throws.
 
 ## Alternatives considered
 

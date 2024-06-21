@@ -6,9 +6,9 @@
 * Status: **Implemented (Swift 4.0)**
 * Bug: [SR-3196](https://bugs.swift.org/browse/SR-3196)
 * Previous Revisions: 
-  [1](https://github.com/apple/swift-evolution/blob/0440700fc555a6c72abb4af807c8b79fb1bec592/proposals/0104-improved-integers.md), 
-  [2](https://github.com/apple/swift-evolution/blob/957ab545e05adb94507792e7871b38e34b56a0a5/proposals/0104-improved-integers.md),
-  [3](https://github.com/apple/swift-evolution/blob/80f57a6b7645126fe0220dcb91c19565e447d5d8/proposals/0104-improved-integers.md)
+  [1](https://github.com/swiftlang/swift-evolution/blob/0440700fc555a6c72abb4af807c8b79fb1bec592/proposals/0104-improved-integers.md), 
+  [2](https://github.com/swiftlang/swift-evolution/blob/957ab545e05adb94507792e7871b38e34b56a0a5/proposals/0104-improved-integers.md),
+  [3](https://github.com/swiftlang/swift-evolution/blob/80f57a6b7645126fe0220dcb91c19565e447d5d8/proposals/0104-improved-integers.md)
 * Discussion on swift-evolution: [here](https://forums.swift.org/t/protocol-oriented-integers-take-2/4884).
 * Decision notes: [Rationale](https://forums.swift.org/t/accepted-se-0104-protocol-oriented-integers/5346)
 

@@ -6,7 +6,7 @@
 * Status: **Implemented (Swift 3.0)**
 * Decision Notes: [Rationale](https://forums.swift.org/t/accepted-se-0091-improving-operator-requirements-in-protocols/3390)
 * Bug: [SR-2073](https://bugs.swift.org/browse/SR-2073)
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/eaab20ed34df1dc8ba8aa07e49abc8c5fa216f3e/proposals/0091-improving-operators-in-protocols.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/eaab20ed34df1dc8ba8aa07e49abc8c5fa216f3e/proposals/0091-improving-operators-in-protocols.md)
 
 ## Introduction
 

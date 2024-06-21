@@ -6,7 +6,7 @@
 * Status: **Implemented (Swift 3.0)**
 * Decision Notes: [Rationale](https://forums.swift.org/t/accepted-se-0067-enhanced-floating-point-protocols/2420)
 * Implementation: [apple/swift#2453](https://github.com/apple/swift/pull/2453)
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/fb1368a6a5474f57aa8f1846b5355d18753098f3/proposals/0067-floating-point-protocols.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/fb1368a6a5474f57aa8f1846b5355d18753098f3/proposals/0067-floating-point-protocols.md)
 
 ## Introduction
 

@@ -10,7 +10,7 @@
 
 ## Introduction
 
-C has special rules for pointer aliasing, for example allowing `char *` to alias other pointer types, and allowing pointers to signed and unsigned types to alias. The usability of some C APIs relies on the ability to easily cast pointers within the boundaries of those rules. Swift generally disallows typed pointer conversion. See [SE-0107 UnsafeRawPointer API](https://github.com/apple/swift-evolution/blob/main/proposals/0107-unsaferawpointer.md). Teaching the Swift compiler to allow pointer conversion within the rules of C when invoking functions imported from C headers will dramatically improve interoperability with no negative impact on type safety.
+C has special rules for pointer aliasing, for example allowing `char *` to alias other pointer types, and allowing pointers to signed and unsigned types to alias. The usability of some C APIs relies on the ability to easily cast pointers within the boundaries of those rules. Swift generally disallows typed pointer conversion. See [SE-0107 UnsafeRawPointer API](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0107-unsaferawpointer.md). Teaching the Swift compiler to allow pointer conversion within the rules of C when invoking functions imported from C headers will dramatically improve interoperability with no negative impact on type safety.
 
 Swift-evolution thread: [Pitch: Implicit Pointer Conversion for C Interoperability](https://forums.swift.org/t/pitch-implicit-pointer-conversion-for-c-interoperability/51129)
 

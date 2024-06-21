@@ -13,7 +13,7 @@ Expression macros provide a way to extend Swift with new kinds of expressions, w
 
 ## Motivation
 
-Expression macros are one part of the [vision for macros in Swift](https://github.com/apple/swift-evolution/pull/1927), which lays out general motivation for introducing macros into the language. Expressions in particular are an area where the language already provides decent abstractions for factoring out runtime behavior, because one can create a function that you call as an expression from anywhere. However, with a few hard-coded exceptions like `#file` and `#line`, an expression cannot reason about or modify the source code of the program being compiled. Such use cases will require external source-generating tools, which don't often integrate cleanly with other tooling.
+Expression macros are one part of the [vision for macros in Swift](https://github.com/swiftlang/swift-evolution/pull/1927), which lays out general motivation for introducing macros into the language. Expressions in particular are an area where the language already provides decent abstractions for factoring out runtime behavior, because one can create a function that you call as an expression from anywhere. However, with a few hard-coded exceptions like `#file` and `#line`, an expression cannot reason about or modify the source code of the program being compiled. Such use cases will require external source-generating tools, which don't often integrate cleanly with other tooling.
 
 ## Proposed solution
 
@@ -155,7 +155,7 @@ macro-function-signature-result -> '->' type
 macro-definition -> '=' expression
 ```
 
-The `@freestanding(expression)` attribute applies only to macros. It indicates that the macro is an expression macro. The "freestanding" terminology comes from the [macros vision document](https://github.com/apple/swift-evolution/pull/1927), and is used to describe macros that are expanded with the leading `#` syntax.
+The `@freestanding(expression)` attribute applies only to macros. It indicates that the macro is an expression macro. The "freestanding" terminology comes from the [macros vision document](https://github.com/swiftlang/swift-evolution/pull/1927), and is used to describe macros that are expanded with the leading `#` syntax.
 
 Macro signatures are function-like, with a parameter clause (that may be empty) and an optional result type.
 
@@ -391,7 +391,7 @@ We propose to introduce a number of macro declarations into the Swift standard l
 @freestanding(expression) macro dsohandle() -> UnsafeRawPointer
 ```
 
-The operations that provide information about the current location in source code are mostly implementable as `ExpressionMacro`-conforming types, using the `location` operation on the `MacroExpansionContext`. The exceptions are `#file`, which would need an extension to `MacroExpansionContext` to determine whether we are in a compilation mode where `#file` behaves like `#fileID` vs. behaving like [`#filePath`](https://github.com/apple/swift-evolution/blob/main/proposals/0285-ease-pound-file-transition.md); `dsohandle`, which requires specific compiler support; and `#function`, which would require contextual information that is not available in the `MacroExpansionContext`.
+The operations that provide information about the current location in source code are mostly implementable as `ExpressionMacro`-conforming types, using the `location` operation on the `MacroExpansionContext`. The exceptions are `#file`, which would need an extension to `MacroExpansionContext` to determine whether we are in a compilation mode where `#file` behaves like `#fileID` vs. behaving like [`#filePath`](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0285-ease-pound-file-transition.md); `dsohandle`, which requires specific compiler support; and `#function`, which would require contextual information that is not available in the `MacroExpansionContext`.
 
 The type signatures of these macros capture most of the type system behavior of the existing `#file`, `#line`, etc., because they are treated like literals and therefore can pick up any contextual type that implements the proper `ExpressibleBy*` protocol. However, the implementations above would fail to type-check code like this:
 
@@ -432,7 +432,7 @@ The object literals allow one to reference a resource in a program of various ki
 
 ### Sandboxing macro implementations
 
-The details of how macro implementation modules are built and provided to the compiler will be left to a separate proposal. However, it's important to call out here that macro implementations will be executed in a sandbox [like SwiftPM plugins](https://github.com/apple/swift-evolution/blob/main/proposals/0303-swiftpm-extensible-build-tools.md#security), preventing file system and network access. This is both a security precaution and a practical way of encouraging macros to not depend on any state other than the specific macro expansion node they are given to expand and its child nodes (but not its parent nodes), and the information specifically provided by the macro expansion context. If in the future macros need access to other information, this will be accomplished by extending the macro expansion context, which also provides a mechanism for the compiler to track what information the macro actually queried.
+The details of how macro implementation modules are built and provided to the compiler will be left to a separate proposal. However, it's important to call out here that macro implementations will be executed in a sandbox [like SwiftPM plugins](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0303-swiftpm-extensible-build-tools.md#security), preventing file system and network access. This is both a security precaution and a practical way of encouraging macros to not depend on any state other than the specific macro expansion node they are given to expand and its child nodes (but not its parent nodes), and the information specifically provided by the macro expansion context. If in the future macros need access to other information, this will be accomplished by extending the macro expansion context, which also provides a mechanism for the compiler to track what information the macro actually queried.
 
 ## Tools for using and developing macros
 

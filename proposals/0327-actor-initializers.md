@@ -314,8 +314,8 @@ In summary, we propose to _implicitly_ perform suspensions to hop to the actors 
 
 - The finding and continually updating the suspension points is annoying for programmers.
 - The reason _why_ some simple stores to a property can trigger a suspension is an implementation detail that is hard to explain to programmers.
-- The benefits of marking these suspensions is very low. The reference to `self` is known to be unique by the time the suspension  will happen, so it is impossible to create an [actor reentrancy](https://github.com/apple/swift-evolution/blob/main/proposals/0306-actors.md#actor-reentrancy) situation.
-- There is [already precedent](https://github.com/apple/swift-evolution/blob/main/proposals/0317-async-let.md#requiring-an-awaiton-any-execution-path-that-waits-for-an-async-let) in the language for performing implicit suspensions, namely for `async let`, when the benefits outweigh the negatives.
+- The benefits of marking these suspensions is very low. The reference to `self` is known to be unique by the time the suspension  will happen, so it is impossible to create an [actor reentrancy](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0306-actors.md#actor-reentrancy) situation.
+- There is [already precedent](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0317-async-let.md#requiring-an-awaiton-any-execution-path-that-waits-for-an-async-let) in the language for performing implicit suspensions, namely for `async let`, when the benefits outweigh the negatives.
 
 The net effect of these implicit executor-hops is that, for programmers, an `async` initializer does not appear to have any additional rules added to it! That is, programmers can simply view the initializer as being isolated throughout, like any ordinary `async` method would be! The flow-sensitive points where the hop is inserted into the initializer can be safely ignored as an implementation detail for all but the most rare situations. For example:
 

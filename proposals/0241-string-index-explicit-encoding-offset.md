@@ -225,4 +225,4 @@ However, it’s not clear this is the best approach for Swift and more design wo
 
 It is too late in the Swift 5.0 release to design and add all of these API. Instead, we’re proposing an urgent, targeted fix for the second problem.
 
-[SE-0180]: <https://github.com/apple/swift-evolution/blob/master/proposals/0180-string-index-overhaul.md>
+[SE-0180]: <https://github.com/swiftlang/swift-evolution/blob/master/proposals/0180-string-index-overhaul.md>

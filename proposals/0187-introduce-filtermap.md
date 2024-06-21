@@ -10,7 +10,7 @@
     [Review #1](https://forums.swift.org/t/review-se-0187-introduce-sequence-filtermap/6977),
     [Review #2](https://forums.swift.org/t/accepted-and-focused-re-review-se-0187-introduce-sequence-filtermap/7076),
     [Rationale](https://forums.swift.org/t/accepted-with-revisions-se-0187-introduce-sequence-filtermap/7290)
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/2d24b0ce9f138858b8341467170d6d8ba973827f/proposals/0187-introduce-filtermap.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/2d24b0ce9f138858b8341467170d6d8ba973827f/proposals/0187-introduce-filtermap.md)
 
 ## Introduction
 

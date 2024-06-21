@@ -93,7 +93,7 @@ Implementation details regarding the compiler changes necessary to implement the
 found in [this document](https://gist.github.com/DougGregor/e7c4e7bb4465d6f5fa2b59be72dbdba6).
 
 The second part of the solution involves updating the standard library to take advantage of the removal of this
-restriction. Such changes are made with [SE-0142](https://github.com/apple/swift-evolution/blob/master/proposals/0142-associated-types-constraints.md)
+restriction. Such changes are made with [SE-0142](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0142-associated-types-constraints.md)
 in mind, and incorporate both recursive constraints and `where` clauses. The changes necessary for this are described
 in the _Detailed Design_ section below.
 

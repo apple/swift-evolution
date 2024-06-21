@@ -7,7 +7,7 @@
 * Decision Notes: [Rationale](https://forums.swift.org/t/accepted-with-modification-se-0299-extending-static-member-lookup-in-generic-contexts/45238)
 * Implementation: [apple/swift#34523](https://github.com/apple/swift/pull/34523)
 * Decision Notes: [First return for revision](https://forums.swift.org/t/returned-for-revision-se-0299-extending-static-member-lookup-in-generic-contexts/44466), [First review thread](https://forums.swift.org/t/se-0299-extending-static-member-lookup-in-generic-contexts/43958)
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/4dd3a9c85195185ab7ad99c468732c5b568d51ac/proposals/0299-extend-generic-static-member-lookup.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/4dd3a9c85195185ab7ad99c468732c5b568d51ac/proposals/0299-extend-generic-static-member-lookup.md)
 
 ## Introduction
 
@@ -275,7 +275,7 @@ CheckboxToggleStyle.switch
 
 # Revision History
 
-The [initial revision of this proposal](https://github.com/apple/swift-evolution/blob/4dd3a9c85195185ab7ad99c468732c5b568d51ac/proposals/0299-extend-generic-static-member-lookup.md)
+The [initial revision of this proposal](https://github.com/swiftlang/swift-evolution/blob/4dd3a9c85195185ab7ad99c468732c5b568d51ac/proposals/0299-extend-generic-static-member-lookup.md)
 allowed contextual member lookup to find protocol extension members without
 the `Self` requirement, but as noted above, the Core Team rejected this ability
 because of the potential for namespace pollution.

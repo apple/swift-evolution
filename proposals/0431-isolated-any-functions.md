@@ -3,17 +3,16 @@
 * Proposal: [SE-0431](0431-isolated-any-functions.md)
 * Authors: [John McCall](https://github.com/rjmccall)
 * Review Manager: [Doug Gregor](https://github.com/DougGregor)
-* Status: **Accepted**
-* Implementation: [apple/swift#71433](https://github.com/apple/swift/pull/71433), [apple/swift#71574](https://github.com/apple/swift/pull/71574), available on `main` with `-enable-experimental-feature IsolatedAny`. 
-* Previous revision: [1](https://github.com/apple/swift-evolution/blob/b35498bf6f198477be50809c0fec3944259e86d0/proposals/0431-isolated-any-functions.md)
+* Status: **Implemented (Swift 6.0)**
+* Previous revision: [1](https://github.com/swiftlang/swift-evolution/blob/b35498bf6f198477be50809c0fec3944259e86d0/proposals/0431-isolated-any-functions.md)
 * Review: ([pitch](https://forums.swift.org/t/isolated-any-function-types/70562))([review](https://forums.swift.org/t/se-0431-isolated-any-function-types/70939))([acceptance](https://forums.swift.org/t/accepted-with-modifications-se-0431-isolated-any-function-types/71611))
 
-[SE-0316]: https://github.com/apple/swift-evolution/blob/main/proposals/0316-global-actors.md
-[SE-0392]: https://github.com/apple/swift-evolution/blob/main/proposals/0392-custom-actor-executors.md
+[SE-0316]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0316-global-actors.md
+[SE-0392]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0392-custom-actor-executors.md
 [isolated-captures]: https://forums.swift.org/t/closure-isolation-control/70378
-[generalized-isolation]: https://github.com/apple/swift-evolution/blob/main/proposals/0420-inheritance-of-actor-isolation.md#generalized-isolation-checking
-[regions]: https://github.com/apple/swift-evolution/blob/main/proposals/0414-region-based-isolation.md
-[region-transfers]: https://github.com/apple/swift-evolution/blob/main/proposals/0430-transferring-parameters-and-results.md
+[generalized-isolation]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0420-inheritance-of-actor-isolation.md#generalized-isolation-checking
+[regions]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0414-region-based-isolation.md
+[region-transfers]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0430-transferring-parameters-and-results.md
 
 ## Introduction
 
@@ -271,7 +270,7 @@ call to a function with that isolation would:
 
 - If the function is `async`, it will run with its formal isolation.  This
   includes leaving isolated contexts if the function is dynamically
-  non-isolated, as specified by [SE-0338](https://github.com/apple/swift-evolution/blob/main/proposals/0338-clarify-execution-non-actor-async.md).
+  non-isolated, as specified by [SE-0338](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0338-clarify-execution-non-actor-async.md).
 
 - If the function is synchronous, it will run with its formal isolation
   only if it is dynamically isolated.  If it is dynamically non-isolated,
@@ -300,7 +299,7 @@ unless the actor is known to be local.  When a distributed actor *is*
 local, function values isolated to the actor can be converted to
 `@isolated(any)` type as above.  The `isolation` property presents
 the distributed actor as an `(any Actor)?` using the same mechanism
-as [`#isolation`](https://github.com/apple/swift-evolution/blob/main/proposals/0420-inheritance-of-actor-isolation.md#isolated-distributed-actors).
+as [`#isolation`](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0420-inheritance-of-actor-isolation.md#isolated-distributed-actors).
 
 ### Isolation checking
 

@@ -1068,7 +1068,7 @@ This proposal regards _syntactic_ support, and does not necessarily mean that ev
 [unicode-scripts]: https://www.unicode.org/reports/tr24/#Script
 [unicode-script-extensions]: https://www.unicode.org/reports/tr24/#Script_Extensions
 [balancing-groups]: https://docs.microsoft.com/en-us/dotnet/standard/base-types/grouping-constructs-in-regular-expressions#balancing-group-definitions
-[overview]: https://github.com/apple/swift-evolution/blob/main/proposals/0350-regex-type-overview.md
+[overview]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0350-regex-type-overview.md
 [pitches]: https://github.com/apple/swift-experimental-string-processing/blob/main/Documentation/Evolution/ProposalOverview.md
 
 

@@ -6,7 +6,7 @@
 * Status: **Implemented (Swift 4.0)**
 * Decision Notes: [Rationale](https://forums.swift.org/t/accepted-se-0180-string-index-overhaul/6286)
 * Implementation: [apple/swift#9806](https://github.com/apple/swift/pull/9806)
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/72b8d90becd60b7cc7695607ae908ef251f1e966/proposals/0180-string-index-overhaul.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/72b8d90becd60b7cc7695607ae908ef251f1e966/proposals/0180-string-index-overhaul.md)
 
 ## Introduction
 

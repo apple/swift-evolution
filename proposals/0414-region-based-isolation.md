@@ -3,8 +3,8 @@
 * Proposal: [SE-0414](0414-region-based-isolation.md)
 * Authors: [Michael Gottesman](https://github.com/gottesmm) [Joshua Turcotti](https://github.com/jturcotti)
 * Review Manager: [Holly Borla](https://github.com/hborla)
-* Status: **Accepted**
-* Implementation: On `main` gated behind `-enable-experimental-feature RegionBasedIsolation`
+* Status: **Implemented (Swift 6.0)**
+* Upcoming Feature Flag: `RegionBasedIsolation`
 * Review: ([first pitch](https://forums.swift.org/t/pitch-safely-sending-non-sendable-values-across-isolation-domains/66566)), ([second pitch](https://forums.swift.org/t/pitch-region-based-isolation/67888)), ([first review](https://forums.swift.org/t/se-0414-region-based-isolation/68805)), ([revision](https://forums.swift.org/t/returned-for-revision-se-0414-region-based-isolation/69123)), ([second review](https://forums.swift.org/t/se-0414-second-review-region-based-isolation/69740)), ([acceptance](https://forums.swift.org/t/accepted-with-modifications-se-0414-region-based-isolation/70051))
 
 ## Introduction
@@ -1722,8 +1722,46 @@ resulting in a race against a write in the closure.
 
 ## Source compatibility
 
-This proposal strictly expands the set of acceptable Swift programs, so all
-Swift code that was previously accepted by the compiler will still be accepted.
+Region-based isolation opens up a new data-race safety hole when using APIs
+change the static isolation in the implementation of a `nonisolated` funciton,
+such as `assumeIsolated`, because values can become referenced by actor-isolated
+state without any indication in the funciton signature:
+
+```swift
+class NonSendable {}
+
+@MainActor var globalNonSendable: NonSendable = .init()
+
+nonisolated func stashIntoMainActor(ns: NonSendable) {
+  MainActor.assumeIsolated {
+    globalNonSendable = ns
+  }
+}
+
+func stashAndTransfer() -> NonSendable {
+  let ns = NonSendable()
+  stashIntoMainActor(ns)
+  Task.detached {
+    print(ns)
+  }
+}
+
+@MainActor func transfer() async {
+  let ns = stashAndTransfer()
+  await sendSomewhereElse(ns)
+}
+```
+
+Without additional restrictions, the above code would be valid under this proposal,
+but it risks a runtime data-race because the value returned from `stashAndTransfer`
+is stored in `MainActor`-isolated state and send to another isolation domain to
+be accessed concurrently. To close this hole, values must be sent into and out of
+`assumeIsolated`. The base region-isolation rules accomplish this by treating
+captures of isolated closures as a region merge, and the standard library annotates
+`assumeIsolated` as requiring the result type `T` to conform to `Sendable`. This
+impacts existing uses of `assumeIsolated`, so the change is staged in as warnings
+under complete concurrency checking, which enables `RegionBasedIsolation` by default,
+and an error in Swift 6 mode.
 
 ## ABI compatibility
 

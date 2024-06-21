@@ -8,7 +8,7 @@
 
 ## Introduction
 
-As of [SE-0269](https://github.com/apple/swift-evolution/blob/main/proposals/0269-implicit-self-explicit-capture.md), implicit `self` is permitted in closures when `self` is written explicitly in the capture list. We should extend this support to `weak self` captures, and permit implicit `self` as long as `self` has been unwrapped.
+As of [SE-0269](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0269-implicit-self-explicit-capture.md), implicit `self` is permitted in closures when `self` is written explicitly in the capture list. We should extend this support to `weak self` captures, and permit implicit `self` as long as `self` has been unwrapped.
 
 ```swift
 class ViewController {
@@ -29,7 +29,7 @@ Swift-evolution thread: [Allow implicit `self` for `weak self` captures, after `
 
 ## Motivation
 
-Explicit `self` has historically been required in closures, in order to help prevent users from inadvertently creating retain cycles. [SE-0269](https://github.com/apple/swift-evolution/blob/main/proposals/0269-implicit-self-explicit-capture.md) relaxed these rules in cases where implicit `self` is unlikely to introduce a hidden retain cycle, such as when `self` is explicitly captured in the closure's capture list:
+Explicit `self` has historically been required in closures, in order to help prevent users from inadvertently creating retain cycles. [SE-0269](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0269-implicit-self-explicit-capture.md) relaxed these rules in cases where implicit `self` is unlikely to introduce a hidden retain cycle, such as when `self` is explicitly captured in the closure's capture list:
 
 ```swift
 button.tapHandler = { [self] in
@@ -139,7 +139,7 @@ couldCauseRetainCycle { [weak self] in
 }
 ```
 
-Following the precedent of [SE-0269](https://github.com/apple/swift-evolution/blob/main/proposals/0269-implicit-self-explicit-capture.md), additional closures nested inside the `[weak self]` closure must capture `self` explicitly in order to use implicit `self`.
+Following the precedent of [SE-0269](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0269-implicit-self-explicit-capture.md), additional closures nested inside the `[weak self]` closure must capture `self` explicitly in order to use implicit `self`.
 
 ```swift
 // Not allowed:
@@ -186,7 +186,7 @@ couldCauseRetainCycle { [weak self] in
 }
 ```
 
-Also following [SE-0269](https://github.com/apple/swift-evolution/blob/main/proposals/0269-implicit-self-explicit-capture.md), implicit `self` will only be permitted if the `self` optional binding specifically, and exclusively, refers the closure's `self` capture:
+Also following [SE-0269](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0269-implicit-self-explicit-capture.md), implicit `self` will only be permitted if the `self` optional binding specifically, and exclusively, refers the closure's `self` capture:
 
 ```swift
 button.tapHandler = { [weak self] in
@@ -224,7 +224,7 @@ That would effectively add implicit control flow, however. `dismiss()` would onl
 
 ## Acknowledgments
 
-Thanks to the authors of [SE-0269](https://github.com/apple/swift-evolution/blob/main/proposals/0269-implicit-self-explicit-capture.md) for laying the foundation for this proposal.
+Thanks to the authors of [SE-0269](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0269-implicit-self-explicit-capture.md) for laying the foundation for this proposal.
 
 Thanks to Kyle Sluder for [the suggestion](https://forums.swift.org/t/allow-implicit-self-for-weak-self-captures-after-self-is-unwrapped/54262/2) to not permit implicit `self` in cases where the unwrapped `self` value doesn't necessarily refer to the closure's `self` capture, like in `let self = self ?? C.global`.
 

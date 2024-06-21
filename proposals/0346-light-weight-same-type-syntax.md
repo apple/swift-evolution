@@ -4,7 +4,7 @@
 * Authors: [Pavel Yaskevich](https://github.com/xedin), [Holly Borla](https://github.com/hborla), [Slava Pestov](https://github.com/slavapestov)
 * Review Manager: [John McCall](https://github.com/rjmccall)
 * Status: **Implemented (Swift 5.7)**
-* Previous Revisions: [1st](https://github.com/apple/swift-evolution/blob/5d86d57cfd6d803df4da90b196682d495e5de9b9/proposals/0346-light-weight-same-type-syntax.md)
+* Previous Revisions: [1st](https://github.com/swiftlang/swift-evolution/blob/5d86d57cfd6d803df4da90b196682d495e5de9b9/proposals/0346-light-weight-same-type-syntax.md)
 * Review: ([first pitch](https://forums.swift.org/t/pitch-light-weight-same-type-constraint-syntax/52889)) ([second pitch](https://forums.swift.org/t/pitch-2-light-weight-same-type-requirement-syntax/55081)) ([first review](https://forums.swift.org/t/se-0346-lightweight-same-type-requirements-for-primary-associated-types/55869)) ([second review](https://forums.swift.org/t/se-0346-second-review-lightweight-same-type-requirements-for-primary-associated-types/56414)) ([acceptance](https://forums.swift.org/t/accepted-se-0346-lightweight-same-type-requirements-for-primary-associated-types/56747))
 
 ## Introduction
@@ -228,7 +228,7 @@ T.PrimaryType2 == Arg2
 ...
 ```
 
-If the right hand side `Arg1` is itself an opaque parameter type, a fresh generic parameter is introduced for use as the right-hand side of the same-type requirement. See [SE-0341 Opaque Parameter Declarations](https://github.com/apple/swift-evolution/blob/main/proposals/0341-opaque-parameters.md) for details.
+If the right hand side `Arg1` is itself an opaque parameter type, a fresh generic parameter is introduced for use as the right-hand side of the same-type requirement. See [SE-0341 Opaque Parameter Declarations](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0341-opaque-parameters.md) for details.
 
 ### Constrained protocols in opaque result types
 
@@ -240,7 +240,7 @@ If the right hand side `Arg1` is itself an opaque parameter type, a fresh generi
 
   This example also demonstrates that the argument can itself depend on generic parameters from the outer scope.
 
-  The [SE-0328 Structural Opaque Result Types](https://github.com/apple/swift-evolution/blob/main/proposals/0328-structural-opaque-result-types.md) pitch allows multiple occurrences of `some` in a return type. This generalizes to constrained protocol types, whose constraint can be another opaque result type:
+  The [SE-0328 Structural Opaque Result Types](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0328-structural-opaque-result-types.md) pitch allows multiple occurrences of `some` in a return type. This generalizes to constrained protocol types, whose constraint can be another opaque result type:
 
   ```swift
   func transform(_: some Sequence<some Equatable>) -> some Sequence<some Equatable>
@@ -349,7 +349,7 @@ There are also a number of drawbacks to this approach:
       -> some Sequence<.Element == (Element, Element)> {}
    ```
    
-* This more verbose syntax is not as clear of an improvement over the existing syntax today, because most of the where clause is still explicitly written. This may also encourage users to specify most or all generic constraints in angle brackets at the front of a generic signature instead of in the `where` clause, violates a core tenet of [SE-0081 Move where clause to end of declaration](https://github.com/apple/swift-evolution/blob/main/proposals/0081-move-where-expression.md).
+* This more verbose syntax is not as clear of an improvement over the existing syntax today, because most of the where clause is still explicitly written. This may also encourage users to specify most or all generic constraints in angle brackets at the front of a generic signature instead of in the `where` clause, violates a core tenet of [SE-0081 Move where clause to end of declaration](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0081-move-where-expression.md).
 
 * Finally, this syntax lacks the symmetry between concrete types and generic types; generalizing from `Array<Int>` requires learning and writing the novel syntax `some Collection<.Element == Int>` instead of simply `some Collection<Int>`.
 

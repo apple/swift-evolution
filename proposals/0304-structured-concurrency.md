@@ -444,7 +444,7 @@ Note also that no information is passed to the task about why it was cancelled. 
 
 ### Unstructured tasks
 
-So far all types of tasks we discussed were child-tasks and respected the primary rule of structured concurrency: that a *child task* cannot live longer than the *parent task* (or scope) in which it was created. This is both true for task groups as well as [SE-0317 `async let`](https://github.com/apple/swift-evolution/blob/main/proposals/0317-async-let.md).
+So far all types of tasks we discussed were child-tasks and respected the primary rule of structured concurrency: that a *child task* cannot live longer than the *parent task* (or scope) in which it was created. This is both true for task groups as well as [SE-0317 `async let`](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0317-async-let.md).
 
 Sometimes however, these rigid rules end up being too restrictive. We might need to create new tasks whose lifetime is not bound to the creating task, for example in order to fire-and-forget some operation or to initiate asynchronous work from synchronous code. Unstructured tasks are not able to utilize some of the optimization techniques wrt. allocation and metadata propagation as child-tasks are, however they remain a very important building block especially for more free-form usages and integration with legacy APIs.
 
@@ -1498,11 +1498,11 @@ Changes after first review:
 ### Pitch changes
 
 * Changes in the third pitch:
-  * Factored `with*Continuation` into [its own proposal](https://github.com/apple/swift-evolution/pull/1244).
+  * Factored `with*Continuation` into [its own proposal](https://github.com/swiftlang/swift-evolution/pull/1244).
   * Factored `async let` into [its own proposal](https://github.com/DougGregor/swift-evolution/pull/50).
   * `Task` becomes a `struct` with instance functions, introduction of `Task.current`, `Task.unsafeCurrent` and the `UnsafeCurrentTask` APIs
   * `Task.Group` now conforms to [the `AsyncSequence` protocol](0298-asyncsequence.md).
-  * `runDetached` and `Task.Group.add` now accept [executor](https://github.com/apple/swift-evolution/pull/1257) arguments to specify where the newly-spawned tasks are initially scheduled.
+  * `runDetached` and `Task.Group.add` now accept [executor](https://github.com/swiftlang/swift-evolution/pull/1257) arguments to specify where the newly-spawned tasks are initially scheduled.
 * Changes in the second pitch:
   * Added a "desugaring" of `async let` to task groups and more motivation for the structured-concurrency parts of the design.
   * Reflowed the entire proposal to focus on the general description of structured concurrency first, the programming model with syntax next, and then details of the language features and API design last.

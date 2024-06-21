@@ -5,7 +5,7 @@
 * Review Manager: [Boris Bügling](https://github.com/neonichu)
 * Status: **Implemented (Swift 5.0)**
 * Decision Notes: [Rationale](https://forums.swift.org/t/accepted-with-modifications-se-0236-package-manager-platform-deployment-settings/18420)
-* Previous Revisions: [1](https://github.com/apple/swift-evolution/blob/aebb22c0f3e139fd921d14f79c3945af99d0342d/proposals/0236-package-manager-platform-deployment-settings.md)
+* Previous Revisions: [1](https://github.com/swiftlang/swift-evolution/blob/aebb22c0f3e139fd921d14f79c3945af99d0342d/proposals/0236-package-manager-platform-deployment-settings.md)
 
 ## Introduction
 

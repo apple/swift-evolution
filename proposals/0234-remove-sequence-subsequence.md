@@ -257,7 +257,7 @@ the standard library in underscored form.
 This will also have the useful side-effect that these methods can also be
 removed as customization points from `Collection` as well, similar to removing
 `prefix(upTo:)` in
-[SE-0232](https://github.com/apple/swift-evolution/blob/master/proposals/0232-remove-customization-points.md),
+[SE-0232](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0232-remove-customization-points.md),
 because there’s no longer any reasonable customization to be done on a per-collection basis.
 
 Doing this will have considerable benefits to code size as well. For example,

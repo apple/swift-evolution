@@ -9,7 +9,7 @@
 * Status: **Implemented (Swift 5.3)**
 * Decision Notes: [Rationale](https://forums.swift.org/t/accepted-se-0282-interoperability-with-the-c-atomic-operations-library/38050)
 
-[SE-0282v1]: https://github.com/apple/swift-evolution/blob/3a358a07e878a58bec256639d2beb48461fc3177/proposals/0282-atomics.md
+[SE-0282v1]: https://github.com/swiftlang/swift-evolution/blob/3a358a07e878a58bec256639d2beb48461fc3177/proposals/0282-atomics.md
 [package]: https://github.com/apple/swift-atomics
 
 ## Introduction
@@ -251,8 +251,8 @@ A previous version of this proposal included a large set of APIs implementing a 
 [Ownership Manifesto]: https://github.com/apple/swift/blob/master/docs/OwnershipManifesto.md
 **\[Ownership Manifesto]** John McCall. "Ownership Manifesto." *Swift compiler documentation*, May 2, 2017. https://github.com/apple/swift/blob/master/docs/OwnershipManifesto.md
 
-[SE-0176]: https://github.com/apple/swift-evolution/blob/master/proposals/0176-enforce-exclusive-access-to-memory.md
-**\[SE-0176]** John McCall. "Enforce Exclusive Access to Memory. *Swift Evolution Proposal,* SE-0176, May 2, 2017. https://github.com/apple/swift-evolution/blob/master/proposals/0176-enforce-exclusive-access-to-memory.md
+[SE-0176]: https://github.com/swiftlang/swift-evolution/blob/master/proposals/0176-enforce-exclusive-access-to-memory.md
+**\[SE-0176]** John McCall. "Enforce Exclusive Access to Memory. *Swift Evolution Proposal,* SE-0176, May 2, 2017. https://github.com/swiftlang/swift-evolution/blob/master/proposals/0176-enforce-exclusive-access-to-memory.md
 
 [Generics Manifesto]: https://github.com/apple/swift/blob/master/docs/GenericsManifesto.md
 **\[Generics Manifesto]** Douglas Gregor. "Generics Manifesto." *Swift compiler documentation*, 2016. https://github.com/apple/swift/blob/master/docs/GenericsManifesto.md

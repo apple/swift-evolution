@@ -15,7 +15,7 @@ to return the same type as the filtered collection.
 ## Motivation
 
 The recently accepted
-[SE-165](https://github.com/apple/swift-evolution/blob/master/proposals/0165-dict.md)
+[SE-165](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0165-dict.md)
 introduced a version of `filter` on `Dictionary` that returned a
 `Dictionary`. This had both performance and usability benefits: in most cases,
 a `Dictionary` is what the user wanted from the filter, and creating one
@@ -34,7 +34,7 @@ filter it, you will still get an `Array`.
 
 An implementation of `filter` on `RangeReplaceableCollection` will be provided,
 using `init()` and `append(_:)`, so all range-replaceable collections will
-have a `filter` method returning of `Self`. Per [SE-163](https://github.com/apple/swift-evolution/blob/master/proposals/0163-string-revision-1.md),
+have a `filter` method returning of `Self`. Per [SE-163](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0163-string-revision-1.md),
 this will include `String`.
 
 Note, many sequences (for example, strides or ranges), cannot represent a

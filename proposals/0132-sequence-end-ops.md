@@ -152,7 +152,7 @@ the direction, but do not indicate the direction in their names:
 
 Adding a direction to these APIs would make their behavior clearer and 
 permit us to offer opposite-end equivalents in the future. (Unmerged 
-[swift-evolution pull request 329](https://github.com/apple/swift-evolution/pull/329) 
+[swift-evolution pull request 329](https://github.com/swiftlang/swift-evolution/pull/329) 
 would add `lastIndex` methods.)
 
 ### Operations taking an index are really slicing

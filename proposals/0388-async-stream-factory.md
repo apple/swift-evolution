@@ -14,7 +14,7 @@ instances which make the stream's continuation easier to access.
 
 ## Motivation
 
-With [SE-0314](https://github.com/apple/swift-evolution/blob/main/proposals/0314-async-stream.md)
+With [SE-0314](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0314-async-stream.md)
 we introduced `AsyncStream` and `AsyncThrowingStream` which act as a root
 `AsyncSequence` that the standard library offers.
 

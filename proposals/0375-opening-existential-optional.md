@@ -9,7 +9,7 @@
 
 ## Introduction
 
-[SE-0352 "Implicitly Opened Existentials"](https://github.com/apple/swift-evolution/blob/main/proposals/0352-implicit-open-existentials.md) has a limitation that prevents the opening of an existential argument when the corresponding parameter is optional. This proposal changes that behavior, so that such a call will succeed when a (non-optional) existential argument is passed to a parameter of optional type:
+[SE-0352 "Implicitly Opened Existentials"](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0352-implicit-open-existentials.md) has a limitation that prevents the opening of an existential argument when the corresponding parameter is optional. This proposal changes that behavior, so that such a call will succeed when a (non-optional) existential argument is passed to a parameter of optional type:
 
 ```swift
 func acceptOptional<T: P>(_ x: T?) { }
@@ -55,7 +55,7 @@ func testOpenToOptional(p: any P) {
 
 ## Source compatibility
 
-Generally speaking, opening an existential argument in one more case will make code that would have been rejected by the compiler (e.g., with an error like "`P` does not conform to `P`") into code that is accepted, because the existential is opened. This can change the behavior of overload resolution, in the same manner as was [discussed in SE-0352](https://github.com/apple/swift-evolution/blob/main/proposals/0352-implicit-open-existentials.md#source-compatibility). Experience with SE-0352's integration into Swift 5.7 implies that the practical effect of these changes is quite small.
+Generally speaking, opening an existential argument in one more case will make code that would have been rejected by the compiler (e.g., with an error like "`P` does not conform to `P`") into code that is accepted, because the existential is opened. This can change the behavior of overload resolution, in the same manner as was [discussed in SE-0352](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0352-implicit-open-existentials.md#source-compatibility). Experience with SE-0352's integration into Swift 5.7 implies that the practical effect of these changes is quite small.
 
 ## Effect on ABI stability
 

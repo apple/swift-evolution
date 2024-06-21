@@ -6,7 +6,7 @@
 * Status: **Implemented (Swift 3.1)**
 * Decision Notes: [Rationale](https://forums.swift.org/t/accepted-with-modifications-se-0045-add-scan-prefix-while-drop-while-and-unfold-to-the-stdlib/2466)
 * Bug: [SR-1516](https://bugs.swift.org/browse/SR-1516)
-* Previous Revisions: [1](https://github.com/apple/swift-evolution/blob/b39d653f7e3d5e982b562664343f26c826652291/proposals/0045-scan-takewhile-dropwhile.md), [2](https://github.com/apple/swift-evolution/blob/baec22a8a5ddaa0407086380da32b5cad2144800/proposals/0045-scan-takewhile-dropwhile.md), [3](https://github.com/apple/swift-evolution/blob/d709546002e1636a10350d14da84eb9e554c3aac/proposals/0045-scan-takewhile-dropwhile.md)
+* Previous Revisions: [1](https://github.com/swiftlang/swift-evolution/blob/b39d653f7e3d5e982b562664343f26c826652291/proposals/0045-scan-takewhile-dropwhile.md), [2](https://github.com/swiftlang/swift-evolution/blob/baec22a8a5ddaa0407086380da32b5cad2144800/proposals/0045-scan-takewhile-dropwhile.md), [3](https://github.com/swiftlang/swift-evolution/blob/d709546002e1636a10350d14da84eb9e554c3aac/proposals/0045-scan-takewhile-dropwhile.md)
 
 ## Introduction
 

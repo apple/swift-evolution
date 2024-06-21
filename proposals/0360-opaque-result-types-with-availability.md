@@ -9,7 +9,7 @@
 
 ## Introduction
 
-Since their introduction in [SE-0244](https://github.com/apple/swift-evolution/blob/main/proposals/0244-opaque-result-types.md), opaque result types have become a powerful tool of type-level abstraction that allows library authors to hide implementation details of their APIs.
+Since their introduction in [SE-0244](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0244-opaque-result-types.md), opaque result types have become a powerful tool of type-level abstraction that allows library authors to hide implementation details of their APIs.
 
 Under the rules described in SE-0244 - a function returning an opaque result type *must return a value of the same concrete type `T`* from each `return` statement, and `T` must meet all of the constraints stated on the opaque type. 
 

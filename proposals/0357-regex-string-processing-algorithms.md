@@ -9,7 +9,7 @@
 * Review: ([pitch](https://forums.swift.org/t/pitch-regex-powered-string-processing-algorithms/55969))
          ([review](https://forums.swift.org/t/se-0357-regex-string-processing-algorithms/57225))
      ([acceptance](https://forums.swift.org/t/accepted-with-modifications-se-0357-regex-string-processing-algorithms/58706))
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/7741017763f528dfbdfa54c6d11f559918ab53e4/proposals/0357-regex-string-processing-algorithms.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/7741017763f528dfbdfa54c6d11f559918ab53e4/proposals/0357-regex-string-processing-algorithms.md)
 
 ## Introduction
 
@@ -21,7 +21,7 @@ We propose:
 2. Generic `Collection` equivalents of these algorithms in terms of subsequences
 3. `protocol CustomConsumingRegexComponent`, which allows 3rd party libraries to provide their industrial-strength parsers as intermixable components of regexes
 
-This proposal is part of a larger [regex-powered string processing initiative](https://github.com/apple/swift-evolution/blob/main/proposals/0350-regex-type-overview.md), the status of each proposal is tracked [here](https://github.com/apple/swift-experimental-string-processing/blob/main/Documentation/Evolution/ProposalOverview.md). Further discussion of regex specifics is out of scope of this proposal and better discussed in their relevant reviews.
+This proposal is part of a larger [regex-powered string processing initiative](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0350-regex-type-overview.md), the status of each proposal is tracked [here](https://github.com/apple/swift-experimental-string-processing/blob/main/Documentation/Evolution/ProposalOverview.md). Further discussion of regex specifics is out of scope of this proposal and better discussed in their relevant reviews.
 
 ## Motivation
 
@@ -1074,7 +1074,7 @@ let range = empty.firstRange(of: empty)
 // empty == empty[range]
 ```
 
-[SE-0346]: https://github.com/apple/swift-evolution/blob/main/proposals/0346-light-weight-same-type-syntax.md
+[SE-0346]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0346-light-weight-same-type-syntax.md
 [stdlib-pitch]: https://forums.swift.org/t/pitch-primary-associated-types-in-the-standard-library/56426
 
 ## Alternatives considered
@@ -1087,7 +1087,7 @@ Most of the proposed algorithms are necessarily on `Collection` due to the use o
 
 The regex work is broken down into 6 proposals based on technical domain, which is advantageous for deeper technical discussions and makes reviewing the large body of work manageable. The disadvantage of this approach is that relatively-shallow cross-cutting concerns, such as API naming consistency, are harder to evaluate until we've built up intuition from multiple proposals.
 
-We've seen the [Regex type and overview](https://github.com/apple/swift-evolution/blob/main/proposals/0350-regex-type-overview.md), the [Regex builder DSL](https://github.com/apple/swift-evolution/blob/main/proposals/0351-regex-builder.md), and here we present lots of ways to use regex. Now's a good time to go over API naming consistency.
+We've seen the [Regex type and overview](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0350-regex-type-overview.md), the [Regex builder DSL](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0351-regex-builder.md), and here we present lots of ways to use regex. Now's a good time to go over API naming consistency.
 
 (The other proposal with a significant amount of API is [Unicode for String Processing](https://forums.swift.org/t/pitch-unicode-for-string-processing/56907), which is in the pitch phase. It is a technical niche and less impactful on these naming discussions. We'll still want to design those names for consistency, of course.)
 
@@ -1117,7 +1117,7 @@ protocol CustomConsumingRegexComponent {
 
 This is not a normal developer-facing protocol or concept; it's an advanced library-extensibility feature. Explicit, descriptive, and careful names are more important than concise names. The "custom" implies that we're not just vending a regex directly ourselves, we're instead customizing behavior by hooking into the run-time engine directly.
 
-Older versions of the pitch had `func match(...) -> (String.Index, T)?` as the protocol requirement. As [Regex type and overview](https://github.com/apple/swift-evolution/blob/main/proposals/0350-regex-type-overview.md) went through review, naming convention settled on using the word "match" as a noun and in context with operations that produce a `Match` instance. Since this is the engine's customization hook, it produces the value and position to resume execution from directly, and hence different terminology is apt and avoids confusion or future ambiguities. "Consuming" is the nomenclature we're going with for something that chews off the front of its input in order to produces a value.
+Older versions of the pitch had `func match(...) -> (String.Index, T)?` as the protocol requirement. As [Regex type and overview](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0350-regex-type-overview.md) went through review, naming convention settled on using the word "match" as a noun and in context with operations that produce a `Match` instance. Since this is the engine's customization hook, it produces the value and position to resume execution from directly, and hence different terminology is apt and avoids confusion or future ambiguities. "Consuming" is the nomenclature we're going with for something that chews off the front of its input in order to produces a value.
 
 This protocol customizes the basic consume-from-the-front functionality. A protocol for customizing search is future work and involves accommodating different kinds of state and ways that a searcher may wish to speed up subsequent searches. Alternative names for the protocol include `CustomRegexComponent`, `CustomConsumingRegex`, etc., but we don't feel brevity is the key consideration here.
 

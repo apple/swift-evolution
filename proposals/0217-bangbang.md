@@ -380,11 +380,11 @@ Having a line and file reference for the associated failure point would be a maj
 
 #### `Never` as a Bottom Type
 
-If `Never` ever becomes a true bottom type as in [SE-0102](https://github.com/apple/swift-evolution/blob/master/proposals/0102-noreturn-bottom-type.md), Swift will be able to use `fatalError()` on the right hand side of nil-coalescing.
+If `Never` ever becomes a true bottom type as in [SE-0102](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0102-noreturn-bottom-type.md), Swift will be able to use `fatalError()` on the right hand side of nil-coalescing.
 
 > If [`Never` as a bottom type] were supported by the compiler, it would enable some potentially useful things, for instance using a nonreturning function directly as a parameter to a higher-order function that expects a result...or allowing a subclass to override a method and covariantly return `Never`.
 > 
-> -- [SE-0102](https://github.com/apple/swift-evolution/blob/master/proposals/0102-noreturn-bottom-type.md#never-as-a-universal-bottom-subtype)
+> -- [SE-0102](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0102-noreturn-bottom-type.md#never-as-a-universal-bottom-subtype)
 
 ```swift
 // Legal if a (desirable) `Never` bottom type is adopted

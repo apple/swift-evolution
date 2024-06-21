@@ -6,7 +6,7 @@
 * Status: **Implemented (Swift 3.0)**
 * Decision Notes: [Rationale](https://forums.swift.org/t/accepted-se-0089-renaming-string-init-t-t/3097)
 * Bug: [SR-1881](https://bugs.swift.org/browse/SR-1881)
-* Previous Revisions: [1](https://github.com/apple/swift-evolution/blob/40aecf3647c19ae37730e39aa9e54b67fcc2be86/proposals/0089-rename-string-reflection-init.md)
+* Previous Revisions: [1](https://github.com/swiftlang/swift-evolution/blob/40aecf3647c19ae37730e39aa9e54b67fcc2be86/proposals/0089-rename-string-reflection-init.md)
 
 ## Introduction
 

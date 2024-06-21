@@ -160,7 +160,7 @@ access modifier is `public` for all APIs unless specified.
     "Foo")` instead of `.product(name: "Foo", package: nil)`.
 
     If
-    [SE-0155](https://github.com/apple/swift-evolution/blob/master/proposals/0155-normalize-enum-case-representation.md)
+    [SE-0155](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0155-normalize-enum-case-representation.md)
     is accepted, we can directly add a default value. Otherwise, we will use a
     static factory method to provide default value for `package`.
 
@@ -456,7 +456,7 @@ access modifier is `public` for all APIs unless specified.
       .package(url: "/SwiftyJSON", "1.2.3"..."1.2.8"),
       ```
     * As a slight modification to the
-      [branch proposal](https://github.com/apple/swift-evolution/blob/master/proposals/0150-package-manager-branch-support.md),
+      [branch proposal](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0150-package-manager-branch-support.md),
       we will add cases for specifying a branch or revision, rather than
       adding factory methods for them:
 
@@ -594,7 +594,7 @@ let package = Package(
 The above changes will be implemented only in the new Package Description v4
 library. The v4 runtime library will release with Swift 4 and packages will be
 able to opt-in into it as described by
-[SE-0152](https://github.com/apple/swift-evolution/blob/master/proposals/0152-package-manager-tools-version.md).
+[SE-0152](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0152-package-manager-tools-version.md).
 
 There will be no automatic migration feature for updating the manifests from v3
 to v4. To indicate the replacements of old APIs, we will annotate them using
@@ -614,7 +614,7 @@ the v3 manifest API, they will build as expected.
 A package which needs to support both Swift 3 and Swift 4 tools will need to
 stay on the v3 manifest API and support the Swift 3 language version for its
 sources, using the API described in the proposal
-[SE-0151](https://github.com/apple/swift-evolution/blob/master/proposals/0151-package-manager-swift-language-compatibility-version.md).
+[SE-0151](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0151-package-manager-swift-language-compatibility-version.md).
 
 An existing package which wants to use the new v4 manifest APIs will need to bump its
 minimum tools version to 4.0 or later using the command `$ swift package tools-version

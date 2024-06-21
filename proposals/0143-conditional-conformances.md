@@ -5,7 +5,7 @@
 * Review Manager: [Joe Groff](https://github.com/jckarter)
 * Status: **Implemented (Swift 4.2)**
 * Decision Notes: [Review extended](https://forums.swift.org/t/review-se-0143-conditional-conformances/4130/10), [Rationale](https://forums.swift.org/t/accepted-se-0143-conditional-conformances/4537)
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/91725ee83fa34c81942a634dcdfa9d2441fbd853/proposals/0143-conditional-conformances.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/91725ee83fa34c81942a634dcdfa9d2441fbd853/proposals/0143-conditional-conformances.md)
 
 ## Introduction
 

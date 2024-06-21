@@ -6,7 +6,7 @@
 * Status: **Implemented (Swift 5.0)**
 * Implementation: [apple/swift#21138](https://github.com/apple/swift/pull/21138)
 * Decision notes: [Rationale](https://forums.swift.org/t/accepted-with-modifications-se-0237-introduce-with-contiguous-mutable-storage-if-available-methods/18713)
-* Prior revisions: [Version 1](https://github.com/apple/swift-evolution/commit/be787dee0732895d35e0aba8f2f69d1f310b4e99)
+* Prior revisions: [Version 1](https://github.com/swiftlang/swift-evolution/commit/be787dee0732895d35e0aba8f2f69d1f310b4e99)
 
 ## Introduction
 

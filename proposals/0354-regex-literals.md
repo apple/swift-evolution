@@ -651,18 +651,18 @@ Regex literals should not be outright avoided, they should be used well. Artific
 
 
 
-[SE-0168]: https://github.com/apple/swift-evolution/blob/main/proposals/0168-multi-line-string-literals.md
-[SE-0200]: https://github.com/apple/swift-evolution/blob/main/proposals/0200-raw-string-escaping.md
+[SE-0168]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0168-multi-line-string-literals.md
+[SE-0200]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0200-raw-string-escaping.md
 
 [pitch-status]: https://github.com/apple/swift-experimental-string-processing/blob/main/Documentation/Evolution/ProposalOverview.md
-[regex-type]: https://github.com/apple/swift-evolution/blob/main/proposals/0350-regex-type-overview.md
+[regex-type]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0350-regex-type-overview.md
 [strongly-typed-captures]: https://github.com/apple/swift-experimental-string-processing/blob/main/Documentation/Evolution/StronglyTypedCaptures.md
 [regex-unicode]: https://github.com/apple/swift-experimental-string-processing/blob/main/Documentation/Evolution/ProposalOverview.md#unicode-for-string-processing
 
-[internal-syntax]: https://github.com/apple/swift-evolution/blob/main/proposals/0355-regex-syntax-run-time-construction.md
-[extended-regex-syntax]: https://github.com/apple/swift-evolution/blob/main/proposals/0355-regex-syntax-run-time-construction.md#extended-syntax-modes
+[internal-syntax]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0355-regex-syntax-run-time-construction.md
+[extended-regex-syntax]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0355-regex-syntax-run-time-construction.md#extended-syntax-modes
 
-[capture-numbering]: https://github.com/apple/swift-evolution/blob/main/proposals/0355-regex-syntax-run-time-construction.md#group-numbering
+[capture-numbering]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0355-regex-syntax-run-time-construction.md#group-numbering
 
-[regex-dsl]: https://github.com/apple/swift-evolution/blob/main/proposals/0351-regex-builder.md
-[dsl-captures]: https://github.com/apple/swift-evolution/blob/main/proposals/0351-regex-builder.md#capture-and-reference
+[regex-dsl]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0351-regex-builder.md
+[dsl-captures]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0351-regex-builder.md#capture-and-reference

@@ -17,7 +17,7 @@ let _: (String) -> Int? = \.count
 
 ## Motivation
 
-[SE-0249](https://github.com/apple/swift-evolution/blob/main/proposals/0249-key-path-literal-function-expressions.md) introduced a conversion between key path literals and function types, which allowed users to write code like the following:
+[SE-0249](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0249-key-path-literal-function-expressions.md) introduced a conversion between key path literals and function types, which allowed users to write code like the following:
 
 ```swift
 let strings = ["Hello", "world", "!"]

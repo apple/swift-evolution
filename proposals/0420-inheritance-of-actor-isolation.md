@@ -4,17 +4,16 @@
 * Authors: [John McCall](https://github.com/rjmccall), [Holly Borla](https://github.com/hborla), [Doug Gregor](https://github.com/douggregor)
 * Review Manager: [Xiaodi Wu](https://github.com/xwu)
 * Status: **Implemented (Swift 6.0)**
-* Implementation: [apple/swift#70758](https://github.com/apple/swift/pull/70758), [apple/swift#70902](https://github.com/apple/swift/pull/70902)
 * Review: ([pitch](https://forums.swift.org/t/pitch-inheriting-the-callers-actor-isolation/68391)) ([review](https://forums.swift.org/t/se-0420-inheritance-of-actor-isolation/69638)) ([acceptance](https://forums.swift.org/t/accepted-se-0420-inheritance-of-actor-isolation/69913))
 
-[SE-0302]: https://github.com/apple/swift-evolution/blob/main/proposals/0302-concurrent-value-and-concurrent-closures.md
-[SE-0304-propagation]: https://github.com/apple/swift-evolution/blob/main/proposals/0304-structured-concurrency.md#actor-context-propagation
-[SE-0306]: https://github.com/apple/swift-evolution/blob/main/proposals/0306-actors.md
-[SE-0313]: https://github.com/apple/swift-evolution/blob/main/proposals/0313-actor-isolation-control.md
-[SE-0316]: https://github.com/apple/swift-evolution/blob/main/proposals/0316-global-actors.md
-[SE-0336]: https://github.com/apple/swift-evolution/blob/main/proposals/0336-distributed-actor-isolation.md
-[SE-0338]: https://github.com/apple/swift-evolution/blob/main/proposals/0338-clarify-execution-non-actor-async.md
-[SE-0392]: https://github.com/apple/swift-evolution/blob/main/proposals/0392-custom-actor-executors.md
+[SE-0302]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0302-concurrent-value-and-concurrent-closures.md
+[SE-0304-propagation]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0304-structured-concurrency.md#actor-context-propagation
+[SE-0306]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0306-actors.md
+[SE-0313]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0313-actor-isolation-control.md
+[SE-0316]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0316-global-actors.md
+[SE-0336]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0336-distributed-actor-isolation.md
+[SE-0338]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0338-clarify-execution-non-actor-async.md
+[SE-0392]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0392-custom-actor-executors.md
 
 ## Introduction
 

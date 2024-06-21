@@ -8,18 +8,18 @@
 * Implementation: [apple/swift#33092](https://github.com/apple/swift/pull/33092)
 * Toolchains: [Linux](https://ci.swift.org/job/swift-PR-toolchain-Linux/404//artifact/branch-master/swift-PR-33092-404-ubuntu16.04.tar.gz), [macOS](https://ci.swift.org/job/swift-PR-toolchain-osx/579//artifact/branch-master/swift-PR-33092-579-osx.tar.gz)
 * Discussion: ([Pitch #1](https://forums.swift.org/t/pitch-1-forward-scan-matching-for-trailing-closures-source-breaking/38162)), ([Pitch #2](https://forums.swift.org/t/pitch-2-forward-scan-matching-for-trailing-closures/38491))
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/07bcb908125e1795a08d47391b5d866eb782639e/proposals/0286-forward-scan-trailing-closures.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/07bcb908125e1795a08d47391b5d866eb782639e/proposals/0286-forward-scan-trailing-closures.md)
 * Review: ([Review](https://forums.swift.org/t/se-0286-forward-scan-for-trailing-closures/38529)), ([Acceptance](https://forums.swift.org/t/accepted-with-modifications-se-0286-forward-scan-for-trailing-closures/38836))
 
 ## Introduction
 
-[SE-0279 "Multiple Trailing Closures"](https://github.com/apple/swift-evolution/blob/master/proposals/0279-multiple-trailing-closures.md) threaded the needle between getting the syntax we wanted for multiple trailing closures without breaking source compatibility. One aspect of that compromise was to extend (rather than replace) the existing rule for matching a trailing closure to a parameter by scanning *backward* from the end of the parameter list.
+[SE-0279 "Multiple Trailing Closures"](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0279-multiple-trailing-closures.md) threaded the needle between getting the syntax we wanted for multiple trailing closures without breaking source compatibility. One aspect of that compromise was to extend (rather than replace) the existing rule for matching a trailing closure to a parameter by scanning *backward* from the end of the parameter list.
 
 However, the backward-scan matching rule makes it hard to write good API that uses trailing closures, especially multiple trailing closures. This proposal replaces the backward scan with a forward scan wherever possible, which is simpler, more in line with normal argument matching in a call, and works better for APIs that support trailing closures (whether single or multiple) and default arguments. This change introduces a *minor source break* for code involving multiple, defaulted closure parameters, but that source break is staged over multiple Swift versions.
 
 ## Motivation
 
-Several folks noted the downsides of the "backward" matching rule. The rule itself is described in the [detailed design](https://github.com/apple/swift-evolution/blob/master/proposals/0279-multiple-trailing-closures.md#detailed-design) section of SE-0279 (search for "backward"). To understand the problem with the backward rule, let's try to declare the UIView [`animate(withDuration:animations:completion:)`](https://developer.apple.com/documentation/uikit/uiview/1622515-animate) method in the obvious way to make use of SE-0279:
+Several folks noted the downsides of the "backward" matching rule. The rule itself is described in the [detailed design](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0279-multiple-trailing-closures.md#detailed-design) section of SE-0279 (search for "backward"). To understand the problem with the backward rule, let's try to declare the UIView [`animate(withDuration:animations:completion:)`](https://developer.apple.com/documentation/uikit/uiview/1622515-animate) method in the obvious way to make use of SE-0279:
 
 ```swift
 class func animate(

@@ -10,7 +10,7 @@
 
 ## Introduction
 
-[SE-0316: Global Actors](https://github.com/apple/swift-evolution/blob/main/proposals/0316-global-actors.md) introduced annotations like `@MainActor` to isolate a type, function, or property to a particular global actor. It also introduced various rules for how that global actor isolation could be inferred. One of those rules was:
+[SE-0316: Global Actors](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0316-global-actors.md) introduced annotations like `@MainActor` to isolate a type, function, or property to a particular global actor. It also introduced various rules for how that global actor isolation could be inferred. One of those rules was:
 
 > Declarations that are not explicitly annotated with either a global actor or `nonisolated` can infer global actor isolation from several different places:
 >

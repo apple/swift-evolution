@@ -146,7 +146,7 @@ Use of single quotes for character/scalar literals is precedented in other langu
 
 In Swift 1.0, single quotes were reserved for some yet-to-be determined syntactical purpose. Since then, pretty much all of the things that might have used single quotes have already found homes in other parts of the Swift syntactical space:
 
-- syntax for [multi-line string literals](https://github.com/apple/swift-evolution/blob/master/proposals/0168-multi-line-string-literals.md) uses triple quotes (`"""`)
+- syntax for [multi-line string literals](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0168-multi-line-string-literals.md) uses triple quotes (`"""`)
 
 - string interpolation syntax uses standard double quote syntax. 
 

@@ -545,5 +545,5 @@ The primary motivation for global actors is the main actor, and the semantics of
 
 
 [customexecs]: https://github.com/rjmccall/swift-evolution/blob/custom-executors/proposals/0000-custom-executors.md
-[isolation]: https://github.com/apple/swift-evolution/blob/main/proposals/0313-actor-isolation-control.md
+[isolation]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0313-actor-isolation-control.md
 

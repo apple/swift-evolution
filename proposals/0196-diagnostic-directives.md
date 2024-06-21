@@ -4,7 +4,7 @@
 * Author: [Harlan Haskins](https://github.com/harlanhaskins)
 * Review Manager: [Ted Kremenek](https://github.com/tkremenek)
 * Implementation: [apple/swift#14048](https://github.com/apple/swift/pull/14048)
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/ab0c22a2340be9bfcb82e6f237752b4d959a93b7/proposals/0196-diagnostic-directives.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/ab0c22a2340be9bfcb82e6f237752b4d959a93b7/proposals/0196-diagnostic-directives.md)
 * Status: **Implemented (Swift 4.2)**
 
 ## Introduction
@@ -152,7 +152,7 @@ to this proposal, and both could be addressed in future proposals.
 # Rationale
 
 On February 1, 2018 the Core Team decided to **accept** this proposal with
-slight revision over the [original proposal](https://github.com/apple/swift-evolution/blob/ab0c22a2340be9bfcb82e6f237752b4d959a93b7/proposals/0196-diagnostic-directives.md).
+slight revision over the [original proposal](https://github.com/swiftlang/swift-evolution/blob/ab0c22a2340be9bfcb82e6f237752b4d959a93b7/proposals/0196-diagnostic-directives.md).
 
 The only revision over the original proposal is to change the syntax to use
 `#warning(<Message>)` instead of `#warning <Messsage>`.  This fits well with

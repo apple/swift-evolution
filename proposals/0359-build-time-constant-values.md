@@ -131,7 +131,7 @@ This list will expand in the future to include more literal-value kinds or poten
 ### Enforcement of Compile-Time Attribute Parameters
 
 Attribute definitions can benefit from additional guarantees of compile-time constant values.
-For example, a `@const` version of the [@Clamping](https://github.com/apple/swift-evolution/blob/main/proposals/0258-property-wrappers.md#clamping-a-value-within-bounds) property wrapper that requires that lower and upper bounds be compile-time-known values can ensure that the clamp values are fixed and cannot change for different instantiations of wrapped properties which may occur if runtime values are used to specify the bounds:
+For example, a `@const` version of the [@Clamping](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0258-property-wrappers.md#clamping-a-value-within-bounds) property wrapper that requires that lower and upper bounds be compile-time-known values can ensure that the clamp values are fixed and cannot change for different instantiations of wrapped properties which may occur if runtime values are used to specify the bounds:
 
 ```swift
 @propertyWrapper
@@ -306,10 +306,10 @@ func foo(@const i: Int) {
 ```
 
 ### Toolchain support for extracting compile-time values at build time.
-The current proposal covers an attribute that allows clients to build an API surface that is capable of carrying semantic build-time information that may be very useful to build-time tooling, such as [SwiftPM plugins](https://github.com/apple/swift-evolution/blob/main/proposals/0303-swiftpm-extensible-build-tools.md). The next step towards this goal would include toolchain support for tooling that extracts such information in a client-agnostic fashion so that it can be adopted equally by use-cases like the manifest example in [Facilitate Compile-time Extraction of Values](#facilitate-compile-time-extraction-of-values) and others.
+The current proposal covers an attribute that allows clients to build an API surface that is capable of carrying semantic build-time information that may be very useful to build-time tooling, such as [SwiftPM plugins](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0303-swiftpm-extensible-build-tools.md). The next step towards this goal would include toolchain support for tooling that extracts such information in a client-agnostic fashion so that it can be adopted equally by use-cases like the manifest example in [Facilitate Compile-time Extraction of Values](#facilitate-compile-time-extraction-of-values) and others.
 
 ### Compile-time expressions and functions
-Building on propagation and inference of `@const`, some of the most interesting use-cases for compile-time-known values emerge with the ability to perform operations on them that result in other compile-time-known values. For example, the [Compiler Diagnostic Directives](https://github.com/apple/swift-evolution/blob/main/proposals/0196-diagnostic-directives.md) could be expanded to trigger conditionally based on a value of a compile-time-known input expression:
+Building on propagation and inference of `@const`, some of the most interesting use-cases for compile-time-known values emerge with the ability to perform operations on them that result in other compile-time-known values. For example, the [Compiler Diagnostic Directives](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0196-diagnostic-directives.md) could be expanded to trigger conditionally based on a value of a compile-time-known input expression:
 
 ```swift
 func foo(@const input: Int) {

@@ -6,7 +6,7 @@
 * Status: **Implemented (Swift 3.0)**
 * Decision Notes: [Rationale](https://forums.swift.org/t/accepted-se-0095-replace-protocol-p1-p2-syntax-with-p1-p2-syntax/3198)
 * Bug: [SR-1938](https://bugs.swift.org/browse/SR-1938)
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/a4356fee94c06181715fad83aa61e923eb73f8ec/proposals/0095-any-as-existential.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/a4356fee94c06181715fad83aa61e923eb73f8ec/proposals/0095-any-as-existential.md)
 
 ## Introduction
 

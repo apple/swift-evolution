@@ -146,7 +146,7 @@ macro stringify<T>(_ value: T) -> (T, String) = #externalMacro(module: "MyMacros
 
 The `macro` introducer indicates that this is a macro, named `stringify`. The `@freestanding` attribute notes that this is a freestanding macro (used with the `#` syntax) and that it is usable as an expression. The macro is defined (after the `=`) to have an externally-provided macro expansion operation that is the type named `MyMacros.StringifyMacro`.  Because the definition is external, the `stringify` macro function doesn't need a function body. If Swift were to grow a way to implement macros directly here (rather than via a separate package), such macros could have a body but not an `#externalMacro` argument.
 
-A given macro can inhabit several different macro *roles*, each of which can expand in different ways. For example, consider a `Clamping` macro that implements behavior similar to the [property wrapper by the same name](https://github.com/apple/swift-evolution/blob/main/proposals/0258-property-wrappers.md#clamping-a-value-within-bounds):
+A given macro can inhabit several different macro *roles*, each of which can expand in different ways. For example, consider a `Clamping` macro that implements behavior similar to the [property wrapper by the same name](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0258-property-wrappers.md#clamping-a-value-within-bounds):
 
 ```swift
 @attached(peer, prefixed(_))
@@ -287,7 +287,7 @@ The `@freestanding` and `@attached` attributes for macro declarations specify th
 
   With this, an expression like `#colorLiteral(red: 0.5, green: 0.5, blue: 0.25, alpha: 1.0)` would produce a value of the `_ColorLiteralType` (presumably defined by a framework), and would be rewritten by the macro into `.init(red: 0.5, green: 0.5, blue: 0.25, alpha: 1.0)` and type-checked with the `_ColorLiteralType` as context so it would initialize a value of that type.
 
-* **Declaration**: A freestanding macro that can occur anywhere a declaration can occur, such as at the top level, in the definition of a type or extension thereof, or in a function or closure body. The macro can expand to zero or more declarations. These macros could be used to subsume the `#warning` and `#error` directives from [SE-0196](https://github.com/apple/swift-evolution/blob/main/proposals/0196-diagnostic-directives.md):
+* **Declaration**: A freestanding macro that can occur anywhere a declaration can occur, such as at the top level, in the definition of a type or extension thereof, or in a function or closure body. The macro can expand to zero or more declarations. These macros could be used to subsume the `#warning` and `#error` directives from [SE-0196](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0196-diagnostic-directives.md):
 
   ```swift
   /// Emits the given message as a warning, as in SE-0196.

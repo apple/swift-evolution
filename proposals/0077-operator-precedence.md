@@ -8,8 +8,8 @@
 
 **Revision history**
 
-- **[v1](https://github.com/apple/swift-evolution/blob/40c2acad241106e1cfe697d0f75e1855dc9e96d5/proposals/0077-operator-precedence.md)** Initial version
-- **[v2](https://github.com/apple/swift-evolution/blob/1f3ae8bfecb2ba70d30767607f0bd3279feeec90/proposals/0077-operator-precedence.md)** After the first review
+- **[v1](https://github.com/swiftlang/swift-evolution/blob/40c2acad241106e1cfe697d0f75e1855dc9e96d5/proposals/0077-operator-precedence.md)** Initial version
+- **[v2](https://github.com/swiftlang/swift-evolution/blob/1f3ae8bfecb2ba70d30767607f0bd3279feeec90/proposals/0077-operator-precedence.md)** After the first review
 - **v3** After the second review
 
 ## Introduction

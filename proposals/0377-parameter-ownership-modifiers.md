@@ -6,7 +6,7 @@
 * Status: **Implemented (Swift 5.9)**
 * Implementation: in main branch of compiler
 * Review: ([first pitch](https://forums.swift.org/t/pitch-formally-defining-consuming-and-nonconsuming-argument-type-modifiers/54313)) ([second pitch](https://forums.swift.org/t/borrow-and-take-parameter-ownership-modifiers/59581)) ([first review](https://forums.swift.org/t/se-0377-borrow-and-take-parameter-ownership-modifiers/61020)) ([second review](https://forums.swift.org/t/combined-se-0366-third-review-and-se-0377-second-review-rename-take-taking-to-consume-consuming/61904)) ([acceptance](https://forums.swift.org/t/accepted-with-modifications-se-0377-borrowing-and-consuming-parameter-ownership-modifiers/62759)) ([revision and third review](https://forums.swift.org/t/se-0377-revision-make-borrowing-and-consuming-parameters-require-explicit-copying-with-the-copy-operator/64996)) ([revision acceptance](https://forums.swift.org/t/accepted-se-0377-revision-make-borrowing-and-consuming-parameters-require-explicit-copying-with-the-copy-operator/65293))
-* Previous Revisions: ([as of first review](https://github.com/apple/swift-evolution/blob/3f984e6183ce832307bb73ec72c842f6cb0aab86/proposals/0377-parameter-ownership-modifiers.md)) ([as of second review](https://github.com/apple/swift-evolution/blob/7e1d16316e5f68eb94546df9241aa6b4cacb9411/proposals/0377-parameter-ownership-modifiers.md))
+* Previous Revisions: ([as of first review](https://github.com/swiftlang/swift-evolution/blob/3f984e6183ce832307bb73ec72c842f6cb0aab86/proposals/0377-parameter-ownership-modifiers.md)) ([as of second review](https://github.com/swiftlang/swift-evolution/blob/7e1d16316e5f68eb94546df9241aa6b4cacb9411/proposals/0377-parameter-ownership-modifiers.md))
 
 ## Introduction
 
@@ -57,7 +57,7 @@ also does not try to optimize polymorphic interfaces, such as non-final class
 methods or protocol requirements. If a programmer wants behavior different
 from the default in these circumstances, there is currently no way to do so.
 
-[SE-0390](https://github.com/apple/swift-evolution/blob/main/proposals/0390-noncopyable-structs-and-enums.md)
+[SE-0390](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0390-noncopyable-structs-and-enums.md)
 introduces noncopyable types into Swift. Since noncopyable types do not have
 the ability to be copied, the distinction between these two conventions becomes
 an important part of the API contract: functions that *borrow* noncopyable
@@ -238,7 +238,7 @@ A value would need to be implicitly copied if:
 
 where *consuming*, *borrowing*, and *mutating operations* are as described for
 values of noncopyable type in
-[SE-0390](https://github.com/apple/swift-evolution/blob/main/proposals/0390-noncopyable-structs-and-enums.md#using-noncopyable-values).
+[SE-0390](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0390-noncopyable-structs-and-enums.md#using-noncopyable-values).
 In essence, disabling implicit copying for a binding makes the binding behave
 as if it were of some noncopyable type.
 
@@ -354,7 +354,7 @@ because it is likely that the callee will want to perform mutations using
 the value it has ownership of. There is a concern that some users may find this
 behavior unintuitive, since those mutations would not be visible in copies
 of the value in the caller. This was the motivation behind
-[SE-0003](https://github.com/apple/swift-evolution/blob/main/proposals/0003-remove-var-parameters.md),
+[SE-0003](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0003-remove-var-parameters.md),
 which explicitly removed the former ability to declare parameters as `var`
 because of this potential for confusion. However, whereas `var` and `inout`
 both suggest mutability, and `var` does not provide explicit directionality as
@@ -479,7 +479,7 @@ little benefit.
 
 #### `consume` operator
 
-[SE-0366](https://github.com/apple/swift-evolution/blob/main/proposals/0366-move-function.md)
+[SE-0366](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0366-move-function.md)
 introduced an operator that explicitly ends the lifetime of a
 variable before the end of its scope. This allows the compiler to reliably
 destroy the value of the variable, or transfer ownership, at the point of its
@@ -562,7 +562,7 @@ while the caller is borrowing it, an exclusivity failure would be raised.
 
 The `consuming` versus `borrowing` distinction becomes much more important and
 prominent for values that cannot be implicitly copied.
-[SE-0390](https://github.com/apple/swift-evolution/blob/main/proposals/0390-noncopyable-structs-and-enums.md)
+[SE-0390](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0390-noncopyable-structs-and-enums.md)
 introduces noncopyable types, whose values are never copyable, as well as
 attributes that suppress the compiler's implicit copying behavior selectively
 for particular variables or scopes. Operations that borrow
@@ -663,10 +663,10 @@ Thanks to Robert Widmann for the original underscored implementation of
 
 ## Revision history
 
-The [first reviewed revision](https://github.com/apple/swift-evolution/blob/3f984e6183ce832307bb73ec72c842f6cb0aab86/proposals/0377-parameter-ownership-modifiers.md)
+The [first reviewed revision](https://github.com/swiftlang/swift-evolution/blob/3f984e6183ce832307bb73ec72c842f6cb0aab86/proposals/0377-parameter-ownership-modifiers.md)
 of this proposal used `take` and `taking` as the name of the callee-destroy convention.
 
-The [second reviewed revision](https://github.com/apple/swift-evolution/blob/e3966645cf07d6103561454574ab3e2cc2b48ee9/proposals/0377-parameter-ownership-modifiers.md)
+The [second reviewed revision](https://github.com/swiftlang/swift-evolution/blob/e3966645cf07d6103561454574ab3e2cc2b48ee9/proposals/0377-parameter-ownership-modifiers.md)
 used the imperative forms, `consume` and `borrow`, as parameter modifiers,
 which were changed to the gerunds `consuming` and `borrowing` in review. The
 proposal was originally accepted after these revisions.

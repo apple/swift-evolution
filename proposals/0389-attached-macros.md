@@ -11,11 +11,11 @@
 
 Attached macros provide a way to extend Swift by creating and extending declarations based on arbitrary syntactic transformations on their arguments. They make it possible to extend Swift in ways that were only previously possible by introducing new language features, helping developers build more expressive libraries and eliminate extraneous boilerplate.
 
-Attached macros are one part of the [vision for macros in Swift](https://github.com/apple/swift-evolution/pull/1927), which lays out general motivation for introducing macros into the language. They build on the ideas and motivation of [SE-0382 "Expression macros"](https://github.com/apple/swift-evolution/blob/main/proposals/0382-expression-macros.md) to cover a large new set of use cases; we will refer to that proposal for the basic model of how macros integrate into the language. While expression macros are designed as standalone entities introduced by `#`, attached macros are associated with a specific declaration in the program that they can augment and extend. This supports many new use cases, greatly expanding the expressiveness of the macro system:
+Attached macros are one part of the [vision for macros in Swift](https://github.com/swiftlang/swift-evolution/pull/1927), which lays out general motivation for introducing macros into the language. They build on the ideas and motivation of [SE-0382 "Expression macros"](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0382-expression-macros.md) to cover a large new set of use cases; we will refer to that proposal for the basic model of how macros integrate into the language. While expression macros are designed as standalone entities introduced by `#`, attached macros are associated with a specific declaration in the program that they can augment and extend. This supports many new use cases, greatly expanding the expressiveness of the macro system:
 
 * Creating trampoline or wrapper functions, such as automatically creating a completion-handler version of an `async` function or vice-versa.
 * Creating members of a type based on its definition, such as forming an [`OptionSet`](https://developer.apple.com/documentation/swift/optionset) from an enum containing flags and conforming it to the `OptionSet` protocol or adding a memberwise initializer.
-* Creating accessors for a stored property or subscript, subsuming some of the behavior of [SE-0258 "Property Wrappers"](https://github.com/apple/swift-evolution/blob/main/proposals/0258-property-wrappers.md).
+* Creating accessors for a stored property or subscript, subsuming some of the behavior of [SE-0258 "Property Wrappers"](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0258-property-wrappers.md).
 * Augmenting members of a type with a new attribute, such as applying a property wrapper to all stored properties of a type.
 
 There is an [example repository](https://github.com/DougGregor/swift-macro-examples) containing a number of macros that have been implemented using the prototype of this feature.
@@ -24,7 +24,7 @@ There is an [example repository](https://github.com/DougGregor/swift-macro-examp
 
 The proposal adds *attached macros*, so-called because they are attached to a particular declaration. They are written using the custom attribute syntax (e.g., `@AddCompletionHandler`) that already provides extensibility for declarations through property wrappers, result builders, and global actors. Attached macros can reason about the declaration to which they are attached, and provide additions and changes based on one or more different macro *roles*. Each role has a specific purpose, such as adding members, creating accessors, or adding peers alongside the declaration. A given attached macro can inhabit several different roles, and as such will be expanded multiple times corresponding to the different roles, which allows the various roles to be composed. For example, an attached macro emulating property wrappers might inhabit both the "peer" and "accessor" roles, allowing it to introduce a backing storage  property and also synthesize a getter/setter that go through that backing storage property. Composition of macro roles will be discussed in more depth once the basic macro roles have been established.
 
-As with expression macros, attached declaration macros are declared with `macro`, and have [type-checked macro arguments](https://github.com/apple/swift-evolution/blob/main/proposals/0382-expression-macros.md#type-checked-macro-arguments-and-results) that allow their behavior to be customized. Attached macros are identified with the `@attached` attribute, which also provides the specific role as well as any names they introduce. For example, the aforemented macro to add a completion handler would be declared as follows:
+As with expression macros, attached declaration macros are declared with `macro`, and have [type-checked macro arguments](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0382-expression-macros.md#type-checked-macro-arguments-and-results) that allow their behavior to be customized. Attached macros are identified with the `@attached` attribute, which also provides the specific role as well as any names they introduce. For example, the aforemented macro to add a completion handler would be declared as follows:
 
 ```swift
 @attached(peer, names: overloaded)
@@ -51,7 +51,7 @@ func fetchAvatar(_ username: String, onCompletion: @escaping (Image?) -> Void) {
 
 ### Implementing attached macros
 
-All attached macros are implemented as types that conform to one of the protocols that inherits from the `AttachedMacro` protocol.  Like the [`Macro` protocol](https://github.com/apple/swift-evolution/blob/main/proposals/0382-expression-macros.md#macro-protocols), the `AttachedMacro` protocol has no requirements, but is used to organize macro implementations. Each attached macro role will have its own protocol that inherits `AttachedMacro`. 
+All attached macros are implemented as types that conform to one of the protocols that inherits from the `AttachedMacro` protocol.  Like the [`Macro` protocol](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0382-expression-macros.md#macro-protocols), the `AttachedMacro` protocol has no requirements, but is used to organize macro implementations. Each attached macro role will have its own protocol that inherits `AttachedMacro`. 
 
 ```swift
 public protocol AttachedMacro: Macro { }
@@ -248,7 +248,7 @@ Member declaration macros allow one to introduce new member declarations within 
 
 Member attribute macros allow a macro to provide similar behavior to how many built-in attributes work, where declaring the attribute on a type or extension will apply that attribute to each of the members. For example, a global actor `@MainActor` written on an extension applies to each of the members of that extension (unless they specify another global actor or `nonisolated`), an access specifier on an extension applies to each of the members of that extension, and so on.
 
-As an example, we'll define a macro that partially mimics the behavior of the `@objcMembers` attributes introduced long ago in [SE-0160](https://github.com/apple/swift-evolution/blob/main/proposals/0160-objc-inference.md#re-enabling-objc-inference-within-a-class-hierarchy). Our `myObjCMembers` macro is a member-attribute macro:
+As an example, we'll define a macro that partially mimics the behavior of the `@objcMembers` attributes introduced long ago in [SE-0160](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0160-objc-inference.md#re-enabling-objc-inference-within-a-class-hierarchy). Our `myObjCMembers` macro is a member-attribute macro:
 
 ```swift
 @attached(memberAttribute)
@@ -354,7 +354,7 @@ The returned array contains the conformances. The `TypeSyntax` describes the pro
 
 ### Composing macro roles
 
-A given macro can have several different roles, allowing the various macro features to be composed. Each of the roles is considered independently, so a single use of a macro in source code can result in different macro expansion functions being called. These calls are independent, and could even happen concurrently. As an example, let's define a macro that emulates property wrappers fairly closely.  The property wrappers proposal has an example for a [clamping property wrapper](https://github.com/apple/swift-evolution/blob/main/proposals/0258-property-wrappers.md#clamping-a-value-within-bounds):
+A given macro can have several different roles, allowing the various macro features to be composed. Each of the roles is considered independently, so a single use of a macro in source code can result in different macro expansion functions being called. These calls are independent, and could even happen concurrently. As an example, let's define a macro that emulates property wrappers fairly closely.  The property wrappers proposal has an example for a [clamping property wrapper](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0258-property-wrappers.md#clamping-a-value-within-bounds):
 
 ```swift
 @propertyWrapper
@@ -518,7 +518,7 @@ First, the arguments to a macro are type-checked before it can be determined whi
 
 Second, if the output of one macro expansion (say, `@myMacro1(x)`) introduces a name (say, `y`) that is then used in the argument to another macro expansion (say, `@myMacro2(y)`), then the order in which the macros are expanded can affect the semantics of the resulting program. It is not generally possible to introduce an ordering on macro expansions, nor would it be desirable, because Swift generally tries not to have order dependencies among declarations in a program. Incidental orderings based on the names introduced by the macro don't help, either, because names of declaration macros can be specified as `arbitrary` and therefore cannot be predicated.
 
-Third, macro expansion is a relatively expensive compile-time operation, involving serialization overhead to transfer parts of the program from the compiler/IDE to another program that expands the macro. Therefore, macros are [only expanded once per use site](https://github.com/apple/swift-evolution/blob/main/proposals/0382-expression-macros.md#macro-expansion), so their expansions cannot participate in the type checking of their arguments or of other surrounding statements or expressions. For example, consider a this (intentionally obtuse) Swift code:
+Third, macro expansion is a relatively expensive compile-time operation, involving serialization overhead to transfer parts of the program from the compiler/IDE to another program that expands the macro. Therefore, macros are [only expanded once per use site](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0382-expression-macros.md#macro-expansion), so their expansions cannot participate in the type checking of their arguments or of other surrounding statements or expressions. For example, consider a this (intentionally obtuse) Swift code:
 
 ```swift
 @attached(peer) macro myMacro(_: Int)
@@ -535,7 +535,7 @@ f(1) { x in
 
 The macro use `@myMacro(x)` provides different names depending on whether the argument is an `Int` or ` Double`. From the perspective of the call to `f`, both overloads of `f` are possible, and the only way to check beyond that macro use to the `print` expression that follows is to try to expand the macro... for the first `myMacro`, the `print(y)` expression will fail to type-check (there is no `y`) whereas the second would find the `y` generated by the second `myMacro` and will succeed. However, this approach does not scale, because it could involve expanding macros a large number of times during type checking. Moreover, the macro expansions might end up getting incomplete information if, for example, macros are someday provided with type information and that type information isn't known yet (because the expansion is happening during type inference).
 
-To address these issues, a name introduced by a macro expansion is not visible within macro arguments for macros the same scope as the macro expansion or any of its enclosing scopes. This is conceptually similar to [outside-in expansion of expression macros](https://github.com/apple/swift-evolution/blob/main/proposals/0382-expression-macros.md#macro-expansion), where one can imagine that all of the macros at a particular scope are type-checked and expanded simultaneously at the top-level scope. Then, macros within each type definition and its extensions are type-checked and expanded simultaneously: they can see the names introduced by top-level macro expansions, but not names introduced at other levels. The following annotated code example shows which names are visible:
+To address these issues, a name introduced by a macro expansion is not visible within macro arguments for macros the same scope as the macro expansion or any of its enclosing scopes. This is conceptually similar to [outside-in expansion of expression macros](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0382-expression-macros.md#macro-expansion), where one can imagine that all of the macros at a particular scope are type-checked and expanded simultaneously at the top-level scope. Then, macros within each type definition and its extensions are type-checked and expanded simultaneously: they can see the names introduced by top-level macro expansions, but not names introduced at other levels. The following annotated code example shows which names are visible:
 
 ```swift
 import OtherModule // declares names x, y, z
@@ -572,7 +572,7 @@ f(1) { x in
 }
 ```
 
-Therefore, a macro used within a closure or function body can only introduce declarations using names produced by `createUniqueName`. This maintains the [two-phase of checking macros](https://github.com/apple/swift-evolution/blob/main/proposals/0382-expression-macros.md#macro-expansion) where type checking and inference is performed without expanding the macro, then the macro is expanded and its result type-checked independently, with no ability to influence type inference further.
+Therefore, a macro used within a closure or function body can only introduce declarations using names produced by `createUniqueName`. This maintains the [two-phase of checking macros](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0382-expression-macros.md#macro-expansion) where type checking and inference is performed without expanding the macro, then the macro is expanded and its result type-checked independently, with no ability to influence type inference further.
 
 ### Restrictions on `arbitrary` names
 

@@ -4,7 +4,6 @@
 * Authors: [Doug Gregor](https://github.com/douggregor), [Holly Borla](https://github.com/hborla)
 * Review Manager: [Freddy Kellison-Linn](https://github.com/Jumhyn)
 * Status: **Implemented (Swift 6.0)**
-* Implementation: https://github.com/apple/swift/pull/70635
 * Review: ([pitch](https://forums.swift.org/t/pitch-generalize-asyncsequence-and-asynciteratorprotocol/69283))([review](https://forums.swift.org/t/se-0421-generalize-effect-polymorphism-for-asyncsequence-and-asynciteratorprotocol/69662)) ([acceptance](https://forums.swift.org/t/accepted-se-0421-generalize-effect-polymorphism-for-asyncsequence-and-asynciteratorprotocol/69973))
 
 ## Introduction

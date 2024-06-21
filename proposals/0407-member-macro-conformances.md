@@ -4,13 +4,13 @@
 * Authors: [Doug Gregor](https://github.com/DougGregor)
 * Review Manager: [John McCall](https://github.com/rjmccall)
 * Status: **Implemented (Swift 5.9.2)**
-* Vision: [Macros](https://github.com/apple/swift-evolution/blob/main/visions/macros.md)
+* Vision: [Macros](https://github.com/swiftlang/swift-evolution/blob/main/visions/macros.md)
 * Implementation: [apple/swift#67758](https://github.com/apple/swift/pull/67758)
 * Review: ([pitch](https://forums.swift.org/t/pitch-member-macros-that-know-what-conformances-are-missing/66590)) ([review](https://forums.swift.org/t/se-0407-member-macro-conformances/66951)) ([acceptance](https://forums.swift.org/t/accepted-se-0407-member-macro-conformances/67345))
 
 ## Introduction
 
-The move from conformance macros to extension macros in [SE-0402](https://github.com/apple/swift-evolution/blob/main/proposals/0402-extension-macros.md) included the ability for extension macros to learn about which protocols the type already conformed to (e.g., because a superclass conformed or an explicit conformance was stated somewhere), so that the macro could avoid adding declarations and conformances that aren't needed. It also meant that any new declarations added are part of an extension---not the original type definition---which is generally beneficial, because it means that (e.g.) a new initializer doesn't suppress the memberwise initializer. It's also usually considered good form to split protocol conformances out into their own extensions.
+The move from conformance macros to extension macros in [SE-0402](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0402-extension-macros.md) included the ability for extension macros to learn about which protocols the type already conformed to (e.g., because a superclass conformed or an explicit conformance was stated somewhere), so that the macro could avoid adding declarations and conformances that aren't needed. It also meant that any new declarations added are part of an extension---not the original type definition---which is generally beneficial, because it means that (e.g.) a new initializer doesn't suppress the memberwise initializer. It's also usually considered good form to split protocol conformances out into their own extensions.
 
 However, there are some times when the member used for the conformance really needs to be part of the original type definition. For example:
 
@@ -47,7 +47,7 @@ Given existing syntactic information about the type (including the presence or a
 
 ## Detailed design
 
-The specification of the `conformances` argument for the `@attached(member, ...)` attribute matches that of the corresponding argument for extension macros documented in [SE-0402](https://github.com/apple/swift-evolution/blob/main/proposals/0402-extension-macros.md).  
+The specification of the `conformances` argument for the `@attached(member, ...)` attribute matches that of the corresponding argument for extension macros documented in [SE-0402](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0402-extension-macros.md).  
 
 For macro implementations, the `expansion` requirement in the  `MemberMacro` protocol is augmented with a `conformingTo:` argument that receives the same set of protocols as for extension macros. The `MemberMacro` protocol is now defined as follows:
 
@@ -113,4 +113,4 @@ There would be some limitations on `@implementation` extensions: they could only
 
 Given the presence of `@implementation` extensions, the extension to member macros in this proposal would no longer be needed, because one could achieve the desired effect using an extension macro that produces an `@implementation` extension for cases where it needs to extend the implementation itself.
 
-The primary drawback to this notion of implementation extensions is that it would no longer be possible to look at the primary definition of a type to find its full "shape": its stored properties, designated/required initializers, overridable methods, and so on.  Instead, that information could be scattered amongst the original type definition and any implementation extensions, requiring readers to stitch together a view of the whole type. This would have a particularly negative effect on macros that want to reason about the shape of the type, because macros only see a single entity (such as a class or struct definition) and not extensions to that entity. The `Codable` macro discussed in this proposal, for example, would not be able to encode or decode stored properties that are written in an implementation extension, and the [`Observable`](https://github.com/apple/swift-evolution/blob/main/proposals/0395-observability.md) macro would silently fail to observe any properties written in an implementation extension. By trying to use implementation extensions to address the shortcoming of macros described in this proposal, we would end up creating a larger problem for those same macros.
+The primary drawback to this notion of implementation extensions is that it would no longer be possible to look at the primary definition of a type to find its full "shape": its stored properties, designated/required initializers, overridable methods, and so on.  Instead, that information could be scattered amongst the original type definition and any implementation extensions, requiring readers to stitch together a view of the whole type. This would have a particularly negative effect on macros that want to reason about the shape of the type, because macros only see a single entity (such as a class or struct definition) and not extensions to that entity. The `Codable` macro discussed in this proposal, for example, would not be able to encode or decode stored properties that are written in an implementation extension, and the [`Observable`](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0395-observability.md) macro would silently fail to observe any properties written in an implementation extension. By trying to use implementation extensions to address the shortcoming of macros described in this proposal, we would end up creating a larger problem for those same macros.

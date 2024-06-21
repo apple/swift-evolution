@@ -1932,5 +1932,5 @@ Regex {
 
 [Declarative String Processing]: https://github.com/apple/swift-experimental-string-processing/blob/main/Documentation/DeclarativeStringProcessing.md
 [Strongly Typed Regex Captures]: https://github.com/apple/swift-experimental-string-processing/blob/main/Documentation/Evolution/StronglyTypedCaptures.md
-[Regex Syntax]: https://github.com/apple/swift-evolution/blob/main/proposals/0355-regex-syntax-run-time-construction.md
-[String Processing Algorithms]: https://github.com/apple/swift-evolution/blob/main/proposals/0357-regex-string-processing-algorithms.md
+[Regex Syntax]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0355-regex-syntax-run-time-construction.md
+[String Processing Algorithms]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0357-regex-string-processing-algorithms.md

@@ -246,11 +246,11 @@ Some API designers may want to take advantage of Swift's effectful properties by
 
 Due to the read-only restriction on Swift properties, and the fact that a large number of failable Objective-C methods are already imported as `throws` methods in Swift, support for Objective-C bridging in this proposal is scoped for the Swift concurrency features. Importing as an effectful subscript is not included in this proposal. Furthermore, exporting effectful properties to Objective-C as methods are left to future work.
 
-To import an Objective-C method as a Swift effectful property, the method must be compatible with the import rules for `async` Swift methods, as described by [SE-0297](https://github.com/apple/swift-evolution/blob/main/proposals/0297-concurrency-objc.md). An annotation changes this import behavior to produce an effectful Swift computed property, instead of an `async` Swift method. The original ObjC method is still imported as a normal Swift method, alongside the property.
+To import an Objective-C method as a Swift effectful property, the method must be compatible with the import rules for `async` Swift methods, as described by [SE-0297](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0297-concurrency-objc.md). An annotation changes this import behavior to produce an effectful Swift computed property, instead of an `async` Swift method. The original ObjC method is still imported as a normal Swift method, alongside the property.
 
 To summarize, an Objective-C method that meets the following requirements:
   1. The method takes exactly one argument, a completion handler, as recognized by 
-  [SE-0297](https://github.com/apple/swift-evolution/blob/main/proposals/0297-concurrency-objc.md).
+  [SE-0297](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0297-concurrency-objc.md).
   2. The method returns `void`. 
   3. The method is annotated with `__attribute__((swift_async_name("getter:myProp()")))`. Note the use of `getter:` to specify that it should be a property instead of a method.
   

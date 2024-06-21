@@ -5,7 +5,7 @@
 * Review Manager: [Chris Lattner](https://github.com/lattner)
 * Status: **Implemented (Swift 3.0)**
 * Decision Notes: [Rationale](https://forums.swift.org/t/accepted-with-revision-se-0088-modernize-libdispatch-for-swift-3-naming-conventions/2697)
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/ef372026d5f7e46848eb2a64f292328028b667b9/proposals/0088-libdispatch-for-swift3.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/ef372026d5f7e46848eb2a64f292328028b667b9/proposals/0088-libdispatch-for-swift3.md)
 
 ## Introduction
 

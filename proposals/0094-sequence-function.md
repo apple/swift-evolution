@@ -6,7 +6,7 @@
 * Status: **Implemented (Swift 3.0)**
 * Decision Notes: [Rationale](https://forums.swift.org/t/accepted-with-revision-se-0094-add-sequence-initial-next-and-sequence-state-next-to-the-stdlib/2775)
 * Bug: [SR-1622](https://bugs.swift.org/browse/SR-1622)
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/7d220a152a681e28761493c7d9781dd867a04cf7/proposals/0094-sequence-function.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/7d220a152a681e28761493c7d9781dd867a04cf7/proposals/0094-sequence-function.md)
 * Previous Proposal: [SE-0045](0045-scan-takewhile-dropwhile.md)
 
 ## Introduction
@@ -23,7 +23,7 @@ Swift-evolution thread:
 
 ## Motivation
 
-[SE-0045](0045-scan-takewhile-dropwhile.md), originally proposed `iterate(_:apply:)` (see [SE-0045r1](https://github.com/apple/swift-evolution/blob/dd0a39dd051b11e4460accad5af0e74223533e95/proposals/0045-scan-takewhile-dropwhile.md)), a method that
+[SE-0045](0045-scan-takewhile-dropwhile.md), originally proposed `iterate(_:apply:)` (see [SE-0045r1](https://github.com/swiftlang/swift-evolution/blob/dd0a39dd051b11e4460accad5af0e74223533e95/proposals/0045-scan-takewhile-dropwhile.md)), a method that
 was subsequently changed to `unfold(_:applying:)`. The proposal was
 accepted with modifications. The core team rejected `unfold` based on its naming. As its core utility remains unquestionably high, this proposal re-introduces the method with better, more Swift-appropriate naming.
 
@@ -50,8 +50,8 @@ See also:
 
 * [SE-0007 Remove C-style For Loops](0007-remove-c-style-for-loops.md), 
 * [SE-0045](0045-scan-takewhile-dropwhile.md), 
-* [SE-0045r1](https://github.com/apple/swift-evolution/blob/b39d653f7e3d5e982b562664343f26c826652291/proposals/0045-scan-takewhile-dropwhile.md), 
-* [SE-0045r3](https://github.com/apple/swift-evolution/blob/d709546002e1636a10350d14da84eb9e554c3aac/proposals/0045-scan-takewhile-dropwhile.md)
+* [SE-0045r1](https://github.com/swiftlang/swift-evolution/blob/b39d653f7e3d5e982b562664343f26c826652291/proposals/0045-scan-takewhile-dropwhile.md), 
+* [SE-0045r3](https://github.com/swiftlang/swift-evolution/blob/d709546002e1636a10350d14da84eb9e554c3aac/proposals/0045-scan-takewhile-dropwhile.md)
 
 ## Detailed design
 

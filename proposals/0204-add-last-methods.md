@@ -118,7 +118,7 @@ This change does not affect ABI stability or API resilience beyond the addition 
 
 - Another previous proposal included renaming `index(of:)` and `index(where:)` to `firstIndex(of:)` and `firstIndex(where:)`, respectively. A proposal after *that one* removed that source-breaking change. *This* version of the proposal adds the source-breaking change back in again.
 
-- An [alternative approach](https://github.com/apple/swift-evolution/pull/773#issuecomment-351148673) is to add a defaulted `options` parameter to the existing searching methods, like so:
+- An [alternative approach](https://github.com/swiftlang/swift-evolution/pull/773#issuecomment-351148673) is to add a defaulted `options` parameter to the existing searching methods, like so:
 
     ```swift
     let a = [20, 30, 10, 40, 20, 30, 10, 40, 20]

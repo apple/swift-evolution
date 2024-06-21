@@ -547,7 +547,7 @@ feature will continue to [throw an error][mixed-target-error].
 
 <!-- Links -->
 
-[SE-0038]: https://github.com/apple/swift-evolution/blob/main/proposals/0038-swiftpm-c-language-targets.md
+[SE-0038]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0038-swiftpm-c-language-targets.md
 
 [mixed-package]: https://github.com/ncooke3/MixedPackage
 

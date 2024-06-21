@@ -75,7 +75,7 @@ The attribute cannot be applied to local declarations, that is, declarations nes
 
 When applied to a subscript or computed property, the attribute applies to both the getter and setter.
 
-Note that only delegating initializers (those that assign to `self` or call another initializer via `self.init`) can be inlinable. Root initializers which initialize the stored properties of a struct or class directly cannot be inlinable. For motivation, see [SE-0189 Restrict Cross-module Struct Initializers](https://github.com/apple/swift-evolution/blob/master/proposals/0189-restrict-cross-module-struct-initializers.md).
+Note that only delegating initializers (those that assign to `self` or call another initializer via `self.init`) can be inlinable. Root initializers which initialize the stored properties of a struct or class directly cannot be inlinable. For motivation, see [SE-0189 Restrict Cross-module Struct Initializers](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0189-restrict-cross-module-struct-initializers.md).
 
 ### Inlinable contexts
 

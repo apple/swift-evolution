@@ -388,7 +388,7 @@ Note that not _all_ test details are eligible to extract statically: those that
 enable runtime test behaviors may not be, but trivial metadata (such as a
 test’s name or whether it is disabled) should be extractable, especially with
 further advances in Swift’s support for
-[Build-Time Constant Values](https://github.com/apple/swift-evolution/blob/main/proposals/0359-build-time-constant-values.md).
+[Build-Time Constant Values](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0359-build-time-constant-values.md).
 While designing a new testing API, it is important to consider which test
 metadata should be statically extractable to support these non-runtime discovery
 use cases.
@@ -531,7 +531,7 @@ The new direction includes 3 major components exposed via a new module named
 ### Test and Suite declaration
 
 To declare test functions and suites (types containing tests), we will leverage
-[Attached Macros (SE-0389)](https://github.com/apple/swift-evolution/blob/main/proposals/0389-attached-macros.md).
+[Attached Macros (SE-0389)](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0389-attached-macros.md).
 At a high level, this will consist of several attached macros
 which may be placed on a test type or test function, defined in a new module
 named `Testing`:
@@ -622,7 +622,7 @@ reduce the need for suspension points.
 
 #### Test discovery
 
-To faciliate test discovery, the attached macros above will eventually use a
+To facilitate test discovery, the attached macros above will eventually use a
 feature such as `@linkage`, an attribute for controlling low-level symbol
 linkage (see
 [pitch](https://forums.swift.org/t/pitch-2-low-level-linkage-control/69752)).
@@ -646,7 +646,7 @@ private implementation detail.
 ### Traits
 
 As discussed earlier, it is important to support specifying traits for a test. 
-[SE-0389](https://github.com/apple/swift-evolution/blob/main/proposals/0389-attached-macros.md)
+[SE-0389](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0389-attached-macros.md)
 allows including parameters in an attached macro declaration, and this allows
 users to pass arguments to a `@Test` attribute on a test function or type.
 
@@ -804,7 +804,7 @@ with no context (such as the original source code) available to include in a
 test’s output.
 
 By adopting
-[Expression Macros (SE-0382)](https://github.com/apple/swift-evolution/blob/main/proposals/0382-expression-macros.md),
+[Expression Macros (SE-0382)](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0382-expression-macros.md),
 we can give developers _implicitly expressive_ test
 expectations. The expectation shown below, upon failure, can capture not just
 the boolean value `false`, but also the left-hand and right-hand operands and
@@ -856,7 +856,7 @@ let b = [1, 2, 3, 3, 4, 5]
 
 This expectation will fail because of the extra element `3` in `b`. We can
 leverage
-[Ordered Collection Diffing (SE-0240)](https://github.com/apple/swift-evolution/blob/main/proposals/0240-ordered-collection-diffing.md)
+[Ordered Collection Diffing (SE-0240)](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0240-ordered-collection-diffing.md)
 to capture exactly how these arrays differ and present that information to the
 developer as part of the test output or in the IDE.
 
@@ -962,7 +962,7 @@ qualification of many other components in the stack. The maintainers of this
 project will work with other Swift workgroups or steering groups to help enable
 support on new platforms.
 
-One reason why broad plaform support is important is so that this project can
+One reason why broad platform support is important is so that this project can
 eventually support testing the Swift standard library. The standard library
 currently uses a custom library for testing
 ([StdlibUnittest](https://github.com/apple/swift/tree/main/stdlib/private/StdlibUnittest))

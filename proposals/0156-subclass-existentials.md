@@ -205,7 +205,7 @@ That would then cause the Swift code run in version 4 mode to fail to compile wi
 An alternative solution to the `class`/`AnyObject` duplication was to keep both, redefine `AnyObject` as `typealias AnyObject = class` and favor the latter when used as a type name.
 
 The [reviewed version of the
-proposal](https://github.com/apple/swift-evolution/blob/78da25ec4acdc49ad9b68fb58300e49c33bc6355/proposals/0156-subclass-existentials.md)
+proposal](https://github.com/swiftlang/swift-evolution/blob/78da25ec4acdc49ad9b68fb58300e49c33bc6355/proposals/0156-subclass-existentials.md)
 included rules that required the class type (or `AnyObject`) to be
 first within the protocol composition, e.g., `AnyObject & Protocol1`
 was well-formed but `Protocol1 & AnyObject` would produce a compiler

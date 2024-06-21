@@ -6,7 +6,7 @@
 * Status: **Implemented (Swift 5.0)**
 * Implementation: [apple/swift#16577](https://github.com/apple/swift/pull/16577)
 * Decision Notes: [Rationale](https://forums.swift.org/t/accepted-with-revision-se-0214-renaming-the-dictionaryliteral-type-to-keyvaluepairs/13661)
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/12315c44dd6b36fec924f4f6c30f48d8784ae4cc/proposals/0214-DictionaryLiteral.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/12315c44dd6b36fec924f4f6c30f48d8784ae4cc/proposals/0214-DictionaryLiteral.md)
 
 ## Introduction
 
@@ -39,7 +39,7 @@ public init<Subject>(
 ```
 
 * This implementation depends on `DictionaryLiteral`'s continued existence. 
-* [The `@dynamicCallable` proposal](https://github.com/apple/swift-evolution/blob/master/proposals/0216-dynamic-callable.md) will provide another use case for this type.
+* [The `@dynamicCallable` proposal](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0216-dynamic-callable.md) will provide another use case for this type.
 
 Even when narrowly used, a type's reach is no longer a sufficient reason to deprecate it or remove it from the language. Absent *active harm*, source stability takes precedence. In this case, the `DictionaryLiteral` type causes no measurable harm beyond API sprawl and the issues with its name. The latter is easily fixed.
 

@@ -9,7 +9,7 @@
 
 ## Introduction
 
-This proposal adds a combined filter/map operation to `Dictionary`, as a companion to the `mapValues` and filter methods introduced by [SE-0165](https://github.com/apple/swift-evolution/blob/master/proposals/0165-dict.md). The new compactMapValues operation corresponds to compactMap on Sequence.
+This proposal adds a combined filter/map operation to `Dictionary`, as a companion to the `mapValues` and filter methods introduced by [SE-0165](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0165-dict.md). The new compactMapValues operation corresponds to compactMap on Sequence.
 
 - Swift forums pitch: [Add compactMapValues to Dictionary](https://forums.swift.org/t/add-compactmapvalues-to-dictionary/8741)
 
@@ -17,7 +17,7 @@ This proposal adds a combined filter/map operation to `Dictionary`, as a compani
 
 Swift 4 introduced two new `Dictionary` operations: the new method `mapValues` and a new version of `filter`. They correspond to the `Sequence` methods `map` and `filter`, respectively, but they operate on `Dictionary` values and return dictionaries rather than arrays.
 
-However, [SE-0165](https://github.com/apple/swift-evolution/blob/master/proposals/0165-dict.md) left a gap in the API: it did not introduce a `Dictionary`-specific version of `compactMap`. We sometimes need to transform and filter values of a `Dictionary` at the same time, and `Dictionary` does not currently provide an operation that directly supports this.
+However, [SE-0165](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0165-dict.md) left a gap in the API: it did not introduce a `Dictionary`-specific version of `compactMap`. We sometimes need to transform and filter values of a `Dictionary` at the same time, and `Dictionary` does not currently provide an operation that directly supports this.
 
 For example, consider the task of filtering out `nil` values from a `Dictionary` of optionals:
 

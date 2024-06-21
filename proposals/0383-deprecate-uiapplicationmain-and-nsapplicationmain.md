@@ -13,7 +13,7 @@
 `@UIApplicationMain` and `@NSApplicationMain` used to be the standard way for
 iOS and macOS apps respectively to declare a synthesized platform-specific
 entrypoint for an app. These functions have since been obsoleted by
-[SE-0281](https://github.com/apple/swift-evolution/blob/main/proposals/0281-main-attribute.md)'s
+[SE-0281](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0281-main-attribute.md)'s
 introduction of the `@main` attribute, and they now represent a confusing bit of
 duplication in the language. This proposal seeks to deprecate these alternative
 entrypoint attributes in favor of `@main` in pre-Swift 6, and it makes their use
@@ -35,7 +35,7 @@ one of the application delegate protocols above is identical to the correspondin
 framework-specific attribute. Having two functionally identical ways to express the
 concept of an app-specific entrypoint is clutter at best and confusing at worst.
 This proposal seeks to complete the migration work implied by
-[SE-0281](https://github.com/apple/swift-evolution/blob/main/proposals/0281-main-attribute.md)
+[SE-0281](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0281-main-attribute.md)
 by having the compiler push Swift authors towards the more general, unified
 solution.
 

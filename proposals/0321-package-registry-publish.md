@@ -316,7 +316,7 @@ like [Trillian] or [sigstore].
 [Registry.md]: https://github.com/apple/swift-package-manager/blob/main/Documentation/PackageRegistry/Registry.md "Swift Package Registry Service Specification"
 [rss]: https://validator.w3.org/feed/docs/rss2.html "RSS 2.0 specification"
 [RubyGems.org]: https://rubygems.org/
-[SE-0292]: https://github.com/apple/swift-evolution/blob/main/proposals/0292-package-registry-service.md "Package Registry Service"
+[SE-0292]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0292-package-registry-service.md "Package Registry Service"
 [secret scanning]: https://docs.github.com/en/github/administering-a-repository/about-secret-scanning
 [sigstore]: https://sigstore.dev/ "sigstore: A non-profit, public good software signing & transparency service"
 [STRIDE]: https://en.wikipedia.org/wiki/STRIDE_(security) "STRIDE (security)"

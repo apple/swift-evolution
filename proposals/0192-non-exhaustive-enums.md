@@ -5,7 +5,7 @@
 * Review Manager: [Ted Kremenek](https://github.com/tkremenek)
 * Status: **Implemented (Swift 5.0)**
 * Implementation: [apple/swift#14945](https://github.com/apple/swift/pull/14945)
-* Previous revision: [1](https://github.com/apple/swift-evolution/blob/a773d07ff4beab8b7855adf0ac56d1e13bb7b44c/proposals/0192-non-exhaustive-enums.md), [2 (informal)](https://github.com/jrose-apple/swift-evolution/blob/57dfa2408fe210ed1d5a1251f331045b988ee2f0/proposals/0192-non-exhaustive-enums.md), [3](https://github.com/apple/swift-evolution/blob/af284b519443d3d985f77cc366005ea908e2af59/proposals/0192-non-exhaustive-enums.md)
+* Previous revision: [1](https://github.com/swiftlang/swift-evolution/blob/a773d07ff4beab8b7855adf0ac56d1e13bb7b44c/proposals/0192-non-exhaustive-enums.md), [2 (informal)](https://github.com/jrose-swiftlang/swift-evolution/blob/57dfa2408fe210ed1d5a1251f331045b988ee2f0/proposals/0192-non-exhaustive-enums.md), [3](https://github.com/swiftlang/swift-evolution/blob/af284b519443d3d985f77cc366005ea908e2af59/proposals/0192-non-exhaustive-enums.md)
 * Pre-review discussion: [Enums and Source Compatibility](https://forums.swift.org/t/enums-and-source-compatibility/6460), with additional [orphaned thread](https://forums.swift.org/t/enums-and-source-compatibility/6651)
 * Review discussion: [Review author summarizes some feedback from review discussion and proposes alternatives](https://forums.swift.org/t/se-0192-non-exhaustive-enums/7291/26), [full discussion thread](https://forums.swift.org/t/se-0192-non-exhaustive-enums/7291/337), plus [Handling unknown cases in enums](https://forums.swift.org/t/handling-unknown-cases-in-enums-re-se-0192/7388/)
 * Decision Notes: [Rationale](https://forums.swift.org/t/se-0192-non-exhaustive-enums-review-2/11043/62)
@@ -561,7 +561,7 @@ The core team decided that this feature was not worth the disruption and long-te
 
 The [initial version][] of this proposal did not include `@unknown`, and required people to use a normal `default` to handle cases added in the future instead. However, many people were unhappy with the loss of exhaustivity checking for `switch` statements, both for enums in libraries distributed as source and enums imported from Apple's SDKs. While this is an additive feature that does not affect ABI, it seems to be one that the community considers a necessary part of a language model that provides non-frozen enums.
 
-  [initial version]: https://github.com/apple/swift-evolution/blob/a773d07ff4beab8b7855adf0ac56d1e13bb7b44c/proposals/0192-non-exhaustive-enums.md
+  [initial version]: https://github.com/swiftlang/swift-evolution/blob/a773d07ff4beab8b7855adf0ac56d1e13bb7b44c/proposals/0192-non-exhaustive-enums.md
 
 
 ### Mixing `@unknown` with other catch-all cases

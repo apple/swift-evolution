@@ -4,12 +4,11 @@
 * Authors: [Apollo Zhu](https://github.com/ApolloZhu)
 * Review Manager: [Doug Gregor](https://github.com/DougGregor)
 * Status: **Implemented (Swift 6.0)**
-* Implementation: [PR #70602](https://github.com/apple/swift/pull/70602) with experimental feature flag `ExpressionMacroDefaultArguments`
 * Review: ([pitch](https://forums.swift.org/t/pitch-expression-macro-as-caller-side-default-argument/69019)), ([review](https://forums.swift.org/t/se-0422-expression-macro-as-caller-side-default-argument/69730)), ([acceptance](https://forums.swift.org/t/accepted-se-0422-expression-macro-as-caller-side-default-argument/70050))
 
 ## Introduction
 
-This proposal aims to lift the restriction afore set in [SE-0382 "Expression macros"](https://github.com/apple/swift-evolution/blob/main/proposals/0382-expression-macros.md) to allow non-built-in expression macros as caller-side default argument expressions.
+This proposal aims to lift the restriction afore set in [SE-0382 "Expression macros"](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0382-expression-macros.md) to allow non-built-in expression macros as caller-side default argument expressions.
 
 ## Motivation
 

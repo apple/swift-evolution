@@ -77,7 +77,7 @@ struct EmptyStruct {}
 (EmptyStruct(), 1, 2) == (EmptyStruct(), 1, 2)
 ```
 
-It's also important to note that this conformance does not take into account the tuple labels in consideration for equality. If both tuples have the same element types, then they can be compared for equality. This mimics the current behavior of the operations introduced in [SE-0015](https://github.com/apple/swift-evolution/blob/master/proposals/0015-tuple-comparison-operators.md).
+It's also important to note that this conformance does not take into account the tuple labels in consideration for equality. If both tuples have the same element types, then they can be compared for equality. This mimics the current behavior of the operations introduced in [SE-0015](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0015-tuple-comparison-operators.md).
 
 ```swift
 // We don't take into account the labels for equality.
@@ -103,7 +103,7 @@ let randomPoint = (x: Int.random(in: 1 ... 10), y: Int.random(in: 1 ... 10))
 print(origin < randomPoint) // true
 ```
 
-Just like in `Equatable`, the comparison operations do not take tuple labels into consideration when determining comparability. This mimics the current behavior of the operations introduced in [SE-0015](https://github.com/apple/swift-evolution/blob/master/proposals/0015-tuple-comparison-operators.md).
+Just like in `Equatable`, the comparison operations do not take tuple labels into consideration when determining comparability. This mimics the current behavior of the operations introduced in [SE-0015](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0015-tuple-comparison-operators.md).
 
 ```swift
 // We don't take into account the labels for comparison.

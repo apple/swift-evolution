@@ -5,7 +5,7 @@
 * Review Manager: [Chris Lattner](https://github.com/lattner)
 * Status: **Implemented (Swift 3.0)**
 * Decision Notes: [Rationale](https://forums.swift.org/t/accepted-se-0057-importing-objective-c-lightweight-generics/2185)
-* Previous Revision: [Originally Accepted Proposal](https://github.com/apple/swift-evolution/blob/3abbed3edd12dd21061181993df7952665d660dd/proposals/0057-importing-objc-generics.md)
+* Previous Revision: [Originally Accepted Proposal](https://github.com/swiftlang/swift-evolution/blob/3abbed3edd12dd21061181993df7952665d660dd/proposals/0057-importing-objc-generics.md)
 
 
 ## Introduction
@@ -190,7 +190,7 @@ classes without fundamentally changing the Swift model.
 
 ## Revision history
 
-The [originally accepted proposal](https://github.com/apple/swift-evolution/blob/3abbed3edd12dd21061181993df7952665d660dd/proposals/0057-importing-objc-generics.md)
+The [originally accepted proposal](https://github.com/swiftlang/swift-evolution/blob/3abbed3edd12dd21061181993df7952665d660dd/proposals/0057-importing-objc-generics.md)
 included a mechanism by which Objective-C generic classes could implement
 an informal protocol to provide reified generic arguments to Swift clients:
 

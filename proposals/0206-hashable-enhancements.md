@@ -9,7 +9,7 @@
     [apple/swift#14913](https://github.com/apple/swift/pull/14913) (standard library, underscored),<br>
     [apple/swift#16009](https://github.com/apple/swift/pull/16009) (`Hasher` interface),<br>
     [apple/swift#16073](https://github.com/apple/swift/pull/16073) (automatic synthesis, de-underscoring)<br>
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/f5a020ec79cdb64fc8700af91b1a1ece2d2fb141/proposals/0206-hashable-enhancements.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/f5a020ec79cdb64fc8700af91b1a1ece2d2fb141/proposals/0206-hashable-enhancements.md)
 
 <!--
 *During the review process, add the following fields as needed:*
@@ -192,7 +192,7 @@ and the standard library. Doing this well requires the use of a hash
 function that works equally well on any number of components,
 regardless of their expected distributions.
 
-[SE-0185]: https://github.com/apple/swift-evolution/blob/master/proposals/0185-synthesize-equatable-hashable.md
+[SE-0185]: https://github.com/swiftlang/swift-evolution/blob/master/proposals/0185-synthesize-equatable-hashable.md
 
 Luckily, this problem has occurred in other contexts before, and there
 is an extensive list of hash functions that have been designed for

@@ -789,7 +789,7 @@ We feel that the complexity of the solution for marking all suspension points, w
 
 ### Property wrappers instead of `async let`
 
-The combination of [property wrappers](https://github.com/apple/swift-evolution/blob/main/proposals/0258-property-wrappers.md) and [effectful properties](https://github.com/apple/swift-evolution/blob/main/proposals/0310-effectful-readonly-properties.md) implies that one could approximate the behavior of `async let` with a property wrapper, e.g.,
+The combination of [property wrappers](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0258-property-wrappers.md) and [effectful properties](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0310-effectful-readonly-properties.md) implies that one could approximate the behavior of `async let` with a property wrapper, e.g.,
 
 ```swift
 @AsyncLet var veggies = try await chopVegetables()

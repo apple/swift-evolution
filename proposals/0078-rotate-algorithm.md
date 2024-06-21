@@ -4,7 +4,7 @@
 * Authors: [Nate Cook](https://github.com/natecook1000), [Sergey Bolshedvorsky](https://github.com/bolshedvorsky)
 * Review Manager: [Chris Lattner](https://github.com/lattner)
 * Status:  **Returned for revision**
-* Previous Revisions: [1](https://github.com/apple/swift-evolution/blob/f5936651da1a08e2335a4991831db61da29aba15/proposals/0078-rotate-algorithm.md), [2](https://github.com/apple/swift-evolution/blob/8d45024ed7baacce94e22080d74f136bebc5c075/proposals/0078-rotate-algorithm.md)
+* Previous Revisions: [1](https://github.com/swiftlang/swift-evolution/blob/f5936651da1a08e2335a4991831db61da29aba15/proposals/0078-rotate-algorithm.md), [2](https://github.com/swiftlang/swift-evolution/blob/8d45024ed7baacce94e22080d74f136bebc5c075/proposals/0078-rotate-algorithm.md)
 * Review: ([pitch](https://forums.swift.org/t/proposal-implement-a-rotate-algorithm-equivalent-to-std-rotate-in-c/491)) ([review](https://forums.swift.org/t/review-se-0078-implement-a-rotate-algorithm-equivalent-to-std-rotate-in-c/2440)) ([return for revision](https://forums.swift.org/t/review-se-0078-implement-a-rotate-algorithm-equivalent-to-std-rotate-in-c/2440/3)) ([immediate deferral](https://forums.swift.org/t/deferred-se-0078-implement-a-rotate-algorithm-equivalent-to-std-rotate-in-c/2744)) ([return for revision #2](https://forums.swift.org/t/returning-or-rejecting-all-the-deferred-evolution-proposals/60724))
 
 ## Introduction

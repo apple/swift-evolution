@@ -3,15 +3,14 @@
 * Proposal: [SE-0417](0417-task-executor-preference.md)
 * Author: [Konrad 'ktoso' Malawski](https://github.com/ktoso), [John McCall](https://github.com/rjmccall), [Franz Busch](https://github.com/FranzBusch)
 * Review Manager: [Doug Gregor](https://github.com/DougGregor)
-* Status:  **Accepted**
-* Implementation: [PR #68793](https://github.com/apple/swift/pull/68793)
+* Status:  **Implemented (Swift 6.0)**
 * Review: ([pitch](https://forums.swift.org/t/pitch-task-executor-preference/68191)), ([review](https://forums.swift.org/t/se-0417-task-executor-preference/68958)), ([acceptance](https://forums.swift.org/t/accepted-se-0417-task-executor-preference/69705))
 
 ## Introduction
 
 Swift Concurrency uses tasks and actors to model concurrency and primarily relies on actor isolation to determine where a specific piece of code shall execute.
 
-The recent introduction of custom actor executors in [SE-0392](https://github.com/apple/swift-evolution/blob/main/proposals/0392-custom-actor-executors.md) allows customizing on what specific `SerialExecutor` implementation code should be running on while isolated to a specific actor. This allows developers to gain some control over exact threading semantics of actors, by e.g. making sure all work made by a specific actor is made on a dedicated queue or thread.
+The recent introduction of custom actor executors in [SE-0392](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0392-custom-actor-executors.md) allows customizing on what specific `SerialExecutor` implementation code should be running on while isolated to a specific actor. This allows developers to gain some control over exact threading semantics of actors, by e.g. making sure all work made by a specific actor is made on a dedicated queue or thread.
 
 Today, the same flexibility is not available to tasks in general, and nonisolated asynchronous functions are always executed on the default global concurrent thread pool managed by Swift concurrency.
 
@@ -19,10 +18,10 @@ Today, the same flexibility is not available to tasks in general, and nonisolate
 
 Custom actor executors allow developers to customize where execution of a task “on” an actor must happen (e.g. on a specific queue or thread, represented by a `SerialExecutor`), the same capability is currently missing for code that is not isolated to an actor.
 
-Notably, since Swift 5.7’s [SE-0338: Clarify the Execution of Non-Actor-Isolated Async Functions](https://github.com/apple/swift-evolution/blob/main/proposals/0338-clarify-execution-non-actor-async.md), functions which are not isolated to an actor will always hop to the default global concurrent executor, which is great for correctness and understanding the code and avoids “hanging onto” actors  longer than necessary. This is also a desirable semantic for code running on the `MainActor` calling into `nonisolated` functions, since it allows the main actor to be quickly freed up to proceed with other work, however it has a detrimental effect on applications which want to *avoid* hops in order to maximize request processing throughput. This is especially common with event-loop based systems, such as network servers or other kinds of tight request handling loops.
+Notably, since Swift 5.7’s [SE-0338: Clarify the Execution of Non-Actor-Isolated Async Functions](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0338-clarify-execution-non-actor-async.md), functions which are not isolated to an actor will always hop to the default global concurrent executor, which is great for correctness and understanding the code and avoids “hanging onto” actors  longer than necessary. This is also a desirable semantic for code running on the `MainActor` calling into `nonisolated` functions, since it allows the main actor to be quickly freed up to proceed with other work, however it has a detrimental effect on applications which want to *avoid* hops in order to maximize request processing throughput. This is especially common with event-loop based systems, such as network servers or other kinds of tight request handling loops.
 
 As Swift concurrency is getting adopted in a wider variety of performance sensitive codebases, it has become clear that the lack of control over where nonisolated functions execute is a noticeable problem. 
-At the same time, the defensive "hop-off" semantics introduced by [SE-0338](https://github.com/apple/swift-evolution/blob/main/proposals/0338-clarify-execution-non-actor-async.md) are still valuable, but sometimes too restrictive and some use-cases might even say that the exact opposite behavior might be desirable instead.
+At the same time, the defensive "hop-off" semantics introduced by [SE-0338](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0338-clarify-execution-non-actor-async.md) are still valuable, but sometimes too restrictive and some use-cases might even say that the exact opposite behavior might be desirable instead.
 
 This proposal acknowledges the different needs of various use-cases, and provides a new flexible mechanism for developers to tune their applications and avoid potentially un-necessary context switching when possible.
 
@@ -727,7 +726,7 @@ Kotlin jobs also inherit the coroutine context from their parent, which is simil
 
 ### Task executor preference and global actors
 
-Thanks to the improvements to treating @SomeGlobalActor isolation proposed in [SE-NNNN: Improved control over closure actor isolation](https://github.com/apple/swift-evolution/pull/2174) we would be able to that a Task may prefer to run on a specific global actor’s executor, and shall be isolated to that actor.
+Thanks to the improvements to treating @SomeGlobalActor isolation proposed in [SE-NNNN: Improved control over closure actor isolation](https://github.com/swiftlang/swift-evolution/pull/2174) we would be able to that a Task may prefer to run on a specific global actor’s executor, and shall be isolated to that actor.
 
 Thanks to the equivalence between `SomeGlobalActor.shared` instance and `@SomeGlobalActor` annotation isolations (introduced in the linked proposal), this does not require a new API, but uses the previously described API that accepts an actor as parameter, to which we can pass a global actor’s `shared` instance.
 
@@ -749,7 +748,7 @@ It would be interesting to allow starting a task on a specific actor's executor,
 Today the proposal does not allow using serial executors, which are strictly associated with actors to start a Task "on" such executor.
 We could consider adding some form of such ability, and then be able to infer that the closure of a Task is isolated to the actor passed to `Task(executorPreference: some Actor)`.
 
-The upcoming [SE-NNNN: Improved control over closure actor isolation](https://github.com/apple/swift-evolution/pull/2174) proposal includes a future direction which would allow isolating a closure to a known other value.
+The upcoming [SE-NNNN: Improved control over closure actor isolation](https://github.com/swiftlang/swift-evolution/pull/2174) proposal includes a future direction which would allow isolating a closure to a known other value.
 
 This could be utilized to spell the `Task` initializer like this:
 

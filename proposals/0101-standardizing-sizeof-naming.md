@@ -13,7 +13,7 @@ This proposal addresses `sizeof`, `sizeofValue`, `strideof`, `strideofValue`, `a
 Review 1: 
 
 * [Swift Evolution Review Thread](https://forums.swift.org/t/review-se-0101-rename-sizeof-and-related-functions-to-comply-with-api-guidelines/3060)
-* [Original Proposal](https://github.com/apple/swift-evolution/blob/26e1e5b546b13fb66ee8877ad7018a7856e467ca/proposals/0101-standardizing-sizeof-naming.md)
+* [Original Proposal](https://github.com/swiftlang/swift-evolution/blob/26e1e5b546b13fb66ee8877ad7018a7856e467ca/proposals/0101-standardizing-sizeof-naming.md)
 
 Prior Discussions:
 

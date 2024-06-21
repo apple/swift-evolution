@@ -4,7 +4,7 @@
 * Authors: [Konrad 'ktoso' Malawski](https://github.com/ktoso)
 * Review Manager: [John McCall](https://github.com/rjmccall)
 * Status: **Implemented (Swift 5.5)**
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/884df3ad6020f0724e06184534b21dd76bd6f4bf/proposals/0311-task-locals.md), [2](https://github.com/apple/swift-evolution/blob/cd1aaef28802a26986094c1f851c261acc796cb6/proposals/0311-task-locals.md), [3](https://github.com/apple/swift-evolution/blob/79b44f3cd15eefc675196136858a5f76a3e58656/proposals/0311-task-locals.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/884df3ad6020f0724e06184534b21dd76bd6f4bf/proposals/0311-task-locals.md), [2](https://github.com/swiftlang/swift-evolution/blob/cd1aaef28802a26986094c1f851c261acc796cb6/proposals/0311-task-locals.md), [3](https://github.com/swiftlang/swift-evolution/blob/79b44f3cd15eefc675196136858a5f76a3e58656/proposals/0311-task-locals.md)
 * Review: ([first review](https://forums.swift.org/t/se-0311-task-local-values/47478), of revision 1) ([second review](https://forums.swift.org/t/se-0311-2nd-review-task-local-values/47738), of revisions 2 and 3) ([third review](https://forums.swift.org/t/se-0311-3rd-review-task-local-values/49122), of revision 4) ([acceptance](https://forums.swift.org/t/accepted-se-0311-task-local-values/50120))
 
 ## Table of Contents
@@ -270,7 +270,7 @@ public final class TaskLocal<Value: Sendable>: Sendable, CustomStringConvertible
 }
 ```
 
-Values stored in task-local storage must conform to the [`Sendable` marker protocol](https://github.com/apple/swift-evolution/blob/main/proposals/0302-concurrent-value-and-concurrent-closures.md), which ensures that such values are safe to be used from different tasks. Please refer to the `Sendable` proposal for more details on the guarantees and checks it introduces.
+Values stored in task-local storage must conform to the [`Sendable` marker protocol](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0302-concurrent-value-and-concurrent-closures.md), which ensures that such values are safe to be used from different tasks. Please refer to the `Sendable` proposal for more details on the guarantees and checks it introduces.
 
 The property wrapper itself must be a `class` because we use it's stable object identifier as *key* for the value lookups performed by the concurrency runtime.
 

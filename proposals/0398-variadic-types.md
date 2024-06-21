@@ -140,7 +140,7 @@ This is in contrast with the parameters of generic function declarations, which 
 
 ### Requirements
 
-The behavior of generic requirements on type parameter packs is mostly unchanged between generic functions and generic types. However, allowing types to abstract over parameter packs introduces _requirement inference_ of [generic requirement expansions](https://github.com/apple/swift-evolution/blob/main/proposals/0393-parameter-packs.md#generic-requirements). Requirement expansion inference follows these rules:
+The behavior of generic requirements on type parameter packs is mostly unchanged between generic functions and generic types. However, allowing types to abstract over parameter packs introduces _requirement inference_ of [generic requirement expansions](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0393-parameter-packs.md#generic-requirements). Requirement expansion inference follows these rules:
 
 1. If a generic type that imposes an inferred scalar requirement is applied to a pack element inside a pack expansion, the inferred requirement is a requirement expansion.
 2. If a generic type imposes an inferred requirement expansion, the requirement is expanded for each of the concrete generic arguments.

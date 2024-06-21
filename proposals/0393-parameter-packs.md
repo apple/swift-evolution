@@ -867,7 +867,7 @@ extension<each T: Equatable> (repeat each T): Equatable {
 
 ## Revision history
 
-Changes to the [first reviewed revision](https://github.com/apple/swift-evolution/blob/b6ca38b9eee79650dce925e7aa8443a6a9e5e6ea/proposals/0393-parameter-packs.md):
+Changes to the [first reviewed revision](https://github.com/swiftlang/swift-evolution/blob/b6ca38b9eee79650dce925e7aa8443a6a9e5e6ea/proposals/0393-parameter-packs.md):
 
 * The `repeat` keyword is required for generic requirement expansions to distinguish requirement expansions from single requirements on an individual pack element nested inside of a pack expansion expression.
 * Overload resolution prefers scalar overloads when the scalar overload is considered a subtype of a parameter pack overload.

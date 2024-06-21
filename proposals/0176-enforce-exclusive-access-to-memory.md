@@ -4,7 +4,7 @@
 * Author: [John McCall](https://github.com/rjmccall)
 * Review Manager: [Ben Cohen](https://github.com/airspeedswift)
 * Status: **Implemented (Swift 4.0)**
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/7e6816c22a29b0ba9bdf63ff92b380f9e963860a/proposals/0176-enforce-exclusive-access-to-memory.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/7e6816c22a29b0ba9bdf63ff92b380f9e963860a/proposals/0176-enforce-exclusive-access-to-memory.md)
 * Previous Discussion: [Email Thread](https://forums.swift.org/t/review-se-0176-enforce-exclusive-access-to-memory/5836)
 
 ## Introduction
@@ -479,7 +479,7 @@ In the short term, these problems can be worked around with
 ``withUnsafeMutableBufferPointer``.
 
 We do know that swapping two array elements will be problematic,
-and accordingly we are (separately proposing)[https://github.com/apple/swift-evolution/blob/master/proposals/0173-swap-indices.md] to add a
+and accordingly we are (separately proposing)[https://github.com/swiftlang/swift-evolution/blob/master/proposals/0173-swap-indices.md] to add a
 ``swapAt`` method to ``MutableCollection`` that takes two indices
 rather than two ``inout`` arguments.  The Swift 3 compatibility
 mode should recognize the swap-of-elements pattern and automatically

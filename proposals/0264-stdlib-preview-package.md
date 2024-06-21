@@ -6,11 +6,11 @@
 * Status:  **Implemented**
 * Decision Notes: [Rationale](https://forums.swift.org/t/se-0264-review-2-standard-library-preview-package/31288/16)
 * Implementation:
-    1. [apple/swift-evolution#1089](https://github.com/apple/swift-evolution/pull/1089)
-    2. [apple/swift-evolution#1090](https://github.com/apple/swift-evolution/pull/1090)
-    3. [apple/swift-evolution#1091](https://github.com/apple/swift-evolution/pull/1091)
+    1. [swiftlang/swift-evolution#1089](https://github.com/swiftlang/swift-evolution/pull/1089)
+    2. [swiftlang/swift-evolution#1090](https://github.com/swiftlang/swift-evolution/pull/1090)
+    3. [swiftlang/swift-evolution#1091](https://github.com/swiftlang/swift-evolution/pull/1091)
 * Pitch Discussion: [Pitch: Standard Library Preview Package](https://forums.swift.org/t/pitch-standard-library-preview-package/27202)
-* Previous Revision: [1](https://github.com/apple/swift-evolution/blob/1547e503376bca2c64c57c96b1f87d5e01a094c3/proposals/0264-stdlib-preview-package.md)
+* Previous Revision: [1](https://github.com/swiftlang/swift-evolution/blob/1547e503376bca2c64c57c96b1f87d5e01a094c3/proposals/0264-stdlib-preview-package.md)
 * Previous Review: [SE-0264 — Standard Library Preview Package](https://forums.swift.org/t/se-0264-standard-library-preview-package/29068)
 * Previous Decision: [Returned for Revision](https://forums.swift.org/t/returned-for-revision-se-0264-standard-library-preview-package/29865)
 
@@ -36,7 +36,7 @@ For the purposes of this document, we will refer to the individual packages and 
 
 ### Facilitating Rapid Adoption and Feedback
 
-It is common for a feature proposed and accepted through Swift Evolution and added to the standard library to wait for months before it gets any real life usage. Take [SE-0199](https://github.com/apple/swift-evolution/blob/master/proposals/0199-bool-toggle.md) (the introduction of `toggle`) for example. It was [accepted](https://forums.swift.org/t/accepted-se-199-add-toggle-to-bool/10681) almost 6 months before Swift 4.2 was released.
+It is common for a feature proposed and accepted through Swift Evolution and added to the standard library to wait for months before it gets any real life usage. Take [SE-0199](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0199-bool-toggle.md) (the introduction of `toggle`) for example. It was [accepted](https://forums.swift.org/t/accepted-se-199-add-toggle-to-bool/10681) almost 6 months before Swift 4.2 was released.
 
 Even though all additions go through a thorough review, there is no substitute for feedback from real-world usage in production. Sometimes we discover that the API is not quite as good as it might have been.
 

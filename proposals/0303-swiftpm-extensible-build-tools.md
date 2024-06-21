@@ -15,9 +15,9 @@
   * [Review](https://forums.swift.org/t/amendment-se-0303-package-manager-extensible-build-tools/)
   * [Implementation](https://github.com/apple/swift-package-manager/pull/3712)
 * Previous Revisions:
-  * [First revision](https://github.com/apple/swift-evolution/blob/878e496eb799fa407ad704d89fb401952fe8fd02/proposals/0303-swiftpm-extensible-build-tools.md) 
-  * [Second revision](https://github.com/apple/swift-evolution/blob/38731efc140a53553aff923a6616a1dee28c973a/proposals/0303-swiftpm-extensible-build-tools.md)
-  * [Third revision](https://github.com/apple/swift-evolution/blob/7c3de3eaed8e160feca1d39a35d2f8ba7b2add0d/proposals/0303-swiftpm-extensible-build-tools.md)
+  * [First revision](https://github.com/swiftlang/swift-evolution/blob/878e496eb799fa407ad704d89fb401952fe8fd02/proposals/0303-swiftpm-extensible-build-tools.md) 
+  * [Second revision](https://github.com/swiftlang/swift-evolution/blob/38731efc140a53553aff923a6616a1dee28c973a/proposals/0303-swiftpm-extensible-build-tools.md)
+  * [Third revision](https://github.com/swiftlang/swift-evolution/blob/7c3de3eaed8e160feca1d39a35d2f8ba7b2add0d/proposals/0303-swiftpm-extensible-build-tools.md)
 
 
 ## Introduction
@@ -31,7 +31,7 @@ The approach is to:
 
 The set of available plugin capabilities can then be extended in future SwiftPM versions. The goal of this proposal is to provide short-term support for common tasks such as source code generation, with a design that can scale to more complex tasks in the future.
 
-This proposal depends on improvements to the existing `binaryTarget` type in SwiftPM — those details are the subject of the separate proposal [SE-0305](https://github.com/apple/swift-evolution/blob/main/proposals/0305-swiftpm-binary-target-improvements.md).
+This proposal depends on improvements to the existing `binaryTarget` type in SwiftPM — those details are the subject of the separate proposal [SE-0305](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0305-swiftpm-binary-target-improvements.md).
 
 ## Motivation
 
@@ -61,7 +61,7 @@ A build tool plugin is invoked after package resolution and validation, and is g
 
 This initial proposal does not directly provide a way for the client target to pass configuration parameters to a plugin. However, because plugins have read-only access to the package directory, they can read custom configuration files as needed. While this means that configuration of the plugin resides outside of the package manifest, it does allow each plugin to use a configuration format suitable for its own needs. This pattern is commonly used in practice already, in the form of JSON or YAML configuration files for source generators, etc. Future proposals are expected to let package plugins define options that can be controlled from the client package's manifest.
 
-A `plugin` target should declare dependencies on the targets that provide the executables needed during the build. The binary target type has been extended to let it vend pre-built executables for build tools that are not built using SwiftPM. This is the subject of the separate evolution proposal [SE-0305](https://github.com/apple/swift-evolution/blob/main/proposals/0305-swiftpm-binary-target-improvements.md).
+A `plugin` target should declare dependencies on the targets that provide the executables needed during the build. The binary target type has been extended to let it vend pre-built executables for build tools that are not built using SwiftPM. This is the subject of the separate evolution proposal [SE-0305](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0305-swiftpm-binary-target-improvements.md).
 
 A plugin script itself cannot initially use custom libraries built by other SwiftPM targets. Initially, the only APIs available are `PackagePlugin` and the Swift standard libraries. This is somewhat limiting, but note that the plugin itself is only expected to contain a minimal amount of logic to construct a command that will then invoke a tool during the actual build. The tool that is invoked during the build — the one for which the plugin generates a command line — is either a regular `executableTarget` (which can depend on as many library targets as it wants to) or a `binaryTarget` that provides prebuilt binary artifacts.
 
@@ -525,7 +525,7 @@ The plugin should specify any generated source files that should be fed back int
 
 When SwiftPM invokes a plugin, it also passes information about any build tools on which the plugin has declared dependencies in the manifest. These build tools may be either executable targets in the package graph or may be binary targets containing prebuilt executables.
 
-The `binaryTarget` type in SwiftPM has been improved to allow binaries to contain command line tools and required support files (such as the system `.proto` files in the case of `protoc`, etc). Binary targets will need to support different executable binaries based on platform and architecture. This is the topic of the separate evolution proposal [SE-0305](https://github.com/apple/swift-evolution/blob/main/proposals/0305-swiftpm-binary-target-improvements.md), which extends binary targets to support executables in addition to XCFrameworks.
+The `binaryTarget` type in SwiftPM has been improved to allow binaries to contain command line tools and required support files (such as the system `.proto` files in the case of `protoc`, etc). Binary targets will need to support different executable binaries based on platform and architecture. This is the topic of the separate evolution proposal [SE-0305](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0305-swiftpm-binary-target-improvements.md), which extends binary targets to support executables in addition to XCFrameworks.
 
 #### Plugin Capabilities
 

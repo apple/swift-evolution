@@ -10,7 +10,7 @@
 
 ## Introduction
 
-Swift's [async/await](https://github.com/apple/swift-evolution/blob/main/proposals/0296-async-await.md) feature provides an intuitive, built-in way to write and use functions that return a single value at some future point in time. We propose building on top of this feature to create an intuitive, built-in way to write and use functions that return many values over time.
+Swift's [async/await](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0296-async-await.md) feature provides an intuitive, built-in way to write and use functions that return a single value at some future point in time. We propose building on top of this feature to create an intuitive, built-in way to write and use functions that return many values over time.
 
 This proposal is composed of the following pieces:
 
@@ -189,7 +189,7 @@ All of the usual rules about error handling apply. For example, this iteration m
 
 ### Cancellation
 
-`AsyncIteratorProtocol` types should use the cancellation primitives provided by Swift's `Task` API, part of [structured concurrency](https://github.com/apple/swift-evolution/blob/main/proposals/0304-structured-concurrency.md). As described there, the iterator can choose how it responds to cancellation. The most common behaviors will be either throwing `CancellationError` or returning `nil` from the iterator. 
+`AsyncIteratorProtocol` types should use the cancellation primitives provided by Swift's `Task` API, part of [structured concurrency](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0304-structured-concurrency.md). As described there, the iterator can choose how it responds to cancellation. The most common behaviors will be either throwing `CancellationError` or returning `nil` from the iterator. 
 
 If an `AsyncIteratorProtocol` type has cleanup to do upon cancellation, it can do it in two places:
 
@@ -298,7 +298,7 @@ The following topics are things we consider important and worth discussion in fu
 
 We've aimed for parity with the most relevant `Sequence` functions. There may be others that are worth adding in a future proposal.
 
-API which uses a time argument must be coordinated with the discussion about `Executor` as part of the [structured concurrency proposal](https://github.com/apple/swift-evolution/blob/main/proposals/0304-structured-concurrency.md).
+API which uses a time argument must be coordinated with the discussion about `Executor` as part of the [structured concurrency proposal](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0304-structured-concurrency.md).
 
 We would like a `first` property, but properties cannot currently be `async` or `throws`. Discussions are ongoing about adding a capability to the language to allow effects on properties. If those features become part of Swift then we should add a `first` property to `AsyncSequence`.
 

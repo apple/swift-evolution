@@ -87,7 +87,7 @@ The solution described below is general enough to scale for any host/target trip
 
 Since a Swift SDK is a collection of binaries arranged in a certain directory hierarchy, it makes sense to distribute
 it as an archive. We'd like to build on top of
-[SE-0305](https://github.com/apple/swift-evolution/blob/main/proposals/0305-swiftpm-binary-target-improvements.md) and
+[SE-0305](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0305-swiftpm-binary-target-improvements.md) and
 extend the `.artifactbundle` format to support this.
 
 Additionally, we propose introducing a new `swift sdk` CLI command for installation and removal of Swift SDKs on the 
@@ -108,7 +108,7 @@ directory layout for proposed artifact bundles, and some CLI helpers to operate 
 ### Swift SDK Bundles
 
 As a quick reminder for a concept introduced in
-[SE-0305](https://github.com/apple/swift-evolution/blob/main/proposals/0305-swiftpm-binary-target-improvements.md), an
+[SE-0305](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0305-swiftpm-binary-target-improvements.md), an
 **artifact bundle** is a directory that has the filename suffix `.artifactbundle` and has a predefined structure with
 `.json` manifest files provided as metadata.
 
@@ -389,7 +389,7 @@ To manage Swift SDKs, we'd like to introduce a new `swift sdk` command with thre
   installs it in a location discoverable by SwiftPM. For Swift SDKs installed from remote URLs an additional
   `--checksum` option is required, through which users of a Swift SDK can specify a checksum provided by a publisher of
   the SDK. The latter can produce a checksum by running `swift package compute-checksum` command (introduced in
-  [SE-0272](https://github.com/apple/swift-evolution/blob/main/proposals/0272-swiftpm-binary-dependencies.md)) with the
+  [SE-0272](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0272-swiftpm-binary-dependencies.md)) with the
   Swift SDK bundle archive as an argument.
   
   If a Swift SDK with a given artifact ID has already been installed and its version is equal or higher to a version

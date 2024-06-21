@@ -6,7 +6,7 @@
 * Status: **Implemented (Swift 5.1)**
 * Implementation: [Linux toolchain](https://ci.swift.org/job/swift-PR-toolchain-Linux/251//artifact/branch-master/swift-PR-25781-251-ubuntu16.04.tar.gz), [macOS toolchain](https://ci.swift.org/job/swift-PR-toolchain-osx/327//artifact/branch-master/swift-PR-25781-327-osx.tar.gz)
 * Review: ([review #1](https://forums.swift.org/t/se-0258-property-delegates/23139)) ([revision announcement #1](https://forums.swift.org/t/returned-for-revision-se-0258-property-delegates/24080)) ([review #2](https://forums.swift.org/t/se-0258-property-wrappers-second-review/25843)) ([review #3](https://forums.swift.org/t/se-0258-property-wrappers-third-review/26399)) ([acceptance](https://forums.swift.org/t/accepted-with-modification-se-0258-property-wrappers/26828))
-* Previous versions: [Revision #3](https://github.com/apple/swift-evolution/blob/e99ae69370f56ae84256b78902ab377cb8249cdd/proposals/0258-property-wrappers.md), [Revision #2](https://github.com/apple/swift-evolution/blob/bb8709c2ddca25c21a3c1e0298ce9457911dbfba/proposals/0258-property-wrappers.md), [Revision #1](https://github.com/apple/swift-evolution/commit/8c3499ec5bc22713b150e2234516af3cb8b16a0b)
+* Previous versions: [Revision #3](https://github.com/swiftlang/swift-evolution/blob/e99ae69370f56ae84256b78902ab377cb8249cdd/proposals/0258-property-wrappers.md), [Revision #2](https://github.com/swiftlang/swift-evolution/blob/bb8709c2ddca25c21a3c1e0298ce9457911dbfba/proposals/0258-property-wrappers.md), [Revision #1](https://github.com/swiftlang/swift-evolution/commit/8c3499ec5bc22713b150e2234516af3cb8b16a0b)
 
 ## Contents
 
@@ -63,7 +63,7 @@ Rather than hardcode a fixed set of patterns into the compiler (as we have done 
 we should provide a general "property wrapper" mechanism to allow
 these patterns to be defined as libraries.
 
-This is an alternative approach to some of the problems intended to be addressed by the [2015-2016 property behaviors proposal](https://github.com/apple/swift-evolution/blob/master/proposals/0030-property-behavior-decls.md). Some of the examples are the same, but this proposal takes a completely different approach designed to be simpler, easier to understand for users, and less invasive in the compiler implementation. There is a section that discusses the substantive differences from that design near the end of this proposal.
+This is an alternative approach to some of the problems intended to be addressed by the [2015-2016 property behaviors proposal](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0030-property-behavior-decls.md). Some of the examples are the same, but this proposal takes a completely different approach designed to be simpler, easier to understand for users, and less invasive in the compiler implementation. There is a section that discusses the substantive differences from that design near the end of this proposal.
 
 [Pitch #1](https://forums.swift.org/t/pitch-property-delegates/21895)<br/>
 [Pitch #2](https://forums.swift.org/t/pitch-2-property-delegates-by-custom-attributes/22855)<br/>
@@ -447,7 +447,7 @@ struct Copying<Value: NSCopying> {
 ```
 
 This implementation would address the problem detailed in
-[SE-0153](https://github.com/apple/swift-evolution/blob/master/proposals/0153-compensate-for-the-inconsistency-of-nscopyings-behaviour.md). Leaving the `copy()` out of `init(wrappedValue:)` implements the pre-SE-0153 semantics.
+[SE-0153](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0153-compensate-for-the-inconsistency-of-nscopyings-behaviour.md). Leaving the `copy()` out of `init(wrappedValue:)` implements the pre-SE-0153 semantics.
 
 ### Thread-specific storage
 
@@ -597,7 +597,7 @@ struct Ref<Value> {
 }
 ```
 
-The subscript is using [SE-0252 "Key Path Member Lookup"](https://github.com/apple/swift-evolution/blob/master/proposals/0252-keypath-dynamic-member-lookup.md) so that a `Ref` instance provides access to the properties of its value. Building on the example from SE-0252:
+The subscript is using [SE-0252 "Key Path Member Lookup"](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0252-keypath-dynamic-member-lookup.md) so that a `Ref` instance provides access to the properties of its value. Building on the example from SE-0252:
 
 ```swift
 @Ref(read: ..., write: ...)
@@ -1183,7 +1183,7 @@ The property wrappers language feature as proposed has no impact on the ABI or r
 
 ### Composition
 
-Composition was left out of the [first revision](https://github.com/apple/swift-evolution/commit/8c3499ec5bc22713b150e2234516af3cb8b16a0b) of this proposal, because one can manually compose property wrapper types. For example, the composition `@A @B` could be implemented as an `AB` wrapper:
+Composition was left out of the [first revision](https://github.com/swiftlang/swift-evolution/commit/8c3499ec5bc22713b150e2234516af3cb8b16a0b) of this proposal, because one can manually compose property wrapper types. For example, the composition `@A @B` could be implemented as an `AB` wrapper:
 
 ```swift
 @propertyWrapper
@@ -1282,7 +1282,7 @@ much debate. A number of alternatives have been proposed, including longer `#`-b
 ### The 2015-2016 property behaviors design
 
 Property wrappers address a similar set of use cases to *property behaviors*, which were [proposed and
-reviewed](https://github.com/apple/swift-evolution/blob/master/proposals/0030-property-behavior-decls.md)
+reviewed](https://github.com/swiftlang/swift-evolution/blob/master/proposals/0030-property-behavior-decls.md)
 in late 2015/early 2016. The design did not converge, and the proposal
 was deferred. This proposal picks up the thread, using much of the
 same motivation and some design ideas, but attempting to simplify the
