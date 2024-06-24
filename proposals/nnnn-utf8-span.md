@@ -9,20 +9,22 @@
 * Upcoming Feature Flag: (pending)
 * Review: ([pitch 1](https://forums.swift.org/t/pitch-utf-8-processing-over-unsafe-contiguous-bytes/69715))
 
+
 ## Introduction
 
-We introduce `UTF8Span` for efficient and safe Unicode processing over contiguous storage.
+We introduce `UTF8Span` for efficient and safe Unicode processing over contiguous storage. `UTF8Span` is a memory safe non-escapable type similar to `Span` (**TODO**: link span proposal).
 
 Native `String`s are stored as validly-encoded UTF-8 bytes in an internal contiguous memory buffer. The standard library implements `String`'s API as internal methods which operate on top of this buffer, taking advantage of the validly-encoded invariant and specialized Unicode knowledge. We propose making this UTF-8 buffer and its methods public as API for more advanced libraries and developers.
 
 ## Motivation
 
-Currently, if a developer wants to do `String`-like processing over UTF-8 bytes, they have to make an instance of `String`, which allocates a native storage class and copies all the bytes. The developer would then need to operate within the new `String`'s views and map between `String.Index` and byte offsets in the original buffer.
+Currently, if a developer wants to do `String`-like processing over UTF-8 bytes, they have to make an instance of `String`, which allocates a native storage class, copies all the bytes, and is reference counted. The developer would then need to operate within the new `String`'s views and map between `String.Index` and byte offsets in the original buffer.
 
-For example, if these bytes were part of a data structure, the developer would need to decide to either cache such a new `String` instance or recreate it on the fly. Caching more than doubles the size and adds caching complexity. Recreating it on the fly adds a linear time factor and class instance allocation/deallocation.
+For example, if these bytes were part of a data structure, the developer would need to decide to either cache such a new `String` instance or recreate it on the fly. Caching more than doubles the size and adds caching complexity. Recreating it on the fly adds a linear time factor and class instance allocation/deallocation and potentially reference counting.
 
 Furthermore, `String` may not be available on all embedded platforms due to the fact that it's conformance to `Comparable` and `Collection` depend on data tables bundled with the stdlib. `UTF8Span` is a more appropriate type for these platforms, and only some explicit API make use of data tables.
 
+**TODO** annotate those API as unavailable on embedded
 
 
 ### UTF-8 validity and efficiency
@@ -36,8 +38,7 @@ Additionally, a particular scalar value in valid UTF-8 has only one encoding, bu
 
 ## Proposed solution
 
-We propose a non-escapable `UTF8Span` which exposes a similar API surface as `String` for validly-encoded UTF-8 code units in contiguous memory.
-
+We propose a non-escapable `UTF8Span` which exposes a similar API surface as `String` for validly-encoded UTF-8 code units in contiguous memory. We also propose rich API describing the kind and location of encoding errors.
 
 ## Detailed design
 
@@ -46,28 +47,40 @@ We propose a non-escapable `UTF8Span` which exposes a similar API surface as `St
 ```swift
 @frozen
 public struct UTF8Span: Copyable, ~Escapable {
-  @usableFromInline
-  internal var _start: Index
+  public var unsafeBaseAddress: UnsafeRawPointer
 
   /*
    A bit-packed count and flags (such as isASCII)
 
-   ┌───────┬──────────┬───────┐
-   │ b63   │ b62:56   │ b56:0 │
-   ├───────┼──────────┼───────┤
-   │ ASCII │ reserved │ count │
-   └───────┴──────────┴───────┘
+   ╔═══════╦═════╦═════╦══════════╦═══════╗
+   ║  b63  ║ b62 ║ b61 ║  b60:56  ║ b56:0 ║
+   ╠═══════╬═════╬═════╬══════════╬═══════╣
+   ║ ASCII ║ NFC ║ SSC ║ reserved ║ count ║
+   ╚═══════╩═════╩═════╩══════════╩═══════╝
 
-   Future bits could be used for all <0x300 scalar (aka <0xC0 byte)
-   flag which denotes the quickest NFC check, a quickCheck NFC
-   flag (using Unicode data tables), a full-check NFC flag,
-   single-scalar-grapheme-clusters flag, etc.
-
+   ASCII means the contents are all-ASCII (<0x7F). 
+   NFC means contents are in normal form C for fast comparisons.
+   SSC means single-scalar Characters (i.e. grapheme clusters): every
+     `Character` holds only a single `Unicode.Scalar`.
    */
   @usableFromInline
   internal var _countAndFlags: UInt64
+
+  @inlinable @inline(__always)
+  init<Owner: ~Copyable & ~Escapable>(
+    _unsafeAssumingValidUTF8 start: UnsafeRawPointer,
+    _countAndFlags: UInt64,
+    owner: borrowing Owner
+  ) -> dependsOn(owner) Self { }
 }
+
 ```
+
+**TODO**: dependsOn(owner) or omit?
+
+**TODO**: Should we have null-termination support? A null-terminated UTF8Span has a NUL byte after its contents and contains no interior NULs. How would we ensure the NUL byte is exclusively borrowed by us?
+
+**TODO**: Should we track contains-newlines or only-newline-terminated? That would speed up Regex `.*` matching considerably.
 
 ### Creation and validation
 
@@ -75,556 +88,789 @@ public struct UTF8Span: Copyable, ~Escapable {
 
 ```swift
 extension Unicode.UTF8 {
+  /**
+
+   The kind and location of a UTF-8 encoding error.
+
+   Valid UTF-8 is represented by this table:
+
+   ╔════════════════════╦════════╦════════╦════════╦════════╗
+   ║    Scalar value    ║ Byte 0 ║ Byte 1 ║ Byte 2 ║ Byte 3 ║
+   ╠════════════════════╬════════╬════════╬════════╬════════╣
+   ║ U+0000..U+007F     ║ 00..7F ║        ║        ║        ║
+   ║ U+0080..U+07FF     ║ C2..DF ║ 80..BF ║        ║        ║
+   ║ U+0800..U+0FFF     ║ E0     ║ A0..BF ║ 80..BF ║        ║
+   ║ U+1000..U+CFFF     ║ E1..EC ║ 80..BF ║ 80..BF ║        ║
+   ║ U+D000..U+D7FF     ║ ED     ║ 80..9F ║ 80..BF ║        ║
+   ║ U+E000..U+FFFF     ║ EE..EF ║ 80..BF ║ 80..BF ║        ║
+   ║ U+10000..U+3FFFF   ║ F0     ║ 90..BF ║ 80..BF ║ 80..BF ║
+   ║ U+40000..U+FFFFF   ║ F1..F3 ║ 80..BF ║ 80..BF ║ 80..BF ║
+   ║ U+100000..U+10FFFF ║ F4     ║ 80..8F ║ 80..BF ║ 80..BF ║
+   ╚════════════════════╩════════╩════════╩════════╩════════╝
+
+   ### Classifying errors
+
+   An *unexpected continuation* is when a continuation byte (`10xxxxxx`) occurs
+   in a position that should be the start of a new scalar value. Unexpected
+   continuations can often occur when the input contains arbitrary data
+   instead of textual content. An unexpected continuation at the start of
+   input might mean that the input was not correctly sliced along scalar
+   boundaries or that it does not contain UTF-8.
+
+   A *truncated scalar* is a multi-byte sequence that is the start of a valid
+   multi-byte scalar but is cut off before ending correctly. A truncated
+   scalar at the end of the input might mean that only part of the entire
+   input was received.
+
+   A *surrogate code point* (`U+D800..U+DFFF`) is invalid UTF-8. Surrogate
+   code points are used by UTF-16 to encode scalars in the supplementary
+   planes. Their presence may mean the input was encoded in a different 8-bit
+   encoding, such as CESU-8, WTF-8, or Java's Modified UTF-8.
+
+   An *invalid non-surrogate code point* is any code point higher than
+   `U+10FFFF`. This can often occur when the input is arbitrary data instead
+   of textual content.
+
+   An *overlong encoding* occurs when a scalar value that could have been
+   encoded using fewer bytes is encoded in a longer byte sequence. Overlong
+   encodings are invalid UTF-8 and can lead to security issues if not
+   correctly detected:
+
+   - https://nvd.nist.gov/vuln/detail/CVE-2008-2938
+   - https://nvd.nist.gov/vuln/detail/CVE-2000-0884
+
+   An overlong encoding of `NUL`, `0xC0 0x80`, is used in Java's Modified
+   UTF-8 but is invalid UTF-8. Overlong encoding errors often catch attempts
+   to bypass security measures.
+
+   ### Reporting the range of the error
+
+   The range of the error reported follows the *Maximal subpart of an
+   ill-formed subsequence* algorithm in which each error is either one byte
+   long or ends before the first byte that is disallowed. See "U+FFFD
+   Substitution of Maximal Subparts" in the Unicode Standard. Unicode started
+   recommending this algorithm in version 6 and is adopted by the W3C.
+
+   The maximal subpart algorithm will produce a single multi-byte range for a
+   truncated scalar (a multi-byte sequence that is the start of a valid
+   multi-byte scalar but is cut off before ending correctly). For all other
+   errors (including overlong encodings, surrogates, and invalid code
+   points), it will produce an error per byte.
+
+   Since overlong encodings, surrogates, and invalid code points are erroneous
+   by the second byte (at the latest), the above definition produces the same
+   ranges as defining such a sequence as a truncated scalar error followed by
+   unexpected continuation byte errors. The more semantically-rich
+   classification is reported.
+
+   For example, a surrogate count point sequence `ED A0 80` will be reported
+   as three `.surrogateCodePointByte` errors rather than a `.truncatedScalar`
+   followed by two `.unexpectedContinuationByte` errors.
+
+   Other commonly reported error ranges can be constructed from this result.
+   For example, PEP 383's error-per-byte can be constructed by mapping over
+   the reported range. Similarly, constructing a single error for the longest
+   invalid byte range can be constructed by joining adjacent error ranges.
+
+   ╔═════════════════╦══════╦═════╦═════╦═════╦═════╦═════╦═════╦══════╗
+   ║                 ║  61  ║ F1  ║ 80  ║ 80  ║ E1  ║ 80  ║ C2  ║  62  ║
+   ╠═════════════════╬══════╬═════╬═════╬═════╬═════╬═════╬═════╬══════╣
+   ║ Longest range   ║ U+61 ║ err ║     ║     ║     ║     ║     ║ U+62 ║
+   ║ Maximal subpart ║ U+61 ║ err ║     ║     ║ err ║     ║ err ║ U+62 ║
+   ║ Error per byte  ║ U+61 ║ err ║ err ║ err ║ err ║ err ║ err ║ U+62 ║
+   ╚═════════════════╩══════╩═════╩═════╩═════╩═════╩═════╩═════╩══════╝
+
+   */
+  @frozen
+  public struct EncodingError: Error, Sendable, Hashable, Codable {
+    /// The kind of encoding error
+    public var kind: Unicode.UTF8.EncodingError.Kind
+
+    /// The range of offsets into our input containing the error
+    public var range: Range<Int>
+
+    @_alwaysEmitIntoClient
+    public init(
+      _ kind: Unicode.UTF8.EncodingError.Kind,
+      _ range: some RangeExpression<Int>
+    )
+
+    @_alwaysEmitIntoClient
+    public init(_ kind: Unicode.UTF8.EncodingError.Kind, at: Int)
+  }
+}
+
+extension UTF8.EncodingError {
   /// The kind of encoding error encountered during validation
   @frozen
-  public struct EncodingErrorKind: Error, Sendable, Hashable, Codable {
+  public struct Kind: Error, Sendable, Hashable, Codable, RawRepresentable {
     public var rawValue: UInt8
 
     @inlinable
     public init(rawValue: UInt8)
 
+    /// A continuation byte (`10xxxxxx`) outside of a multi-byte sequence
     @_alwaysEmitIntoClient
-    public static var unexpectedContinuationByte: Self { get }
+    public static var unexpectedContinuationByte: Self
 
+    /// A byte in a surrogate code point (`U+D800..U+DFFF`) sequence
     @_alwaysEmitIntoClient
-    public static var overlongEncoding: Self { get }
+    public static var surrogateCodePointByte: Self
 
+    /// A byte in an invalid, non-surrogate code point (`>U+10FFFF`) sequence
     @_alwaysEmitIntoClient
-    public static var invalidCodePoint: Self { get }
+    public static var invalidNonSurrogateCodePointByte: Self
+
+    /// A byte in an overlong encoding sequence
+    @_alwaysEmitIntoClient
+    public static var overlongEncodingByte: Self
+
+    /// A multi-byte sequence that is the start of a valid multi-byte scalar
+    /// but is cut off before ending correctly
+    @_alwaysEmitIntoClient
+    public static var truncatedScalar: Self
   }
 }
-```
 
-**TODO**: Check all the kinds of errors we'd like to diagnose. Since this is a `RawRepresentable` struct, we can still extend it with a (finite) number of error kinds in the future.
+extension UTF8.EncodingError.Kind: CustomStringConvertible {
+  public var description: String { get }
+}
 
-```swift
+extension UTF8.EncodingError: CustomStringConvertible {
+  public var description: String { get }
+}
+
 extension UTF8Span {
-  /// The kind and location of invalidly-encoded UTF-8 bytes
-  @frozen
-  public struct EncodingError: Error, Sendable, Hashable, Codable {
-    /// The kind of encoding error
-    public var kind: Unicode.UTF8.EncodingErrorKind
-
-    /// The range of offsets into our input containing the error
-    public var range: Range<Int>
-  }
-
   public init(
     validating codeUnits: Span<UInt8>
   ) throws(EncodingError) -> dependsOn(codeUnits) Self
-
-  public init<Owner: ~Copyable & ~Escapable>(
-    nulTerminatedCString: UnsafeRawPointer,
-    owner: borrowing Owner
-  ) throws(EncodingError) -> dependsOn(owner) Self
-
-  public init<Owner: ~Copyable & ~Escapable>(
-    nulTerminatedCString: UnsafePointer<CChar>,
-    owner: borrowing Owner
-  ) throws(EncodingError) -> dependsOn(owner) Self
 }
 ```
 
-### Views
+**TODO**: null-terminated strings where we borrow and remember the terminator (and ensure there's no interior nulls)?
 
-Similarly to `String`, `UTF8Span` exposes different ways to view the UTF-8 contents.
+### Basic operations
 
-`UTF8Span.UnicodeScalarView` corresponds to `String.UnicodeScalarView` for read-only purposes, however it is not `RangeReplaceable` as `UTF8Span` provides read-only access. Similarly, `UTF8Span.CharacterView` corresponds to `String`'s character view (i.e. its default view), `UTF8Span.UTF16View` to `String.UTF16View`, and `UTF8Span.CodeUnits` to `String.UTF8View`.
+#### Core Scalar API
 
 ```swift
 extension UTF8Span {
-  public typealias CodeUnits = Span<UInt8>
+  /// Whether `i` is on a boundary between Unicode scalar values.
+  @_alwaysEmitIntoClient
+  public func isScalarAligned(_ i: Int) -> Bool
 
-  @inlinable
-  public var codeUnits: CodeUnits { get }
+  /// Whether `i` is on a boundary between Unicode scalar values.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  @_alwaysEmitIntoClient
+  public func isScalarAligned(unchecked i: Int) -> Bool
 
-  @frozen
-  public struct UnicodeScalarView: ~Escapable {
-    public let span: UTF8Span
+  /// Whether `range`'s bounds are aligned to `Unicode.Scalar` boundaries.
+  @_alwaysEmitIntoClient
+  public func isScalarAligned(_ range: Range<Int>) -> Bool
 
-    @inlinable
-    public init(_ span: UTF8Span)
-  }
+  /// Whether `range`'s bounds are aligned to `Unicode.Scalar` boundaries.
+  ///
+  /// This function does not validate that `range` is within the span's bounds;
+  /// this is an unsafe operation.
+  @_alwaysEmitIntoClient
+  public func isScalarAligned(unchecked range: Range<Int>) -> Bool
 
-  @inlinable
-  public var unicodeScalars: UnicodeScalarView { _read }
+  /// Returns the start of the next `Unicode.Scalar` after the one starting at
+  /// `i`, or the end of the span if `i` denotes the final scalar.
+  ///
+  /// `i` must be scalar-aligned.
+  @_alwaysEmitIntoClient
+  public func nextScalarStart(_ i: Int) -> Int
 
-  @frozen
-  public struct CharacterView: ~Escapable {
-    public let span: UTF8Span
+  /// Returns the start of the next `Unicode.Scalar` after the one starting at
+  /// `i`, or the end of the span if `i` denotes the final scalar.
+  ///
+  /// `i` must be scalar-aligned.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  @_alwaysEmitIntoClient
+  public func nextScalarStart(unchecked i: Int) -> Int
 
-    @inlinable
-    public init(_ span: UTF8Span)
-  }
+  /// Returns the start of the next `Unicode.Scalar` after the one starting at
+  /// `i`, or the end of the span if `i` denotes the final scalar.
+  ///
+  /// `i` must be scalar-aligned.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  ///
+  /// This function does not validate that `i` is scalar-aligned; this is an
+  /// unsafe operation if `i` isn't.
+  @_alwaysEmitIntoClient
+  public func nextScalarStart(
+    uncheckedAssumingAligned i: Int
+  ) -> Int
 
-  @inlinable
-  public var characters: CharacterView { _read }
+  /// Returns the start of the `Unicode.Scalar` ending at `i`, i.e. the scalar
+  /// before the one starting at `i` or the last scalar if `i` is the end of
+  /// the span.
+  ///
+  /// `i` must be scalar-aligned.
+  @_alwaysEmitIntoClient
+  public func previousScalarStart(_ i: Int) -> Int
 
-  @frozen
-  public struct UTF16View: ~Escapable {
-    public let span: UTF8Span
+  /// Returns the start of the `Unicode.Scalar` ending at `i`, i.e. the scalar
+  /// before the one starting at `i` or the last scalar if `i` is the end of
+  /// the span.
+  ///
+  /// `i` must be scalar-aligned.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  @_alwaysEmitIntoClient
+  public func previousScalarStart(unchecked i: Int) -> Int
 
-    @inlinable
-    public init(_ span: UTF8Span)
-  }
+  /// Returns the start of the `Unicode.Scalar` ending at `i`, i.e. the scalar
+  /// before the one starting at `i` or the last scalar if `i` is the end of
+  /// the span.
+  ///
+  /// `i` must be scalar-aligned.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  ///
+  ///
+  /// This function does not validate that `i` is scalar-aligned; this is an
+  /// unsafe operation if `i` isn't.
+  @_alwaysEmitIntoClient
+  public func previousScalarStart(
+    uncheckedAssumingAligned i: Int
+  ) -> Int
 
-  @inlinable
-  public var utf16: UTF16View { _read }
+  /// Decode the `Unicode.Scalar` starting at `i`. Return it and the start of
+  /// the next scalar.
+  ///
+  /// `i` must be scalar-aligned.
+  @_alwaysEmitIntoClient
+  public func decodeNextScalar(
+    _ i: Int
+  ) -> (Unicode.Scalar, nextScalarStart: Int)
+
+  /// Decode the `Unicode.Scalar` starting at `i`. Return it and the start of 
+  /// the next scalar.
+  ///
+  /// `i` must be scalar-aligned.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  @_alwaysEmitIntoClient
+  public func decodeNextScalar(
+    unchecked i: Int
+  ) -> (Unicode.Scalar, nextScalarStart: Int)
+
+  /// Decode the `Unicode.Scalar` starting at `i`. Return it and the start of
+  /// the next scalar.
+  ///
+  /// `i` must be scalar-aligned.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  ///
+  ///
+  /// This function does not validate that `i` is scalar-aligned; this is an
+  /// unsafe operation if `i` isn't.
+  @_alwaysEmitIntoClient
+  public func decodeNextScalar(
+    uncheckedAssumingAligned i: Int
+  ) -> (Unicode.Scalar, nextScalarStart: Int)
+
+  /// Decode the `Unicode.Scalar` ending at `i`, i.e. the previous scalar.
+  /// Return it and the start of that scalar.
+  ///
+  /// `i` must be scalar-aligned.
+  @_alwaysEmitIntoClient
+  public func decodePreviousScalar(
+    _ i: Int
+  ) -> (Unicode.Scalar, previousScalarStart: Int)
+
+  /// Decode the `Unicode.Scalar` ending at `i`, i.e. the previous scalar.
+  /// Return it and the start of that scalar.
+  ///
+  /// `i` must be scalar-aligned.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  @_alwaysEmitIntoClient
+  public func decodePreviousScalar(
+    unchecked i: Int
+  ) -> (Unicode.Scalar, previousScalarStart: Int)
+
+  /// Decode the `Unicode.Scalar` ending at `i`, i.e. the previous scalar.
+  /// Return it and the start of that scalar.
+  ///
+  /// `i` must be scalar-aligned.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  ///
+  ///
+  /// This function does not validate that `i` is scalar-aligned; this is an
+  /// unsafe operation if `i` isn't.
+  @_alwaysEmitIntoClient
+  public func decodePreviousScalar(
+    uncheckedAssumingAligned i: Int
+  ) -> (Unicode.Scalar, previousScalarStart: Int)
+}
+
+```
+
+#### Core Character API
+
+```swift
+extension UTF8Span {
+  /// Whether `i` is on a boundary between `Character`s (i.e. grapheme
+  /// clusters).
+  @_alwaysEmitIntoClient
+  public func isCharacterAligned(_ i: Int) -> Bool
+
+  /// Whether `i` is on a boundary between `Character`s (i.e. grapheme
+  /// clusters).
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  @_alwaysEmitIntoClient
+  public func isCharacterAligned(unchecked i: Int) -> Bool
+
+  /// Returns the start of the next `Character` (i.e. grapheme cluster) after
+  /// the one  starting at `i`, or the end of the span if `i` denotes the final
+  /// `Character`.
+  ///
+  /// `i` must be `Character`-aligned.
+  @_alwaysEmitIntoClient
+  public func nextCharacterStart(_ i: Int) -> Int
+
+  /// Returns the start of the next `Character` (i.e. grapheme cluster) after
+  /// the one  starting at `i`, or the end of the span if `i` denotes the final
+  /// `Character`.
+  ///
+  /// `i` must be `Character`-aligned.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  @_alwaysEmitIntoClient
+  public func nextCharacterStart(unchecked i: Int) -> Int
+
+  /// Returns the start of the next `Character` (i.e. grapheme cluster) after
+  /// the one  starting at `i`, or the end of the span if `i` denotes the final
+  /// `Character`.
+  ///
+  /// `i` must be `Character`-aligned.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  ///
+  /// This function does not validate that `i` is `Character`-aligned; this is
+  /// an unsafe operation if `i` isn't.
+  @_alwaysEmitIntoClient
+  public func nextCharacterStart(
+    uncheckedAssumingAligned i: Int
+  ) -> Int
+
+  /// Returns the start of the `Character` (i.e. grapheme cluster) ending at
+  /// `i`, i.e. the `Character` before the one starting at `i` or the last
+  /// `Character` if `i` is the end of the span.
+  ///
+  /// `i` must be `Character`-aligned.
+  @_alwaysEmitIntoClient
+  public func previousCharacterStart(_ i: Int) -> Int
+
+  /// Returns the start of the `Character` (i.e. grapheme cluster) ending at
+  /// `i`, i.e. the `Character` before the one starting at `i` or the last
+  /// `Character` if `i` is the end of the span.
+  ///
+  /// `i` must be `Character`-aligned.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  @_alwaysEmitIntoClient
+  public func previousCharacterStart(unchecked i: Int) -> Int
+
+  /// Returns the start of the `Character` (i.e. grapheme cluster) ending at
+  /// `i`, i.e. the `Character` before the one starting at `i` or the last
+  /// `Character` if `i` is the end of the span.
+  ///
+  /// `i` must be `Character`-aligned.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  ///
+  /// This function does not validate that `i` is `Character`-aligned; this is
+  /// an unsafe operation if `i` isn't.
+  @_alwaysEmitIntoClient
+  public func previousCharacterStart(
+    uncheckedAssumingAligned i: Int
+  ) -> Int
+
+  /// Decode the `Character` starting at `i` Return it and the start of the
+  /// next `Character`.
+  ///
+  /// `i` must be `Character`-aligned.
+  @_alwaysEmitIntoClient
+  public func decodeNextCharacter(
+    _ i: Int
+  ) -> (Character, nextCharacterStart: Int)
+
+  /// Decode the `Character` starting at `i` Return it and the start of the
+  /// next `Character`.
+  ///
+  /// `i` must be `Character`-aligned.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  @_alwaysEmitIntoClient
+  public func decodeNextCharacter(
+    unchecked i: Int
+  ) -> (Character, nextCharacterStart: Int)
+
+  /// Decode the `Character` starting at `i` Return it and the start of the
+  /// next `Character`.
+  ///
+  /// `i` must be `Character`-aligned.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  ///
+  /// This function does not validate that `i` is `Character`-aligned; this is
+  /// an unsafe operation if `i` isn't.
+  @_alwaysEmitIntoClient
+  public func decodeNextCharacter(
+    uncheckedAssumingAligned i: Int
+  ) -> (Character, nextCharacterStart: Int)
+
+  /// Decode the `Character` (i.e. grapheme cluster) ending at `i`, i.e. the
+  /// previous `Character`. Return it and the start of that `Character`.
+  ///
+  /// `i` must be `Character`-aligned.
+  @_alwaysEmitIntoClient
+  public func decodePreviousCharacter(_ i: Int) -> (Character, Int)
+
+  /// Decode the `Character` (i.e. grapheme cluster) ending at `i`, i.e. the
+  /// previous `Character`. Return it and the start of that `Character`.
+  ///
+  /// `i` must be `Character`-aligned.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  @_alwaysEmitIntoClient
+  public func decodePreviousCharacter(
+    unchecked i: Int
+  ) -> (Character, Int)
+
+  /// Decode the `Character` (i.e. grapheme cluster) ending at `i`, i.e. the
+  /// previous `Character`. Return it and the start of that `Character`.
+  ///
+  /// `i` must be `Character`-aligned.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  ///
+  /// This function does not validate that `i` is `Character`-aligned; this is
+  /// an unsafe operation if `i` isn't.
+  @_alwaysEmitIntoClient
+  public func decodePreviousCharacter(
+    uncheckedAssumingAligned i: Int
+  ) -> (Character, Int)
+
+}
+
+```
+
+#### Derived Scalar operations
+
+```swift
+extension UTF8Span {
+  /// Find the nearest scalar-aligned position `<= i`.
+  @_alwaysEmitIntoClient
+  public func scalarAlignBackwards(_ i: Int) -> Int
+
+  /// Find the nearest scalar-aligned position `<= i`.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  @_alwaysEmitIntoClient
+  public func scalarAlignBackwards(unchecked i: Int) -> Int
+
+  /// Find the nearest scalar-aligned position `>= i`.
+  @_alwaysEmitIntoClient
+  public func scalarAlignForwards(_ i: Int) -> Int
+
+  /// Find the nearest scalar-aligned position `>= i`.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  @_alwaysEmitIntoClient
+  public func scalarAlignForwards(unchecked i: Int) -> Int
 }
 ```
 
-**TOOD**: `_read` vs `get`? `@inlinable` vs `@_alwaysEmitIntoClient`?
-
-##### `Collection`-like API:
-
-Like `Span`, `UTF8Span` provides index and `Collection`-like API:
-
+#### Derived Character operations
 
 ```swift
 extension UTF8Span {
-  public typealias Index = RawSpan.Index
+  /// Find the nearest `Character` (i.e. grapheme cluster)-aligned position
+  /// that is `<= i`.
+  @_alwaysEmitIntoClient
+  public func characterAlignBackwards(_ i: Int) -> Int
+
+  /// Find the nearest `Character` (i.e. grapheme cluster)-aligned position
+  /// that is `<= i`.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  @_alwaysEmitIntoClient
+  public func characterAlignBackwards(unchecked i: Int) -> Int
+
+  /// Find the nearest `Character` (i.e. grapheme cluster)-aligned position
+  /// that is `>= i`.
+  @_alwaysEmitIntoClient
+  public func characterAlignForwards(_ i: Int) -> Int
+
+  /// Find the nearest `Character` (i.e. grapheme cluster)-aligned position
+  /// that is `>= i`.
+  ///
+  /// This function does not validate that `i` is within the span's bounds;
+  /// this is an unsafe operation.
+  @_alwaysEmitIntoClient
+  public func characterAlignForwards(unchecked i: Int) -> Int
 }
+```
 
-extension UTF8Span.UnicodeScalarView {
-  @frozen
-  public struct Index: Comparable, Hashable {
-    public var position: UTF8Span.Index
+### Collection-like API
 
-    @inlinable
-    public init(_ position: UTF8Span.Index)
+#### Comparisons
 
-    @inlinable
-    public static func < (
-      lhs: UTF8Span.UnicodeScalarView.Index,
-      rhs: UTF8Span.UnicodeScalarView.Index
-    ) -> Bool
-  }
+```swift
+extension UTF8Span {
+  /// Whether this span has the same bytes as `other`.
+  @_alwaysEmitIntoClient
+  public func bytesEqual(to other: UTF8Span) -> Bool
 
-  public typealias Element = Unicode.Scalar
+  /// Whether this span has the same bytes as `other`.
+  @_alwaysEmitIntoClient
+  public func bytesEqual(to other: some Sequence<UInt8>) -> Bool
 
-  @frozen
-  public struct Iterator: ~Escapable {
-    public typealias Element = Unicode.Scalar
-
-    public let span: UTF8Span
-
-    public var position: UTF8Span.Index
-
-    @inlinable
-    init(_ span: UTF8Span)
-
-    @inlinable
-    public mutating func next() -> Unicode.Scalar?
-  }
-
-  @inlinable
-  public borrowing func makeIterator() -> Iterator
-
-  @inlinable
-  public var startIndex: Index { get }
-
-  @inlinable
-  public var endIndex: Index { get }
-
-  @inlinable
-  public var count: Int { get }
-
-  @inlinable
-  public var isEmpty: Bool { get }
-
-  @inlinable
-  public var indices: Range<Index> { get }
-
-  @inlinable
-  public func index(after i: Index) -> Index
-
-  @inlinable
-  public func index(before i: Index) -> Index
-
-  @inlinable
-  public func index(
-    _ i: Index, offsetBy distance: Int, limitedBy limit: Index
-  ) -> Index?
-
-  @inlinable
-  public func formIndex(after i: inout Index)
-
-  @inlinable
-  public func formIndex(before i: inout Index)
-
-  @inlinable
-  public func index(_ i: Index, offsetBy distance: Int) -> Index
-
-  @inlinable
-  public func formIndex(_ i: inout Index, offsetBy distance: Int)
-
-  @inlinable
-  public func formIndex(
-    _ i: inout Index, offsetBy distance: Int, limitedBy limit: Index
+  /// Whether this span has the same `Unicode.Scalar`s as `other`.
+  @_alwaysEmitIntoClient
+  public func scalarsEqual(
+    to other: some Sequence<Unicode.Scalar>
   ) -> Bool
 
-  @inlinable
-  public subscript(position: Index) -> Element { borrowing _read }
-
-  @inlinable
-  public subscript(unchecked position: Index) -> Element { 
-    borrowing _read
-  }
-
-  @inlinable
-  public subscript(bounds: Range<Index>) -> Self { get }
-
-  @inlinable
-  public subscript(unchecked bounds: Range<Index>) -> Self {
-    borrowing get
-  }
-
+  /// Whether this span has the same `Character`s as `other`.
   @_alwaysEmitIntoClient
-  public subscript(bounds: some RangeExpression<Index>) -> Self {
-    borrowing get
-  }
-
-  @_alwaysEmitIntoClient
-  public subscript(
-    unchecked bounds: some RangeExpression<Index>
-  ) -> Self {
-    borrowing get
-  }
-
-  @_alwaysEmitIntoClient
-  public subscript(x: UnboundedRange) -> Self {
-    borrowing get
-  }
-
-  @inlinable
-  public func distance(from start: Index, to end: Index) -> Int
-
-  @inlinable
-  public func elementsEqual(_ other: Self) -> Bool
-
-  @inlinable
-  public func elementsEqual(_ other: some Sequence<Element>) -> Bool
-}
-
-extension UTF8Span.CharacterView {
-  @frozen
-  public struct Index: Comparable, Hashable {
-    public var position: UTF8Span.Index
-
-    @inlinable
-    public init(_ position: UTF8Span.Index)
-
-    @inlinable
-    public static func < (
-      lhs: UTF8Span.CharacterView.Index,
-      rhs: UTF8Span.CharacterView.Index
-    ) -> Bool
-  }
-
-  public typealias Element = Character
-
-  @frozen
-  public struct Iterator: ~Escapable {
-    public typealias Element = Character
-
-    public let span: UTF8Span
-
-    public var position: UTF8Span.Index
-
-    @inlinable
-    init(_ span: UTF8Span)
-
-    @inlinable
-    public mutating func next() -> Character?
-  }
-
-  @inlinable
-  public borrowing func makeIterator() -> Iterator
-
-  @inlinable
-  public var startIndex: Index { get }
-
-  @inlinable
-  public var endIndex: Index { get }
-
-  @inlinable
-  public var count: Int { get }
-
-  @inlinable
-  public var isEmpty: Bool { get }
-
-  @inlinable
-  public var indices: Range<Index> { get }
-
-  @inlinable
-  public func index(after i: Index) -> Index
-
-  @inlinable
-  public func index(before i: Index) -> Index
-
-  @inlinable
-  public func index(
-    _ i: Index, offsetBy distance: Int, limitedBy limit: Index
-  ) -> Index?
-
-  @inlinable
-  public func formIndex(after i: inout Index)
-
-  @inlinable
-  public func formIndex(before i: inout Index)
-
-  @inlinable
-  public func index(_ i: Index, offsetBy distance: Int) -> Index
-
-  @inlinable
-  public func formIndex(_ i: inout Index, offsetBy distance: Int)
-
-  @inlinable
-  public func formIndex(
-    _ i: inout Index, offsetBy distance: Int, limitedBy limit: Index
+  public func charactersEqual(
+    to other: some Sequence<Character>
   ) -> Bool
 
-  @inlinable
-  public subscript(position: Index) -> Element { borrowing _read }
-
-  @inlinable
-  public subscript(unchecked position: Index) -> Element { 
-    borrowing _read
-  }
-
-  @inlinable
-  public subscript(bounds: Range<Index>) -> Self { get }
-
-  @inlinable
-  public subscript(unchecked bounds: Range<Index>) -> Self {
-    borrowing get
-  }
-
-  @_alwaysEmitIntoClient
-  public subscript(bounds: some RangeExpression<Index>) -> Self {
-    borrowing get
-  }
-
-  @_alwaysEmitIntoClient
-  public subscript(
-    unchecked bounds: some RangeExpression<Index>
-  ) -> Self {
-    borrowing get
-  }
-
-  @_alwaysEmitIntoClient
-  public subscript(x: UnboundedRange) -> Self {
-    borrowing get
-  }
-
-  @inlinable
-  public func distance(from start: Index, to end: Index) -> Int
-
-  @inlinable
-  public func elementsEqual(_ other: Self) -> Bool
-
-  @inlinable
-  public func elementsEqual(_ other: some Sequence<Element>) -> Bool
 }
+```
 
-extension UTF8Span.UTF16View {
-  @frozen
-  public struct Index: Comparable, Hashable {
-    @usableFromInline
-    internal var _rawValue: UInt64
+**TODO**: lexicographically less than? `std::mismatch`? others?
 
-    @inlinable
-    public var position: UTF8Span.Index { get }
+#### Canonical equivalence and ordering
 
-    /// Whether this index is referring to the second code unit of a non-BMP
-    /// Unicode Scalar value.
-    @inlinable
-    public var secondCodeUnit: Bool { get }
+`UTF8Span` can perform Unicode canonical equivalence checks (i.e. the semantics of `String.==` and `Character.==`).
 
-    @inlinable
-    public init(_ position: UTF8Span.Index, secondCodeUnit: Bool)
-
-    @inlinable
-    public static func < (
-      lhs: UTF8Span.UTF16View.Index,
-      rhs: UTF8Span.UTF16View.Index
-    ) -> Bool
-  }
-
-  public typealias Element = UInt16
-
-  @frozen
-  public struct Iterator: ~Escapable {
-    public typealias Element = UInt16
-
-    public let span: UTF8Span
-
-    public var index: UTF8Span.UTF16View.Index
-
-    @inlinable
-    init(_ span: UTF8Span)
-
-    @inlinable
-    public mutating func next() -> UInt16?
-  }
-
-  @inlinable
-  public borrowing func makeIterator() -> Iterator
-
-  @inlinable
-  public var startIndex: Index { get }
-
-  @inlinable
-  public var endIndex: Index { get }
-
-  @inlinable
-  public var count: Int { get }
-
-  @inlinable
-  public var isEmpty: Bool { get }
-
-  @inlinable
-  public var indices: Range<Index> { get }
-
-  @inlinable
-  public func index(after i: Index) -> Index
-
-  @inlinable
-  public func index(before i: Index) -> Index
-
-  @inlinable
-  public func index(
-    _ i: Index, offsetBy distance: Int, limitedBy limit: Index
-  ) -> Index?
-
-  @inlinable
-  public func formIndex(after i: inout Index)
-
-  @inlinable
-  public func formIndex(before i: inout Index)
-
-  @inlinable
-  public func index(_ i: Index, offsetBy distance: Int) -> Index
-
-  @inlinable
-  public func formIndex(_ i: inout Index, offsetBy distance: Int)
-
-  @inlinable
-  public func formIndex(
-    _ i: inout Index, offsetBy distance: Int, limitedBy limit: Index
+```swift
+extension UTF8Span {
+  /// Whether `self` is equivalent to `other` under Unicode Canonical
+  /// Equivalance.
+  public func isCanonicallyEquivalent(
+    to other: UTF8Span
   ) -> Bool
 
-  @inlinable
-  public subscript(position: Index) -> Element { borrowing _read }
+  /// Whether `self` orders less than `other` under Unicode Canonical 
+  /// Equivalance using normalized code-unit order (in NFC).
+  public func isCanonicallyLessThan(
+    _ other: UTF8Span
+  ) -> Bool
+}
+```
 
-  @inlinable
-  public subscript(unchecked position: Index) -> Element { 
-    borrowing _read
-  }
+#### Extracting sub-spans
 
-  @inlinable
-  public subscript(bounds: Range<Index>) -> Self { get }
+Similarly to `Span`, we support subscripting and extracting sub-spans. Since a `UTF8Span` is always validly-encoded UTF-8, extracting must happen along Unicode scalar boundaries.
 
-  @inlinable
-  public subscript(unchecked bounds: Range<Index>) -> Self {
-    borrowing get
-  }
+```swift
+extension UTF8Span {
+  /// Constructs a new `UTF8Span` span over the bytes within the supplied
+  /// range of positions within this span.
+  ///
+  /// `bounds` must be scalar aligned.
+  ///
+  /// The returned span's first item is always at offset 0; unlike buffer
+  /// slices, extracted spans do not generally share their indices with the
+  /// span from which they are extracted.
+  ///
+  /// - Parameter bounds: A valid range of positions. Every position in
+  ///     this range must be within the bounds of this `Span`.
+  ///
+  /// - Returns: A `UTF8Span` over the bytes within `bounds`.
+  @_alwaysEmitIntoClient
+  public func extracting(_ bounds: some RangeExpression<Int>) -> Self
+
+  /// Constructs a new `UTF8Span` span over the bytes within the supplied
+  /// range of positions within this span.
+  ///
+  /// `bounds` must be scalar aligned.
+  ///
+  /// This function does not validate that `bounds` is within the span's
+  /// bounds; this is an unsafe operation.
+  ///
+  /// The returned span's first item is always at offset 0; unlike buffer
+  /// slices, extracted spans do not generally share their indices with the
+  /// span from which they are extracted.
+  ///
+  /// - Parameter bounds: A valid range of positions. Every position in
+  ///     this range must be within the bounds of this `Span`.
+  ///
+  /// - Returns: A `UTF8Span` over the bytes within `bounds`.
+  @_alwaysEmitIntoClient
+  public func extracting(
+    unchecked bounds: some RangeExpression<Int>
+  ) -> Self
+
+  /// Constructs a new `UTF8Span` span over the bytes within the supplied
+  /// range of positions within this span.
+  ///
+  /// This function does not validate that `bounds` is within the span's
+  /// bounds; this is an unsafe operation.
+  ///
+  /// This function does not validate that `bounds` is within the span's
+  /// bounds; this is an unsafe operation.
+  ///
+  /// The returned span's first item is always at offset 0; unlike buffer
+  /// slices, extracted spans do not generally share their indices with the
+  /// span from which they are extracted.
+  ///
+  /// - Parameter bounds: A valid range of positions. Every position in
+  ///     this range must be within the bounds of this `Span`.
+  ///
+  /// - Returns: A `UTF8Span` over the bytes within `bounds`.
+  @_alwaysEmitIntoClient
+  public func extracting(
+    uncheckedAssumingAligned bounds: some RangeExpression<Int>
+  ) -> Self
+}
+
+```
+
+#### Misc.
+
+```swift
+extension UTF8Span {
+  @_alwaysEmitIntoClient
+  public var isEmpty: Bool { get }
 
   @_alwaysEmitIntoClient
-  public subscript(bounds: some RangeExpression<Index>) -> Self {
-    borrowing get
-  }
+  public var storage: Span<UInt8> { get }
 
+  /// Whether `i` is in bounds
   @_alwaysEmitIntoClient
-  public subscript(
-    unchecked bounds: some RangeExpression<Index>
-  ) -> Self {
-    borrowing get
+  public func boundsCheck(_ i: Int) -> Bool {
+    i >= 0 && i < count
   }
 
+  /// Whether `bounds` is in bounds
   @_alwaysEmitIntoClient
-  public subscript(x: UnboundedRange) -> Self {
-    borrowing get
+  public func boundsCheck(_ bounds: Range<Int>) -> Bool
+
+  /// Calls a closure with a pointer to the viewed contiguous storage.
+  ///
+  /// The buffer pointer passed as an argument to `body` is valid only
+  /// during the execution of `withUnsafeBufferPointer(_:)`.
+  /// Do not store or return the pointer for later use.
+  ///
+  /// - Parameter body: A closure with an `UnsafeBufferPointer` parameter
+  ///   that points to the viewed contiguous storage. If `body` has
+  ///   a return value, that value is also used as the return value
+  ///   for the `withUnsafeBufferPointer(_:)` method. The closure's
+  ///   parameter is valid only for the duration of its execution.
+  /// - Returns: The return value of the `body` closure parameter.
+  @_alwaysEmitIntoClient
+  borrowing public func withUnsafeBufferPointer<
+    E: Error, Result: ~Copyable & ~Escapable
+  >(
+    _ body: (_ buffer: borrowing UnsafeBufferPointer<UInt8>) throws(E) -> Result
+  ) throws(E) -> dependsOn(self) Result {
+    try body(unsafeBaseAddress._ubp(0..<count))
   }
-
-  @inlinable
-  public func distance(from start: Index, to end: Index) -> Int
-
-  @inlinable
-  public func elementsEqual(_ other: Self) -> Bool
-
-  @inlinable
-  public func elementsEqual(_ other: some Sequence<Element>) -> Bool
 }
 ```
 
 ### Queries
 
+`UTF8Span` checks at construction time and remembers whether its contents are all ASCII. Additional checks can be requested and remembered.
+
 ```swift
 extension UTF8Span {
   /// Returns whether the validated contents were all-ASCII. This is checked at
   /// initialization time and remembered.
-  @inlinable
+  @inlinable @inline(__always)
   public var isASCII: Bool { get }
 
-  /// Whether `i` is on a boundary between Unicode scalar values
-  @inlinable
-  public func isScalarAligned(_ i: UTF8Span.Index) -> Bool
+  /// Returns whether the contents are known to be NFC. This is not
+  /// always checked at initialization time and is set by `checkForNFC`.
+  @inlinable @inline(__always)
+  public var isKnownNFC: Bool { get }
 
-  /// Whether `i` is on a boundary between `Character`s, i.e. extended grapheme clusters.
-  @inlinable
-  public func isCharacterAligned(_ i: UTF8Span.Index) -> Bool
+  /// Do a scan checking for whether the contents are in Normal Form C.
+  /// When the contents are in NFC, canonical equivalence checks are much
+  /// faster.
+  ///
+  /// `quickCheck` will check for a subset of NFC contents using the 
+  /// NFCQuickCheck algorithm, which is faster than the full normalization
+  /// algorithm. However, it cannot detect all NFC contents.
+  ///
+  /// Updates the `isKnownNFC` bit.
+  public mutating func checkForNFC(
+    quickCheck: Bool
+  ) -> Bool
 
-  /// Whether `self` is equivalent to `other` under Unicode Canonical Equivalance
-  public func isCanonicallyEquivalent(to other: UTF8Span) -> Bool
+  /// Returns whether every `Character` (i.e. grapheme cluster)
+  /// is known to be comprised of a single `Unicode.Scalar`.
+  ///
+  /// This is not always checked at initialization time. It is set by
+  /// `checkForSingleScalarCharacters`.
+  @inlinable @inline(__always)
+  public var isKnownSingleScalarCharacters: Bool { get }
 
-  /// Whether `self` orders less than `other` under Unicode Canonical Equivalance
-  /// using normalized code-unit order
-  public func isCanonicallyLessThan(_ other: UTF8Span) -> Bool
+  /// Do a scan, checking whether every `Character` (i.e. grapheme cluster)
+  /// is comprised of only a single `Unicode.Scalar`. When a span contains
+  /// only single-scalar characters, character operations are much faster.
+  ///
+  /// `quickCheck` will check for a subset of single-scalar character contents
+  /// using a faster algorithm than the full grapheme breaking algorithm.
+  /// However, it cannot detect all single-scalar `Character` contents.
+  ///
+  /// Updates the `isKnownSingleScalarCharacters` bit.
+  public mutating func checkForSingleScalarCharacters(
+    quickCheck: Bool
+  ) -> Bool
 }
 ```
 
-### Additions to `String` and `RawSpan`
-
-We extend `String` with the ability to access its backing `UTF8Span`:
+### Spans from strings
 
 ```swift
 extension String {
-  // TODO: note that a copy may happen if `String` is not native...
-  public var utf8Span: UTF8Span {
-    // TODO: how to do this well, considering we also have small 
-    //       strings
-  }
+  /// ... note that a copy may happen if `String` is not native...
+  public var utf8Span: UTF8Span { _read }
 }
 extension Substring {
-  // TODO: needs scalar alignment (check Substring's invariants)
-  // TODO: note that a copy may happen if `String` is not native...
-  public var utf8Span: UTF8Span {
-    // TODO: how to do this well, considering we also have small 
-    //       strings
-  }
+  // ... note that a copy may happen if `Substring` is not native...
+  public var utf8Span: UTF8Span { _read }
 }
 ```
 
-Additionally, we extend `RawSpan`'s byte parsing support with helpers for parsing validly-encoded UTF-8.
 
-```swift
-extension RawSpan {
-  public func parseUTF8(
-    _ position: inout Index, length: Int
-  ) throws -> UTF8Span
-
-  public func parseNullTermiantedUTF8(
-    _ position: inout Index
-  ) throws -> UTF8Span
-}
-
-extension RawSpan.Cursor {
-  public mutating func parseUTF8(length: Int) throws -> UTF8Span
-
-  public mutating func parseNullTermiantedUTF8() throws -> UTF8Span
-}
-```
 
 ## Source compatibility
 
@@ -640,14 +886,32 @@ The additions described in this proposal require a new version of the standard l
 
 ## Future directions
 
-
 ### More alignments
 
 Future API could include whether an index is "word aligned" (either [simple](https://www.unicode.org/reports/tr18/#Simple_Word_Boundaries) or [default](https://www.unicode.org/reports/tr18/#Default_Word_Boundaries)), "line aligned", etc.
 
 ### Normalization
 
-Future API could include checks for whether the content is in a normal form. These could take the form of thorough checks, quick checks, and even mutating check-and-update-flag checks.
+Future API could include checks for whether the content is in a particular normal form (not just NFC).
+
+### UnicodeScalarView and CharacterView
+
+Like `Span`, we are deferring adding any collection-like types to non-escapable `UTF8Span`. Future work includes adding view types and corresponding iterators.   
+
+For an example implementation of those see **TODO**: link to test in repo
+
+### Returning all the encoding errors
+
+Future work includes returning all the encoding errors found in a given input.
+
+```swift
+extension UTF8 {
+  public static func checkAllErrors(
+    _ s: some Sequence<UInt8>
+  ) -> some Sequence<UTF8.EncodingError>
+```
+
+See **TODO**: link to example implementation
 
 ### Transcoded views, normalized views, case-folded views, etc
 
@@ -657,7 +921,7 @@ For example, transcoded views can be generalized:
 
 ```swift
 extension UTF8Span {
-  /// A view off the span's contents as a bidirectional collection of 
+  /// A view of the span's contents as a bidirectional collection of 
   /// transcoded `Encoding.CodeUnit`s.
   @frozen
   public struct TranscodedView<Encoding: _UnicodeEncoding> {
@@ -671,8 +935,6 @@ extension UTF8Span {
 }
 ```
 
-Note: UTF-16 has such historical significance that, even with a fully-generic transcoded view, we'd still want a dedicated, specialized type for UTF-16.
-
 We could similarly provide lazily-normalized views of code units or scalars under NFC or NFD (which the stdlib already distributes data tables for), possibly generic via a protocol for 3rd party normal forms.
 
 Finally, case-folded functionality can be accessed in today's Swift via [scalar properties](https://developer.apple.com/documentation/swift/unicode/scalar/properties-swift.struct), but we could provide convenience collections ourselves as well.
@@ -680,7 +942,7 @@ Finally, case-folded functionality can be accessed in today's Swift via [scalar 
 
 ### Regex or regex-like support
 
-Future API additions would be to support `Regex`es on such spans. 
+Future API additions would be to support `Regex`es on `UTF8Span`. We'd expose grapheme-level semantics, scalar-level semantics, and introduce byte-level semantics.
 
 Another future direction could be to add many routines corresponding to the underlying operations performed by the regex engine, such as:
 
@@ -704,10 +966,6 @@ extension UTF8Span.CharacterView {
 which would be useful for parser-combinator libraries who wish to expose `String`'s model of Unicode by using the stdlib's accelerated implementation.
 
 
-### Index rounding operations
-
-Unlike String, `UTF8Span`'s view's `Index` types are distinct, which avoids a [mess of problems](https://forums.swift.org/t/string-index-unification-vs-bidirectionalcollection-requirements/55946). Interesting additions to both `UTF8Span` and `String` would be explicit index-rounding for a desired behavior.
-
 ### Canonical Spaceships
 
 Should a `ComparisonResult` (or [spaceship](https://forums.swift.org/t/pitch-comparison-reform/5662)) be added to Swift, we could support that operation under canonical equivalence in a single pass rather than subsequent calls to `isCanonicallyEquivalent(to:)` and `isCanonicallyLessThan(_:)`.
@@ -718,39 +976,63 @@ Should a `ComparisonResult` (or [spaceship](https://forums.swift.org/t/pitch-com
 For the purposes of this pitch, we're not looking to expand the scope of functionality beyond what the stdlib already does in support of `String`'s API. Other functionality can be considered future work.
 
 
+### Exposing `String`'s storage class
+
+String's internal storage class is null-terminated valid UTF-8 (by substituting replacement characters) and implements range-replaceable operations along scalar boundaries. We could consider exposing the storage class itself, which might be useful for embedded platforms that don't have `String`.
+
+### Yield UTF8Spans in byte parsers
+
+Span's proposal mentions a future direction of byte parsing helpers on a `Cursor` or `Iterator` type (**TODO**: link to span proposal section). We could extend these types (or analogous types on `Span<UInt>`) with UTF-8 parsing code:
+
+```swift
+extension RawSpan.Cursor {
+  public mutating func parseUTF8(length: Int) throws -> UTF8Span
+
+  public mutating func parseNullTermiantedUTF8() throws -> UTF8Span
+}
+```
+
+
+
 ## Alternatives considered
 
+### Invalid start / end of input UTF-8 encoding errors
 
+Earlier prototypes had `.invalidStartOfInput` and `.invalidEndOfInput` UTF8 validation errors to communicate that the input was perhaps incomplete or not slices along scalar boundaries. In this scenario, `.invalidStartOfInput` is equivalent to `.unexpectedContinuation` with the range's lower bound equal to 0 and `.invalidEndOfInput` is equivalent to `.truncatedScalar` with the range's upper bound equal to `count`.
 
-### Use the same Index type across views
-
-
-
-
-### Deprecate `String.withUTF8`
-
-... mutating... 
-
-### Alternate places or representations for UTF-8 `EncodingError`s
-
-**TODO**: Should `EncodingError.range` be a range of span indices instead, and we only have a span-based init? Should it be generic over the index type? Should it be inside of `Unicode.UTF8` instead?
-
-
-
-- put it on `UTF8.EncodingError`
-- make it generic over index type 
-  - (but doesn't necessarily make more sense for null-terminated UTF-8 pointer)
-
-
-
+This was rejected so as to not have two ways to encode the same error. There is no loss of information and `.unexpectedContinuation`/`.truncatedScalar` with ranges are more semantically precise.
 
 ### An unsafe UTF8 Buffer Pointer type
 
-An [earlier pitch](https://forums.swift.org/t/pitch-utf-8-processing-over-unsafe-contiguous-bytes/69715) proposed an unsafe version of `UTF8Span`. 
+An [earlier pitch](https://forums.swift.org/t/pitch-utf-8-processing-over-unsafe-contiguous-bytes/69715) proposed an unsafe version of `UTF8Span`. Now that we have `~Escapable`, a memory-safe `UTF8Span` is better.
 
-...
+### Other names for basic operations
+
+An alternative name for `nextScalarStart(_:)` and `previousScalarStart(_:)` could be something like `scalarEnd(startingAt:)` and `scalarStart(endingAt: i)`. Similarly, `decodeNextScalar(_:)` and `decodePreviousScalar(_:)` could be `decodeScalar(startingAt:)` and `decodeScalar(endingAt:)`. These names are similar to `index(after:)` and `index(before:)`.
+
+However, in practice this buries the direction deeper into the argument label and is more confusing than the `index(before/after:)` analogues. This is especially true when the argument label contains `unchecked` or `uncheckedAssumingAligned`.
+
+That being said, these names are definitely bikesheddable and we'd like suggestions from the community.
+
+
+### Other bounds or alignment checked formulations
+
+For many operations that take an index that needs to be appropriately aligned, we propose `foo(_:)`, `foo(unchecked:)`, and `foo(uncheckedAssumingAligned:)`. 
+
+`foo(_:)` and `foo(unchecked:)` have analogues in `Span` and `foo(uncheckedAssumingAligned:)` is the lowest level interface that a type such as `Iterator` would call (since it maintains index validity and alignment as an invariant).
+
+We could additionally have a `foo(assumingAligned:)` overload that does bounds checking, but it's unclear what the use case would be.
+
+Another alternative is to only have a variant that skips both bounds and alignment checks and call it `foo(unchecked:)`. However, this use of `unchecked:` is far more nuanced than `Span`'s and it's not the case that any `i` in `0..<count` would be valid.
+
+We could also only offer `foo(_:)` and `foo(uncheckedAssumingAligned:)`. Unaligned API such as `isScalarAligned(_:)` and `isScalarAligned(unchecked:)` would keep their names.
+
+
 
 ## Acknowledgments
 
 Karoy Lorentey, Karl, Geordie_J, and fclout, contributed to this proposal with their clarifying questions and discussions.
+
+
+
 
