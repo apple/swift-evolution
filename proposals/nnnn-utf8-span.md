@@ -5,7 +5,7 @@
 * Review Manager: TBD
 * Status: **Awaiting implementation**
 * Bug: rdar://48132971, rdar://96837923
-* Implementation: (pending)
+* Implementation: [Prototype](https://github.com/apple/swift-collections/pull/394)
 * Upcoming Feature Flag: (pending)
 * Review: ([pitch 1](https://forums.swift.org/t/pitch-utf-8-processing-over-unsafe-contiguous-bytes/69715))
 
