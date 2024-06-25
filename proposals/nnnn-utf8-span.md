@@ -12,7 +12,7 @@
 
 ## Introduction
 
-We introduce `UTF8Span` for efficient and safe Unicode processing over contiguous storage. `UTF8Span` is a memory safe non-escapable type similar to `Span` (**TODO**: link span proposal).
+We introduce `UTF8Span` for efficient and safe Unicode processing over contiguous storage. `UTF8Span` is a memory safe non-escapable type [similar to `Span`](https://github.com/swiftlang/swift-evolution/pull/2307).
 
 Native `String`s are stored as validly-encoded UTF-8 bytes in an internal contiguous memory buffer. The standard library implements `String`'s API as internal methods which operate on top of this buffer, taking advantage of the validly-encoded invariant and specialized Unicode knowledge. We propose making this UTF-8 buffer and its methods public as API for more advanced libraries and developers.
 
@@ -23,9 +23,6 @@ Currently, if a developer wants to do `String`-like processing over UTF-8 bytes,
 For example, if these bytes were part of a data structure, the developer would need to decide to either cache such a new `String` instance or recreate it on the fly. Caching more than doubles the size and adds caching complexity. Recreating it on the fly adds a linear time factor and class instance allocation/deallocation and potentially reference counting.
 
 Furthermore, `String` may not be available on all embedded platforms due to the fact that it's conformance to `Comparable` and `Collection` depend on data tables bundled with the stdlib. `UTF8Span` is a more appropriate type for these platforms, and only some explicit API make use of data tables.
-
-**TODO** annotate those API as unavailable on embedded
-
 
 ### UTF-8 validity and efficiency
 
@@ -58,7 +55,7 @@ public struct UTF8Span: Copyable, ~Escapable {
    ║ ASCII ║ NFC ║ SSC ║ reserved ║ count ║
    ╚═══════╩═════╩═════╩══════════╩═══════╝
 
-   ASCII means the contents are all-ASCII (<0x7F). 
+   ASCII means the contents are all-ASCII (<0x7F).
    NFC means contents are in normal form C for fast comparisons.
    SSC means single-scalar Characters (i.e. grapheme clusters): every
      `Character` holds only a single `Unicode.Scalar`.
@@ -75,12 +72,6 @@ public struct UTF8Span: Copyable, ~Escapable {
 }
 
 ```
-
-**TODO**: dependsOn(owner) or omit?
-
-**TODO**: Should we have null-termination support? A null-terminated UTF8Span has a NUL byte after its contents and contains no interior NULs. How would we ensure the NUL byte is exclusively borrowed by us?
-
-**TODO**: Should we track contains-newlines or only-newline-terminated? That would speed up Regex `.*` matching considerably.
 
 ### Creation and validation
 
@@ -232,10 +223,12 @@ extension UTF8.EncodingError {
   }
 }
 
+@_unavailableInEmbedded
 extension UTF8.EncodingError.Kind: CustomStringConvertible {
   public var description: String { get }
 }
 
+@_unavailableInEmbedded
 extension UTF8.EncodingError: CustomStringConvertible {
   public var description: String { get }
 }
@@ -246,8 +239,6 @@ extension UTF8Span {
   ) throws(EncodingError) -> dependsOn(codeUnits) Self
 }
 ```
-
-**TODO**: null-terminated strings where we borrow and remember the terminator (and ensure there's no interior nulls)?
 
 ### Basic operations
 
@@ -354,7 +345,7 @@ extension UTF8Span {
     _ i: Int
   ) -> (Unicode.Scalar, nextScalarStart: Int)
 
-  /// Decode the `Unicode.Scalar` starting at `i`. Return it and the start of 
+  /// Decode the `Unicode.Scalar` starting at `i`. Return it and the start of
   /// the next scalar.
   ///
   /// `i` must be scalar-aligned.
@@ -425,6 +416,7 @@ extension UTF8Span {
 #### Core Character API
 
 ```swift
+@_unavailableInEmbedded
 extension UTF8Span {
   /// Whether `i` is on a boundary between `Character`s (i.e. grapheme
   /// clusters).
@@ -614,6 +606,7 @@ extension UTF8Span {
 #### Derived Character operations
 
 ```swift
+@_unavailableInEmbedded
 extension UTF8Span {
   /// Find the nearest `Character` (i.e. grapheme cluster)-aligned position
   /// that is `<= i`.
@@ -664,6 +657,7 @@ extension UTF8Span {
   ) -> Bool
 
   /// Whether this span has the same `Character`s as `other`.
+  @_unavailableInEmbedded
   @_alwaysEmitIntoClient
   public func charactersEqual(
     to other: some Sequence<Character>
@@ -671,8 +665,6 @@ extension UTF8Span {
 
 }
 ```
-
-**TODO**: lexicographically less than? `std::mismatch`? others?
 
 #### Canonical equivalence and ordering
 
@@ -682,12 +674,14 @@ extension UTF8Span {
 extension UTF8Span {
   /// Whether `self` is equivalent to `other` under Unicode Canonical
   /// Equivalance.
+  @_unavailableInEmbedded
   public func isCanonicallyEquivalent(
     to other: UTF8Span
   ) -> Bool
 
-  /// Whether `self` orders less than `other` under Unicode Canonical 
+  /// Whether `self` orders less than `other` under Unicode Canonical
   /// Equivalance using normalized code-unit order (in NFC).
+  @_unavailableInEmbedded
   public func isCanonicallyLessThan(
     _ other: UTF8Span
   ) -> Bool
@@ -819,17 +813,19 @@ extension UTF8Span {
   /// Returns whether the contents are known to be NFC. This is not
   /// always checked at initialization time and is set by `checkForNFC`.
   @inlinable @inline(__always)
+  @_unavailableInEmbedded
   public var isKnownNFC: Bool { get }
 
   /// Do a scan checking for whether the contents are in Normal Form C.
   /// When the contents are in NFC, canonical equivalence checks are much
   /// faster.
   ///
-  /// `quickCheck` will check for a subset of NFC contents using the 
+  /// `quickCheck` will check for a subset of NFC contents using the
   /// NFCQuickCheck algorithm, which is faster than the full normalization
   /// algorithm. However, it cannot detect all NFC contents.
   ///
   /// Updates the `isKnownNFC` bit.
+  @_unavailableInEmbedded
   public mutating func checkForNFC(
     quickCheck: Bool
   ) -> Bool
@@ -839,6 +835,7 @@ extension UTF8Span {
   ///
   /// This is not always checked at initialization time. It is set by
   /// `checkForSingleScalarCharacters`.
+  @_unavailableInEmbedded
   @inlinable @inline(__always)
   public var isKnownSingleScalarCharacters: Bool { get }
 
@@ -851,6 +848,7 @@ extension UTF8Span {
   /// However, it cannot detect all single-scalar `Character` contents.
   ///
   /// Updates the `isKnownSingleScalarCharacters` bit.
+  @_unavailableInEmbedded
   public mutating func checkForSingleScalarCharacters(
     quickCheck: Bool
   ) -> Bool
@@ -860,10 +858,13 @@ extension UTF8Span {
 ### Spans from strings
 
 ```swift
+@_unavailableInEmbedded
 extension String {
   /// ... note that a copy may happen if `String` is not native...
   public var utf8Span: UTF8Span { _read }
 }
+
+@_unavailableInEmbedded
 extension Substring {
   // ... note that a copy may happen if `Substring` is not native...
   public var utf8Span: UTF8Span { _read }
@@ -896,11 +897,19 @@ Future API could include checks for whether the content is in a particular norma
 
 ### UnicodeScalarView and CharacterView
 
-Like `Span`, we are deferring adding any collection-like types to non-escapable `UTF8Span`. Future work includes adding view types and corresponding iterators.   
+Like `Span`, we are deferring adding any collection-like types to non-escapable `UTF8Span`. Future work includes adding view types and corresponding iterators.
 
-For an example implementation of those see **TODO**: link to test in repo
+For an example implementation of those see [the `UTFSpanViews.swift` test file](https://github.com/apple/swift-collections/pull/394).
 
-### Returning all the encoding errors
+### More Collectiony algorithms
+
+We propose equality checks (e.g. `scalarsEqual`), as those are incredibly common and useful operations. We have (tentatively) deferred other algorithms until non-escapable collections are figured out.
+
+However, we can add select high-value algorithms if motivated by the community. We'd want to
+
+
+
+### More validation API
 
 Future work includes returning all the encoding errors found in a given input.
 
@@ -911,7 +920,7 @@ extension UTF8 {
   ) -> some Sequence<UTF8.EncodingError>
 ```
 
-See **TODO**: link to example implementation
+See [`_checkAllErrors` in `UTF8EncodingError.swift`](https://github.com/apple/swift-collections/pull/394).
 
 ### Transcoded views, normalized views, case-folded views, etc
 
@@ -921,7 +930,7 @@ For example, transcoded views can be generalized:
 
 ```swift
 extension UTF8Span {
-  /// A view of the span's contents as a bidirectional collection of 
+  /// A view of the span's contents as a bidirectional collection of
   /// transcoded `Encoding.CodeUnit`s.
   @frozen
   public struct TranscodedView<Encoding: _UnicodeEncoding> {
@@ -951,14 +960,14 @@ extension UTF8Span.CharacterView {
   func matchCharacterClass(
     _: CharacterClass,
     startingAt: Index,
-    limitedBy: Index    
+    limitedBy: Index
   ) throws -> Index?
 
   func matchQuantifiedCharacterClass(
     _: CharacterClass,
     _: QuantificationDescription,
     startingAt: Index,
-    limitedBy: Index    
+    limitedBy: Index
   ) throws -> Index?
 }
 ```
@@ -982,7 +991,7 @@ String's internal storage class is null-terminated valid UTF-8 (by substituting 
 
 ### Yield UTF8Spans in byte parsers
 
-Span's proposal mentions a future direction of byte parsing helpers on a `Cursor` or `Iterator` type (**TODO**: link to span proposal section). We could extend these types (or analogous types on `Span<UInt>`) with UTF-8 parsing code:
+Span's proposal mentions a future direction of byte parsing helpers on a `Cursor` or `Iterator` type on `RawSpan`. We could extend these types (or analogous types on `Span<UInt>`) with UTF-8 parsing code:
 
 ```swift
 extension RawSpan.Cursor {
@@ -992,6 +1001,9 @@ extension RawSpan.Cursor {
 }
 ```
 
+### Track other bits
+
+Future work include tracking whether the contents are NULL-terminated (useful for C bridging), whether the contents contain any newlines or only a single newline at the end (useful for accelerating Regex `.`), etc.
 
 
 ## Alternatives considered
@@ -1017,7 +1029,7 @@ That being said, these names are definitely bikesheddable and we'd like suggesti
 
 ### Other bounds or alignment checked formulations
 
-For many operations that take an index that needs to be appropriately aligned, we propose `foo(_:)`, `foo(unchecked:)`, and `foo(uncheckedAssumingAligned:)`. 
+For many operations that take an index that needs to be appropriately aligned, we propose `foo(_:)`, `foo(unchecked:)`, and `foo(uncheckedAssumingAligned:)`.
 
 `foo(_:)` and `foo(unchecked:)` have analogues in `Span` and `foo(uncheckedAssumingAligned:)` is the lowest level interface that a type such as `Iterator` would call (since it maintains index validity and alignment as an invariant).
 
@@ -1026,6 +1038,7 @@ We could additionally have a `foo(assumingAligned:)` overload that does bounds c
 Another alternative is to only have a variant that skips both bounds and alignment checks and call it `foo(unchecked:)`. However, this use of `unchecked:` is far more nuanced than `Span`'s and it's not the case that any `i` in `0..<count` would be valid.
 
 We could also only offer `foo(_:)` and `foo(uncheckedAssumingAligned:)`. Unaligned API such as `isScalarAligned(_:)` and `isScalarAligned(unchecked:)` would keep their names.
+
 
 
 
