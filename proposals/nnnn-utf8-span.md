@@ -1,4 +1,4 @@
-# Safe Access to Contiguous UTF-8 Storage
+# Safe UTF-8 Processing Over Contiguous Bytes
 
 * Proposal: [SE-NNNN](nnnn-utf8-span.md)
 * Authors: [Michael Ilseman](https://github.com/milseman), [Guillaume Lessard](https://github.com/glessard)
