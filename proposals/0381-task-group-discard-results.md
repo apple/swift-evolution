@@ -5,13 +5,11 @@
 * Review Manager: [Doug Gregor](https://github.com/DougGregor)
 * Status: **Implemented (Swift 5.9)**
 * Implementation: [apple/swift#62361](https://github.com/apple/swift/pull/62361)
-* Decision Notes: [Rationale](https://forums.swift.org/t/accepted-se-0381-discardingtaskgroups/62615)
+* Review: ([pitch](https://forums.swift.org/t/pitch-task-pools/61703)) ([review](https://forums.swift.org/t/se-0381-discardresults-for-taskgroups/62072)) ([acceptance](https://forums.swift.org/t/accepted-se-0381-discardingtaskgroups/62615))
 
 ### Introduction
 
 We propose to introduce a new type of structured concurrency task group:  `Discarding[Throwing]TaskGroup`. This type of group is similar to `TaskGroup` however it discards results of its child tasks immediately. It is specialized for potentially never-ending task groups, such as top-level loops of http or other kinds of rpc servers.
-
-Pitch thread: [Task Pools](https://forums.swift.org/t/pitch-task-pools/61703).
 
 ## Motivation
 

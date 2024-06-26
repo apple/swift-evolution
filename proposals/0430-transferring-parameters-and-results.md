@@ -3,9 +3,11 @@
 * Proposal: [SE-0430](0430-transferring-parameters-and-results.md)
 * Authors: [Michael Gottesman](https://github.com/gottesmm), [Holly Borla](https://github.com/hborla), [John McCall](https://github.com/rjmccall)
 * Review Manager: [Becca Royal-Gordon](https://github.com/beccadax)
-* Status: **Implemented (Swift 6.0)** 
+* Status: **Active Review (June 21 ... 28, 2024)** 
+* Implementation: Implemented in Swift 6.0 except for amendment under review
 * Previous Proposal: [SE-0414: Region-based isolation](/proposals/0414-region-based-isolation.md)
-* Review: ([pitch](https://forums.swift.org/t/pitch-transferring-isolation-regions-of-parameter-and-result-values/70240)) ([first review](https://forums.swift.org/t/se-0430-transferring-isolation-regions-of-parameter-and-result-values/70830)) ([returned for revision](https://forums.swift.org/t/returned-for-revision-se-0430-transferring-isolation-regions-of-parameter-and-result-values/71297)) ([second review](https://forums.swift.org/t/se-0430-second-review-sendable-parameter-and-result-values/71685)) ([acceptance with modifications](https://forums.swift.org/t/accepted-with-modifications-se-0430-second-review-sendable-parameter-and-result-values/71850))
+* Previous Revisions: [1](https://github.com/apple/swift-evolution/blob/87943205551af43682ef50260816f3ff2ef9b7ea/proposals/0430-transferring-parameters-and-results.md) [2](https://github.com/apple/swift-evolution/blob/4dded8ed382b526a5a301c225a1d45018f8d556b/proposals/0430-transferring-parameters-and-results.md)
+* Review: ([pitch](https://forums.swift.org/t/pitch-transferring-isolation-regions-of-parameter-and-result-values/70240)) ([first review](https://forums.swift.org/t/se-0430-transferring-isolation-regions-of-parameter-and-result-values/70830)) ([returned for revision](https://forums.swift.org/t/returned-for-revision-se-0430-transferring-isolation-regions-of-parameter-and-result-values/71297)) ([second review](https://forums.swift.org/t/se-0430-second-review-sendable-parameter-and-result-values/71685)) ([acceptance with modifications](https://forums.swift.org/t/accepted-with-modifications-se-0430-second-review-sendable-parameter-and-result-values/71850)) ([amendment pitch](https://forums.swift.org/t/pitch-revise-se-0430-to-adopt-sending-on-unsafecontinuation/72289)) ([amendment review](https://forums.swift.org/t/amendment-se-0430-sending-parameter-and-result-values/72653))
 
 
 ## Introduction
@@ -370,12 +372,12 @@ struct Y2: P1 {
 }
 ```
 
-### `sending inout` parameters
+### `inout sending` parameters
 
 A `sending` parameter can also be marked as `inout`, meaning that the argument
 value must be in a disconnected region when passed to the function, and the
 parameter value must be in a disconnected region when the function
-returns. Inside the function, the `sending inout` parameter can be merged with
+returns. Inside the function, the `inout sending` parameter can be merged with
 actor-isolated callees or further sent as long as the parameter is
 re-assigned a value in a disconnected region upon function exit.
 
@@ -404,16 +406,14 @@ so there is no way to change the default ownership convention of a
 ### Adoption in the Concurrency library
 
 There are several APIs in the concurrency library that send a parameter across
-isolation boundaries and don't need the full guarnatees of `Sendable`.  These
+isolation boundaries and don't need the full guarantees of `Sendable`.  These
 APIs will instead adopt `sending` parameters:
 
 * `CheckedContinuation.resume(returning:)`
+* `UnsafeContinuation.resume(returning:)`
 * `Async{Throwing}Stream.Continuation.yield(_:)`
 * `Async{Throwing}Stream.Continuation.yield(with:)`
 * The `Task` creation APIs
-
-Note that this list does not include `UnsafeContinuation.resume(returning:)`,
-because `UnsafeContinuation` deliberately opts out of correctness checking.
 
 ## Source compatibility
 
@@ -481,3 +481,66 @@ It was also suggested that perhaps instead of renaming `transferring` to
 authors since it runs into the same problem as `transferring` namely that it is
 suggesting that the value is actively being moved to another isolation domain,
 when we are expressing a latent capability of the value.
+
+### Exclude `UnsafeContinuation`
+
+An earlier version of this proposal excluded
+`UnsafeContinuation.resume(returning:)` from the list of standard library
+APIs that adopt `sending`.  This meant that `UnsafeContinuation` didn't
+require either the return type to be `Sendable` or the return value to be
+`sending`.  Since `UnsafeContinuation` is unconditionally `Sendable`, this
+effectively made it a major hole in sendability checking.
+
+This was an intentional choice.  The reasoning was that `UnsafeContinuation`
+was already an explicitly unsafe type, and so it's not illogical for it
+to also work as an unsafe opt-out from sendability checks.  There are some
+uses of continuations that do need an opt-out like this.  For example, it
+is not uncommon for a continuation to be resumed from a context that's
+isolated to the same actor as the context that called `withUnsafeContinuation`.
+In this situation, the data flow through the continuation is essentially
+internal to the actor.  This means there's no need for any sendability
+restrictions; both `sending` and `Sendable` would be over-conservative.
+
+However, the nature of the unsafety introduced by this exclusion is very
+different from the normal unsafety of an `UnsafeContinuation`.
+Continuations must be resumed exactly once; that's the condition that
+`CheckedContinuation` checks.  If a programmer can prove that
+they will do that to their own satisfaction, they should be able to use
+`UnsafeContinuation` instead of `CheckedContinuation` in full confidence.
+Making `UnsafeContinuation` *also* a potential source of concurrency-safety
+holes is likely to be surprising to programmers.
+
+Conversely, if a programmer needs to opt out of sendability checks but
+is *not* confident about how many times their continuation will be
+resumed --- for example, if it's resumed from an arbitrary callback ---
+forcing them to adopt `UnsafeContinuation` in order to achieve their
+goal is actively undesirable.
+
+Not requiring `sending` in `UnsafeContinuation` also makes the high-level
+interfaces of `UnsafeContinuation` and `CheckedContinuation` inconsistent.
+This means that programmers cannot always easily move from an unsafe to a
+checked continuation.  That is a common need, for example when fixing
+a bug and trying to prove that the unsafe continuation is not implicated.
+
+Swift has generally resisted adding new dimensions of unsafety to unsafe
+types this way.  For example, `UnsafePointer` was originally specified as
+unconditionally `Sendable` in [SE-0302][], but that conformance was
+removed in [SE-0331][], and pointers are now unconditionally
+non-`Sendable`.  The logic in both of those proposals closely parallels
+this one: at first, `UnsafePointer` was seen as an unsafe type that should
+not be burdened with partial safety checks, and then the community
+recognized that this was actually adding a new dimension of unsafety to
+how the type interacted with concurrency.
+
+Finally, there is already a general unsafe opt-out from sendability
+checking: `nonisolated(unsafe)`.  It is better for Swift to encourage
+consistent use of a single unsafe opt-out than to build *ad hoc*
+opt-outs into many different APIs, because it is much easier to find,
+recognize, and audit uses of the former.
+
+For these reasons, `UnsafeContinuation.resume(returning:)` now requires
+its argument to be `sending`, and the result of `withUnsafeContinuation`
+is correspondingly now marked as `sending`.
+
+[SE-0302]: https://github.com/apple/swift-evolution/blob/main/proposals/0302-concurrent-value-and-concurrent-closures.md
+[SE-0331]: https://github.com/apple/swift-evolution/blob/main/proposals/0331-remove-sendable-from-unsafepointer.md

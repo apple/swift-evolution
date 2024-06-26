@@ -5,7 +5,7 @@
 * Review Manager: [John McCall](https://github.com/rjmccall)
 * Status: **Implemented (Swift 6.0)**
 * Upcoming Feature Flag: `GlobalActorIsolatedTypesUsability`
-* Review: ([pitch](https://forums.swift.org/t/pitch-usability-of-global-actor-isolated-types/70799)) ([review](https://forums.swift.org/t/se-0434-usability-of-global-actor-isolated-types/71187))
+* Review: ([pitch](https://forums.swift.org/t/pitch-usability-of-global-actor-isolated-types/70799)) ([review](https://forums.swift.org/t/se-0434-usability-of-global-actor-isolated-types/71187)) ([acceptance](https://forums.swift.org/t/accepted-se-0434-usability-of-global-actor-isolated-types/72743))
 
 ## Introduction
 
@@ -247,6 +247,10 @@ An alternative choice would be to introduce an upcoming feature flag that's enab
 ## Implications on adoption
 
 The existing adoption implications of `@Sendable` and global actor isolation adoption apply when making use of the rules in this proposal. For example, `@Sendable` and `@MainActor` can be staged into existing APIs using `@preconcurrency`. See [SE-0337: Incremental migration to concurrency checking](/proposals/0337-support-incremental-migration-to-concurrency-checking.md) for more information.
+
+## Alternatives considered
+
+Instead of implicitly suppressing a `Sendable` conformance on isolated subclasses of non-`Sendable`, non-isolated superclasses, the compiler could instead require an explicit opt-out, such as `~Sendable` in the conformance clause. This would make it obvious that the subclass does not have a `Sendable` conformance. However, the programmer does not need to understand that the class does not conform to `Sendable` until they use the type in a way that requires `Sendable`, and the reason for the class not conforming to `Sendable` can be explained with notes attached to the diagnostic. It is also not always the case that global actor isolation implies `Sendable`. Notably, `@MainActor` on a protocol does not imply that the protocol refines `Sendable`, so requiring more boilerplate for programmers in the isolated subclass case does not leave the programmer with a simple rule to remember about when `@MainActor` implies a conformance to `Sendable`.
 
 ## Acknowledgments
 
