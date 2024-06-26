@@ -905,9 +905,7 @@ For an example implementation of those see [the `UTFSpanViews.swift` test file](
 
 We propose equality checks (e.g. `scalarsEqual`), as those are incredibly common and useful operations. We have (tentatively) deferred other algorithms until non-escapable collections are figured out.
 
-However, we can add select high-value algorithms if motivated by the community. We'd want to
-
-
+However, we can add select high-value algorithms if motivated by the community.
 
 ### More validation API
 
@@ -1005,6 +1003,9 @@ extension RawSpan.Cursor {
 
 Future work include tracking whether the contents are NULL-terminated (useful for C bridging), whether the contents contain any newlines or only a single newline at the end (useful for accelerating Regex `.`), etc.
 
+### Putting more API on String
+
+`String` would also benefit from the query API, such as `isKnownNFC` and corresponding scan methods. Because a string may be a lazily-bridged instance of `NSString`, we don't always have the bits available to query or set, but this may become via pending future improvements in bridging.
 
 ## Alternatives considered
 
