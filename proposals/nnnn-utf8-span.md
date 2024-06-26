@@ -1007,6 +1007,10 @@ Future work include tracking whether the contents are NULL-terminated (useful fo
 
 `String` would also benefit from the query API, such as `isKnownNFC` and corresponding scan methods. Because a string may be a lazily-bridged instance of `NSString`, we don't always have the bits available to query or set, but this may become viable pending future improvements in bridging.
 
+### Generalize printing and logging facilities
+
+Many printing and logging protocols and facilities operate in terms of `String`. They could be generalized to work in terms of UTF-8 bytes instead, which is important for embedded.
+
 ## Alternatives considered
 
 ### Invalid start / end of input UTF-8 encoding errors
