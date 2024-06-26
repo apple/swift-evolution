@@ -1005,7 +1005,7 @@ Future work include tracking whether the contents are NULL-terminated (useful fo
 
 ### Putting more API on String
 
-`String` would also benefit from the query API, such as `isKnownNFC` and corresponding scan methods. Because a string may be a lazily-bridged instance of `NSString`, we don't always have the bits available to query or set, but this may become via pending future improvements in bridging.
+`String` would also benefit from the query API, such as `isKnownNFC` and corresponding scan methods. Because a string may be a lazily-bridged instance of `NSString`, we don't always have the bits available to query or set, but this may become viable pending future improvements in bridging.
 
 ## Alternatives considered
 
