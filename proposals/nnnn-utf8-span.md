@@ -673,7 +673,7 @@ extension UTF8Span {
 ```swift
 extension UTF8Span {
   /// Whether `self` is equivalent to `other` under Unicode Canonical
-  /// Equivalance.
+  /// Equivalence.
   @_unavailableInEmbedded
   public func isCanonicallyEquivalent(
     to other: UTF8Span
