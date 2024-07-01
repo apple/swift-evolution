@@ -991,7 +991,7 @@ Span's proposal mentions a future direction of byte parsing helpers on a `Cursor
 extension RawSpan.Cursor {
   public mutating func parseUTF8(length: Int) throws -> UTF8Span
 
-  public mutating func parseNullTermiantedUTF8() throws -> UTF8Span
+  public mutating func parseNullTerminatedUTF8() throws -> UTF8Span
 }
 ```
 
