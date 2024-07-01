@@ -791,9 +791,7 @@ extension UTF8Span {
     E: Error, Result: ~Copyable & ~Escapable
   >(
     _ body: (_ buffer: borrowing UnsafeBufferPointer<UInt8>) throws(E) -> Result
-  ) throws(E) -> dependsOn(self) Result {
-    try body(unsafeBaseAddress._ubp(0..<count))
-  }
+  ) throws(E) -> dependsOn(self) Result
 }
 ```
 
