@@ -680,7 +680,7 @@ extension UTF8Span {
   ) -> Bool
 
   /// Whether `self` orders less than `other` under Unicode Canonical
-  /// Equivalance using normalized code-unit order (in NFC).
+  /// Equivalence using normalized code-unit order (in NFC).
   @_unavailableInEmbedded
   public func isCanonicallyLessThan(
     _ other: UTF8Span
