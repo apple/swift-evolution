@@ -7,7 +7,7 @@
 * Bug: rdar://48132971, rdar://96837923
 * Implementation: [Prototype](https://github.com/apple/swift-collections/pull/394)
 * Upcoming Feature Flag: (pending)
-* Review: ([pitch 1](https://forums.swift.org/t/pitch-utf-8-processing-over-unsafe-contiguous-bytes/69715))
+* Review: ([pitch 1](https://forums.swift.org/t/pitch-utf-8-processing-over-unsafe-contiguous-bytes/69715)) ([pitch 2](https://forums.swift.org/t/pitch-safe-utf-8-processing-over-contiguous-bytes/72742))
 
 
 ## Introduction
