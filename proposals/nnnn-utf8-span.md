@@ -768,9 +768,7 @@ extension UTF8Span {
 
   /// Whether `i` is in bounds
   @_alwaysEmitIntoClient
-  public func boundsCheck(_ i: Int) -> Bool {
-    i >= 0 && i < count
-  }
+  public func boundsCheck(_ i: Int) -> Bool
 
   /// Whether `bounds` is in bounds
   @_alwaysEmitIntoClient
