@@ -4,6 +4,7 @@
 * Author: [Jordan Rose](https://github.com/jrose-apple)
 * Review Manager: [Ted Kremenek](https://github.com/tkremenek)
 * Status: **Implemented (Swift 5.0)**
+* Upcoming Feature Flag: `NonfrozenEnumExhaustivity` (implemented in Swift 6.0 to subsume bespoke compiler flag for Swift 4/4.2 language mode)
 * Implementation: [apple/swift#14945](https://github.com/apple/swift/pull/14945)
 * Previous revision: [1](https://github.com/swiftlang/swift-evolution/blob/a773d07ff4beab8b7855adf0ac56d1e13bb7b44c/proposals/0192-non-exhaustive-enums.md), [2 (informal)](https://github.com/jrose-swiftlang/swift-evolution/blob/57dfa2408fe210ed1d5a1251f331045b988ee2f0/proposals/0192-non-exhaustive-enums.md), [3](https://github.com/swiftlang/swift-evolution/blob/af284b519443d3d985f77cc366005ea908e2af59/proposals/0192-non-exhaustive-enums.md)
 * Pre-review discussion: [Enums and Source Compatibility](https://forums.swift.org/t/enums-and-source-compatibility/6460), with additional [orphaned thread](https://forums.swift.org/t/enums-and-source-compatibility/6651)
@@ -20,6 +21,8 @@ A key note: in this version of the proposal, *nothing changes for user-defined S
 ### Post-acceptance revision
 
 - Since the proposal was accepted months after it was written, the rollout plan turned out to be a little too aggressive. Therefore, in Swift 5 the diagnostic for omitting `@unknown default:` or `@unknown case _:` will only be a warning, and in Swift 4 mode there will be no diagnostic at all. (The previous version of the proposal used an error and a warning, respectively.) Developers are still free to use `@unknown` in Swift 4 mode, in which case the compiler will still produce a warning if all known cases are not handled.
+
+- To complete the rollout of this feature, the warning is [upgraded to an error for the Swift 6 language mode](https://forums.swift.org/t/amendment-se-0192-handling-future-enum-cases/68321)
 
 
 ### Revision at acceptance
