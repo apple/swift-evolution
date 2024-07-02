@@ -5,7 +5,7 @@
 - Review Manager: [Xiaodi Wu](https://github.com/xwu)
 - Status: **Active review (July 1...July 14, 2024)**
 - Implementation: https://github.com/swiftlang/swift/pull/74522# gated behind `-enable-experimental-feature TrailingComma`
-- Review: [pitch](https://forums.swift.org/t/pitch-allow-trailing-comma-in-tuples-arguments-and-if-guard-while-conditions/70170)
+- Review: ([pitch](https://forums.swift.org/t/pitch-allow-trailing-comma-in-tuples-arguments-and-if-guard-while-conditions/70170)), ([review](https://forums.swift.org/t/se-0439-allow-trailing-comma-in-comma-separated-lists/72876))
 
 ## Introduction
 
