@@ -1,4 +1,4 @@
-# Metatype Keypaths
+# Metatype KeyPaths
 
 * Proposal: [SE-0438](0438-metatype-keypath.md)
 * Authors: [Amritpan Kaur](https://github.com/amritpan), [Pavel Yaskevich](https://github.com/xedin)
@@ -9,7 +9,7 @@
 
 ## Introduction
 
-Key path expressions access properties dynamically. They are declared with a concrete root type and one or more key path components that define a path to a resulting value via the type’s properties, subscripts, optional-chaining expressions, forced unwrapped expressions, or self. This proposal expands key path expression access to include static properties of a type, i.e., metatype keypaths.
+KeyPath expressions access properties dynamically. They are declared with a concrete root type and one or more KeyPath components that define a path to a resulting value via the type’s properties, subscripts, optional-chaining expressions, forced unwrapped expressions, or self. This proposal expands KeyPath expression access to include static properties of a type, i.e., metatype KeyPaths.
 
 ## Motivation
 
@@ -17,7 +17,7 @@ Metatype keypaths were briefly explored in the pitch for [SE-0254](https://forum
 
 ## Proposed solution
 
-We propose to allow keypath expressions to define a reference to static properties. The following usage, which currently generates a compiler error, will be allowed as valid Swift code.
+We propose to allow KeyPath expressions to define a reference to static properties. The following usage, which currently generates a compiler error, will be allowed as valid Swift code.
 
 ```swift
 struct Bee {
@@ -31,24 +31,24 @@ let kp = \Bee.Type.name
 
 ### Metatype syntax
 
-Keypath expressions where the first component refers to a static property will include `.Type` on their root types stated in the key path contextual type or in the key path literal. For example:
+KeyPath expressions where the first component refers to a static property will include `.Type` on their root types stated in the KeyPath contextual type or in the KeyPath literal. For example:
 
 ```swift
 struct Bee {
   static let name = "honeybee"
 }
 
-let kpWithContextualType: KeyPath<Bee.Type, String> = \.name // key path contextual root type of Bee.Type
-let kpWithLiteral = \Bee.Type.name // key path literal \Bee.Type
+let kpWithContextualType: KeyPath<Bee.Type, String> = \.name // KeyPath contextual root type of Bee.Type
+let kpWithLiteral = \Bee.Type.name // KeyPath literal \Bee.Type
 ```
 
-Attempting to write the above metatype keypath without including `.Type will trigger an error diagnostic:
+Attempting to write the above metatype KeyPath without including `.Type` will trigger an error diagnostic with a fix-it recommending the addition of `Type` after the root type `Bee`:
 
 ```swift
 let kpWithLiteral = \Bee.name // error: static member 'name' cannot be used on instance of type 'Bee'
 ```
 
-Keypath expressions where the component referencing a static property is not the first component do not require `.Type`:
+KeyPath expressions where the component referencing a static property is not the first component do not require `.Type`:
 ```swift
 struct Species {
   static let isNative = true
@@ -62,7 +62,7 @@ let kpSecondComponentIsStatic = \Wasp.species.isNative
 ```
 ### Access semantics
 
-Immutable static properties will form the read-only keypaths just like immutable instance properties.
+Immutable static properties will form the read-only KeyPaths just like immutable instance properties.
 ```swift
 struct Tip {
   static let isIncluded = True
@@ -72,7 +72,7 @@ struct Tip {
 let kpStaticImmutable: KeyPath<Tip.Type, Bool> = \.isIncluded 
 let kpInstanceImmutable: KeyPath<Tip, Bool> = \.isVoluntary 
 ```
-However, unlike instance members, keypaths to mutable static properties will always conform to `ReferenceWritableKeyPath` because metatypes are reference types.
+However, unlike instance members, KeyPaths to mutable static properties will always conform to `ReferenceWritableKeyPath` because metatypes are reference types.
 ```swift
 struct Tip {
   static var total = 0
@@ -84,7 +84,7 @@ let kpInstanceMutable: WriteableKeyPath<Tip, Int> = \.flatRate
 ```
 ## Effect on source compatibility
 
-This feature breaks source compatibility for key path expressions that reference static properties after subscript overloads. For example, the compiler cannot differentiate between subscript keypath components by return type in the following:
+This feature breaks source compatibility for KeyPath expressions that reference static properties after subscript overloads. For example, the compiler cannot differentiate between subscript KeyPath components by return type in the following:
 
 ```swift
 struct S {
@@ -99,7 +99,7 @@ struct Test {
 let kpViaSubscript = \Test.[42] // fails to typecheck
 ```
 
-This keypath does not specify a contextual type, without which the key path value type is unknown. To form a keypath to the metatype subscript and return an `Int`, we can specify a contextual type with a value type of `S.Type` and chain the metatype keypath: 
+This KeyPath does not specify a contextual type, without which the KeyPath value type is unknown. To form a KeyPath to the metatype subscript and return an `Int`, we can specify a contextual type with a value type of `S.Type` and chain the metatype KeyPath: 
 
 ```swift
 let kpViaSubscript: KeyPath<Test, S.Type> = \Test.[42]
@@ -127,9 +127,9 @@ note: rebuild <Module> to enable the feature
 
 ### Key Paths to Enum cases
 
-Adding language support for read-only key paths to enum cases has been widely discussed on the [Swift Forums](https://forums.swift.org/t/enum-case-key-paths-an-update/68436) but has been left out of this proposal as this merits a separate discussion around [syntax design and implementation concerns](https://forums.swift.org/t/enum-case-keypaths/60899/32).
+Adding language support for read-only KeyPaths to enum cases has been widely discussed on the [Swift Forums](https://forums.swift.org/t/enum-case-key-paths-an-update/68436) but has been left out of this proposal as this merits a separate discussion around [syntax design and implementation concerns](https://forums.swift.org/t/enum-case-keypaths/60899/32).
 
-Since references to enum cases must be metatypes, extending keypath expressions to include references to metatypes will hopefully bring the Swift language closer to adopting keypaths to enum cases in a future pitch.
+Since references to enum cases must be metatypes, extending KeyPath expressions to include references to metatypes will hopefully bring the Swift language closer to adopting KeyPaths to enum cases in a future pitch.
 
 ## Acknowledgments
 
