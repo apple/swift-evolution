@@ -422,37 +422,23 @@ and wrapping the code that is required to run on a specific executor in an `with
 
 Nevertheless, because we understand there may be situations where synchronous code may want to compare task executors, this capability is exposed for advanced use cases.
 
-Another use case may be carrying the same task executor into an un-structured Task -- although this should only be done with **extreme caution**,
-because it breaks structured concurrency lifetime expectations of executors. For example, the following code is correct under structured concurrency's
-default and automatic behavior surrounding task executors:
+### TaskExecutor ownership
 
-```swift
-func computeThings() async {
-  let eventLoop = MyCoolEventLoop()
-  defer { eventLoop.shutdown() }
+Task executors, unlike serial executors, are explicitly owned by tasks as long as they are running on the given task executor.
 
-  let computed = await withTaskExecutorPreference(eventLoop) {
-    async let first = computation(1)
-    async let second = computation(2)
-    return await first + second
-  }
+This is achieved in two ways. The `withTaskExecutorPreference` APIs by their construction as `with...`-style APIs,
+naturally retain and keep alive the task executor for as long as the `with... { ... }` body is executing.
+This also naturally extends to other structured concurrency constructs like `async let` and task groups, which can
+rely on the task executor to remain alive while these constructs are running within such `withTaskExecutorPreference(...) { ... }` closure body.
 
-  return computed // event loop will be shutdown and the executor destroyed(!)
-}
+Unstructured tasks which are started with a task executor preference (e.g. `Task(executorPreference: someTaskExecutor)`),
+take ownership of the executor for as long as the task is running. 
 
-func computation(_ int: Int) -> Int { return int * 2 }
-```
-
-The above code is structurally correct and we guarantee the lifetime of `MyCoolEventLoop` throughout all of its uses 
-by structured concurrency tasks in this snippet.
-
-The following snippet is **not safe**, which is why task executors are not inherited to un-structured tasks:
+In other words, it is safe to rely on a task, structured or not, to keep alive the task executor it may be running on.
+This makes it possible to write code like the following snippet, without having to worry about manually keeping the 
+executor alive until "all tasks which may be executing on it have finished":
 
 ```swift 
-// !!! POTENTIALLY UNSAFE !!! 
-// Do not do this, unless you can guarantee the lifetime of TaskExecutor 
-// exceeds all potential for any task to be running on it (!)
-
 func computeThings() async {
   let eventLoop: any TaskExecutor = MyCoolEventLoop()
   defer { eventLoop.shutdown() }
@@ -466,18 +452,30 @@ func computeThings() async {
   return computed // event loop will be shutdown and the executor destroyed(!)
 }
 
-// DANGEROUS; MUST ENSURE THE EXECUTOR REMAINS ALIVE FOR AS LONG AS ANY TASK MAY BE RUNNING ON IT
 func computation(_ int: Int) -> Int {
   withUnsafeCurrentTask { task in
     let unownedExecutor: UnownedTaskExecutor? = task?.unownedTaskExecutor
-    let eventLoop: MyCoolEventLoop? = EventLoops.find(unownedExecutor)
-    
-    // Dangerous because there is no structured guarantee that eventLoop will be kept alive
-    // long for as long as there is  any of its child tasks and functions running on it
-    Task(executorPreference: eventLoop) { ... }
+    if let eventLoop: MyCoolEventLoop = EventLoops.find(unownedExecutor) {
+      // we need to start an unstructured task for some reason (try to avoid this if possible)
+      // and we have located the `MyCoolEventLoop` in our "cache".
+      //
+      // Since we have a real MyCoolEventLoop reference, this is safe to forward
+      // to the unstructured task which will retain it.
+      Task(executorPreference: eventLoop) {
+        async let something = ... // inherits the executor preference 
+      }
+    } else {
+      // otherwise start an unstructured task without task executor preference
+      Task { ... } 
+    }
   }
 }
 ```
+
+Same as with `SerialExecutor`'s `UnownedSerialExecutor` type, the `UnownedTaskExecutor` does _not_ retain the executor,
+so you have to be extra careful when relying on unowned task executor references for any kind of operations. If you
+were to write some form of "lookup" function, which takes an unowned executor and returns an `any TaskExecutor`, 
+please make sure that the returned references are alive (i.e. by keeping them alive in the "cache" using strong references).
 
 ## Combining `SerialExecutor` and `TaskExecutor`
 
@@ -786,6 +784,7 @@ We considered if not introducing this feature could be beneficial and forcing de
 
 
 ## Revisions
+
 - 1.6
   - introduce the global `var defaultConcurrentExecutor: any TaskExecutor` we we can express a task specifically wanting to run on the default global concurrency pool.
 - 1.5
