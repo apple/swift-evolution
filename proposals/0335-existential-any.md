@@ -3,7 +3,7 @@
 * Proposal: [SE-0335](0335-existential-any.md)
 * Authors: [Holly Borla](https://github.com/hborla)
 * Review Manager: [Doug Gregor](https://github.com/DougGregor)
-* Status: **Implemented (Swift 5.6)**
+* Status: **Implemented (Swift 7.0)**
 * Upcoming Feature Flag: `ExistentialAny` (implemented in Swift 5.8)
 * Implementation: [apple/swift#40282](https://github.com/apple/swift/pull/40282)
 * Decision Notes: [Acceptance](https://forums.swift.org/t/accepted-with-modifications-se-0335-introduce-existential-any/54504)

@@ -3,9 +3,8 @@
 * Proposal: [SE-0409](0409-access-level-on-imports.md)
 * Author: [Alexis Laferrière](https://github.com/xymus)
 * Review Manager: [Frederick Kellison-Linn](https://github.com/Jumhyn)
-* Status: **Implemented (Swift 6.0)**
-* Implementation: On main and release/5.9 gated behind the frontend flag `-enable-experimental-feature AccessLevelOnImport`
-* Upcoming Feature Flag: `InternalImportsByDefault`
+* Status: **Implemented (Swift 7.0)**
+* Upcoming Feature Flag: `InternalImportsByDefault` (implemented in Swift 5.9 gated behind the frontend flag `-enable-experimental-feature AccessLevelOnImport`)
 * Review: ([pitch](https://forums.swift.org/t/pitch-access-level-on-import-statements/66657)) ([review](https://forums.swift.org/t/se-0409-access-level-modifiers-on-import-declarations/67290)) ([acceptance](https://forums.swift.org/t/accepted-with-modifications-se-0409-access-level-modifiers-on-import-declarations/67666))
 
 ## Introduction
