@@ -379,7 +379,7 @@ Here's `swift-sdk.json` file for the `ubuntu_jammy` artifact previously introduc
 
 Since not all platforms can support self-contained Swift SDK bundles, users will be able to provide their own
 additional paths on the filesystem outside of bundles after a Swift SDK is installed. The exact options for specifying
-paths are proposed in a subsequent section for a newly introduced `swift sdk configure` command.
+paths are proposed in a subsequent section for a newly introduced `swift sdk config` command.
 
 ### Swift SDK Installation and Configuration
 
@@ -397,12 +397,12 @@ To manage Swift SDKs, we'd like to introduce a new `swift sdk` command with thre
   `install` subcommand with `--update` flag to allow updating an already installed Swift SDK artifact to a new
   version.
 - `swift sdk list`, which prints a list of already installed Swift SDKs with their identifiers.
-- `swift sdk configure <identifier> <target-triple>`, which allows users to provide additional search paths and toolsets to be
+- `swift sdk config set <identifier> <target-triple>`, which allows users to provide additional search paths and toolsets to be
 used subsequently when building with a given Swift SDK. Specifically, multiple `--swift-resources-path`,
 `--include-search-path`, `--library-search-path`, and `--toolset` options with corresponding paths can be provided,
 which then will be stored as configuration for this Swift SDK. 
-`swift sdk configure <identifier> --show-configuration` will print currently set paths, while
-`swift sdk configure <identifier> --reset` will reset all of those at once.
+`swift sdk config show <identifier>` will print currently set paths, while
+`swift sdk config reset <identifier>` will reset all of those at once.
 - `swift sdk remove <identifier>` will remove a given Swift SDK from the filesystem.
 
 ### Using a Swift SDK
