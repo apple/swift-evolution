@@ -158,9 +158,10 @@ public func withCheckedContinuation<T>(
 
 ### Sendable Values and Sendable Types
 
-A type that conforms to the `Sendable` protocol is a thread-safe type: values of
-that type can be shared with and used safely from multiple concurrent contexts
-at once without causing data races. If a value does not conform to `Sendable`,
+A type that conforms to the `Sendable` protocol can be used safely from multiple 
+concurrent contexts at once without causing data races since values of 
+that type can be shared with in a thread-safe way or transferred by copying them 
+to avoid sharing. If a value does not conform to `Sendable`,
 Swift must ensure that the value is never used concurrently. The value can still
 be sent between concurrent contexts, but the send must be a complete transfer of
 the value's entire region implying that all uses of the value (and anything
